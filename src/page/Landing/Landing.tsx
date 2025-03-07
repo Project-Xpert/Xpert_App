@@ -1,22 +1,18 @@
-import {StyleSheet, Text, View} from 'react-native';
+import BasicText from '../../components/common/BasicText';
+import {colorStyles} from '../../assets/styles/color';
+import BasicContainer from '../../components/common/BasicContainer';
 
 const Landing = () => {
   return (
-    <View style={styles.test}>
-      <Text style={styles.text}>hello world!</Text>
-    </View>
+    <BasicContainer>
+      <BasicText
+        size={40}
+        weight={'Bold'}
+        text={'hello world'}
+        color={colorStyles.mainColor}
+      />
+    </BasicContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  test: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    color: '#000000',
-  },
-});
 
 export default Landing;

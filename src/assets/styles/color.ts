@@ -1,0 +1,17 @@
+export const colorStyles = {
+  mainColor: '#23CB85',
+  mainColorDark: '#019E56',
+  mainColorBright: '#92E1B8',
+  disableGray: '#929292',
+  descriptionGray: '#929292',
+  basicText: '#4C4848',
+  lightGrayBackGround: '#F1F1F1',
+  selectedBackGround: '#EEFCF6',
+  selectedOutline: '#23CB85',
+  defaultBlack: '#000000',
+  defaultWhite: '#FFFFFF',
+  defaultRed: '#FB4A31',
+  defaultBlue: '#3227CC',
+  selectedDropdownBackGround: '#F2F4FF',
+  transparentBackground: '#6A6A6A',
+};
