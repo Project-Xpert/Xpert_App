@@ -3,10 +3,16 @@ import {StyleSheet, View} from 'react-native';
 
 interface ContainerProps {
   children: ReactNode;
+  paddingTop: number;
 }
 
 const BasicContainer = (props: ContainerProps) => {
-  return <View style={styles.container}>{props.children}</View>;
+  const containerStyle = {
+    paddingTop: props.paddingTop,
+    ...styles.container,
+  };
+
+  return <View style={containerStyle}>{props.children}</View>;
 };
 
 const styles = StyleSheet.create({
