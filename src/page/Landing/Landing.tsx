@@ -1,9 +1,8 @@
-import BasicContainer from '../../components/common/BasicContainer';
 import LandingImage1 from '../../assets/image/landing/page1.svg';
 import LandingImage2 from '../../assets/image/landing/page2.svg';
 import LandingImage3 from '../../assets/image/landing/page3.svg';
 import LandingImage4 from '../../assets/image/landing/page4.svg';
-import MidButton from '../../components/common/buttons/MidButton';
+import Button from '../../components/common/buttons/Button';
 import IndexBars from '../../components/Landing/indexBar';
 import LandingIdxPage from '../../components/Landing/LandingIdxPage';
 import Swiper from 'react-native-swiper';
@@ -16,11 +15,11 @@ const Landing = () => {
   const navigator = useNavigation<NavigationProp<any>>();
 
   const onButtonPress = () => {
-    navigator;
+    navigator.navigate('Login');
   };
 
   return (
-    <BasicContainer paddingTop={90}>
+    <View style={styles.container}>
       <View style={styles.swiperContainer}>
         <Swiper
           loop={false}
@@ -56,12 +55,22 @@ const Landing = () => {
         </Swiper>
       </View>
       <IndexBars activeIdx={index} marginTop={132} />
-      <MidButton text={'시작하기'} marginTop={32} />
-    </BasicContainer>
+      <Button
+        text={'시작하기'}
+        marginTop={32}
+        onPress={onButtonPress}
+        size={'mid'}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    paddingTop: 130,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   swiperContainer: {
     height: 470,
   },
