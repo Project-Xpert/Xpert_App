@@ -1,6 +1,13 @@
 import BasicHeader from '../../components/common/headers/BasicHeader';
 import BasicContainer from '../../components/common/BasicContainer';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  NativeSyntheticEvent,
+  StyleSheet,
+  Text,
+  TextInputChangeEventData,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {fontStyle} from '../../assets/styles/fontStyles';
 import {colorStyles} from '../../assets/styles/color';
 import Button from '../../components/common/buttons/Button';
@@ -8,9 +15,16 @@ import BasicInput from '../../components/common/inputs/BasicInput';
 import PasswordInput from '../../components/common/inputs/PasswordInput';
 import SocialLoginBtn from '../../components/Login/SocialLogin';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {useState} from 'react';
+import LoginIdIcon from '../../assets/image/icon/input/loginId/LoginIdIcon';
 
 const Login = () => {
   const navigation = useNavigation<NavigationProp<any>>();
+  const [data, setData] = useState({userId: '', password: ''});
+
+  const onDataChange = (name: string, value: string) => {
+    setData({...data, [name]: value});
+  };
 
   const onLoginBtnPress = () => {};
 
@@ -29,8 +43,19 @@ const Login = () => {
         지금 바로 Xpert와 투자를 시작해봅시다!
       </Text>
 
-      <BasicInput marginTop={40} placeHolder={'로그인 아이디를 입력해주세요'} />
-      <PasswordInput marginTop={20} placeHolder={'비밀번호를 입력해주세요'} />
+      <BasicInput
+        value={data.userId}
+        marginTop={40}
+        placeHolder={'로그인 아이디를 입력해주세요'}
+        onChange={e => onDataChange('userId', e.nativeEvent.text)}
+        Icon={LoginIdIcon}
+        />
+      <PasswordInput
+        value={data.password}
+        marginTop={20}
+        placeHolder={'비밀번호를 입력해주세요'}
+        onChange={e => onDataChange('password', e.nativeEvent.text)}
+      />
       <Button
         text={'로그인'}
         marginTop={30}

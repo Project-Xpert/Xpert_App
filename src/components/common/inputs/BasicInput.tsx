@@ -1,23 +1,59 @@
-import {StyleSheet, TextInput, View} from 'react-native';
+import {
+  NativeSyntheticEvent,
+  StyleSheet,
+  TextInput,
+  TextInputChangeEventData,
+  TextInputEndEditingEventData,
+  TextInputFocusEventData,
+  View,
+} from 'react-native';
 import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
-import Icon from '../../../assets/image/icon/input/loginId/loginIdDisabled.svg';
+import {ElementType, useState} from 'react';
 
 interface InputProps {
+  Icon: ElementType
+  value: string;
   marginTop: number;
   placeHolder: string;
+  onChange: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
 }
 
 const BasicInput = (props: InputProps) => {
+  const [isActivated, setIsActivated] = useState(false);
+
+  const onFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+    setIsActivated(true);
+  };
+
+  const onBlur = (e: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
+    setIsActivated(false);
+  };
+
   const inputStyle = {
     marginTop: props.marginTop,
+    borderColor:
+      isActivated
+        ? colorStyles.selectedOutline
+        : colorStyles.disableGray,
+    color:
+      isActivated
+        ? colorStyles.basicText 
+        : colorStyles.disableGray,
     ...styles.input,
   };
 
   return (
     <View>
-      <Icon style={styles.icon} />
-      <TextInput style={inputStyle} placeholder={props.placeHolder} />
+      <props.Icon style={styles.icon} isActivated={isActivated} />
+      <TextInput
+        style={inputStyle}
+        value={props.value}
+        placeholder={props.placeHolder}
+        onChange={props.onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+      />
     </View>
   );
 };
@@ -30,8 +66,6 @@ const styles = StyleSheet.create({
   input: {
     width: 350,
     height: 50,
-    borderColor: colorStyles.disableGray,
-    color: colorStyles.disableGray,
     fontFamily: fontStyle.SUIT.Medium,
     fontSize: 15,
     borderWidth: 0.5,
