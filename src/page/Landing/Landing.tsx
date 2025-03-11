@@ -9,6 +9,7 @@ import Swiper from 'react-native-swiper';
 import {StyleSheet, View} from 'react-native';
 import {useState} from 'react';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {colorStyles} from '../../assets/styles/color';
 
 const Landing = () => {
   const [index, setIndex] = useState(0);
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
     paddingTop: 130,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: colorStyles.defaultWhite,
   },
   swiperContainer: {
     height: 470,

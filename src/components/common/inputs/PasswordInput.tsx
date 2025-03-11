@@ -38,14 +38,10 @@ const PasswordInput = (props: InputProps) => {
 
   const inputStyle = {
     marginTop: props.marginTop,
-    borderColor:
-      isActivated
-        ? colorStyles.selectedOutline
-        : colorStyles.disableGray,
-    color:
-      isActivated
-        ? colorStyles.basicText 
-        : colorStyles.disableGray,
+    borderColor: isActivated
+      ? colorStyles.selectedOutline
+      : colorStyles.disableGray,
+    color: isActivated ? colorStyles.basicText : colorStyles.disableGray,
     ...styles.input,
   };
 
@@ -64,9 +60,16 @@ const PasswordInput = (props: InputProps) => {
         onChange={props.onChange}
         onBlur={onBlur}
         onFocus={onFocus}
+        autoCorrect={false}
+        autoCapitalize="none"
+        returnKeyType="done"
       />
       <TouchableOpacity onPress={onPressVisibility} style={styles.btn}>
-        {showPassword ? <SeePasswordIcon isActivated={isActivated} /> : <HidePasswordIcon isActivated={isActivated}/>}
+        {showPassword ? (
+          <SeePasswordIcon isActivated={isActivated} />
+        ) : (
+          <HidePasswordIcon isActivated={isActivated} />
+        )}
       </TouchableOpacity>
       <Text style={styles.errorMessage}>{props.errorMessage}</Text>
     </View>
@@ -103,8 +106,8 @@ const styles = StyleSheet.create({
     left: 15,
     fontSize: 12,
     fontFamily: fontStyle.SUIT.Regular,
-    color: colorStyles.defaultRed
-  }
+    color: colorStyles.defaultRed,
+  },
 });
 
 export default PasswordInput;

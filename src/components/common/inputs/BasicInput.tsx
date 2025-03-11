@@ -1,4 +1,5 @@
 import {
+  Keyboard,
   NativeSyntheticEvent,
   StyleSheet,
   Text,
@@ -6,6 +7,7 @@ import {
   TextInputChangeEventData,
   TextInputEndEditingEventData,
   TextInputFocusEventData,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {colorStyles} from '../../../assets/styles/color';
@@ -13,7 +15,7 @@ import {fontStyle} from '../../../assets/styles/fontStyles';
 import {ElementType, useState} from 'react';
 
 interface InputProps {
-  Icon: ElementType
+  Icon: ElementType;
   value: string;
   marginTop: number;
   placeHolder: string;
@@ -34,14 +36,10 @@ const BasicInput = (props: InputProps) => {
 
   const inputStyle = {
     marginTop: props.marginTop,
-    borderColor:
-      isActivated
-        ? colorStyles.selectedOutline
-        : colorStyles.disableGray,
-    color:
-      isActivated
-        ? colorStyles.basicText 
-        : colorStyles.disableGray,
+    borderColor: isActivated
+      ? colorStyles.selectedOutline
+      : colorStyles.disableGray,
+    color: isActivated ? colorStyles.basicText : colorStyles.disableGray,
     ...styles.input,
   };
 
@@ -55,6 +53,9 @@ const BasicInput = (props: InputProps) => {
         onChange={props.onChange}
         onBlur={onBlur}
         onFocus={onFocus}
+        autoCorrect={false}
+        autoCapitalize="none"
+        returnKeyType="done"
       />
       <Text style={styles.errorMessage}>{props.errorMessage}</Text>
     </View>
@@ -86,8 +87,8 @@ const styles = StyleSheet.create({
     left: 15,
     fontSize: 12,
     fontFamily: fontStyle.SUIT.Regular,
-    color: colorStyles.defaultRed
-  }
+    color: colorStyles.defaultRed,
+  },
 });
 
 export default BasicInput;

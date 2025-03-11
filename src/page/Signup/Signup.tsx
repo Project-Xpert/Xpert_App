@@ -10,8 +10,10 @@ import Button from '../../components/common/buttons/Button';
 import useSignupData from '../../data/signupData';
 import { useState } from 'react';
 import { UserAPI } from '../../api/user';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 const Signup = () => {
+  const navigation = useNavigation<NavigationProp<any>>()
   const {userId, email, password, passwordCheck, setData} = useSignupData()
   const [errorMessage, setErrorMessage] = useState({
     userId: "",
@@ -23,9 +25,8 @@ const Signup = () => {
     let isValid = true
     const newErrorMessages = {...errorMessage}
     const userIdValidation = /^[a-zA-Z0-9_]+$/
-    const emailValidation = /^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+    const emailValidation = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const passwordValidation = /^(?=.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$/;
-
 
     if (userId.length < 3 || userId.length > 20) {
       newErrorMessages.userId = "로그인용 아이디는 3글자 이상, 20글자 이하여야 합니다."
@@ -69,7 +70,7 @@ const Signup = () => {
     if (isValidData()) {
       UserAPI.CheckAttributeIsUnique({userId, email})
       .then(response => {
-        console.log(response)
+        navigation.navigate("EmailCode")
       })
       .catch(e => {
         if(e.response?.data.description == "이미 해당 아이디로 가입된 유저가 존재합니다") {

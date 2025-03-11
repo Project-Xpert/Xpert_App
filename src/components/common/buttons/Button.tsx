@@ -7,17 +7,30 @@ interface ButtonProps {
   marginTop: number;
   size: 'small' | 'mid' | 'large';
   onPress: () => void;
+  disable?: boolean;
 }
 
 const Button = (props: ButtonProps) => {
   const containerStyle = {
     marginTop: props.marginTop,
+    backgroundColor: props.disable
+      ? colorStyles.disableGray
+      : colorStyles.mainColor,
     height: props.size === 'small' ? 50 : props.size === 'mid' ? 60 : 80,
     ...styles.container,
   };
 
+  const onPress = () => {
+    if (!props.disable) {
+      props.onPress();
+    }
+  };
+
   return (
-    <TouchableOpacity style={containerStyle} onPress={props.onPress}>
+    <TouchableOpacity
+      style={containerStyle}
+      onPress={onPress}
+      activeOpacity={props.disable ? 1 : 0}>
       <Text style={styles.text}>{props.text}</Text>
     </TouchableOpacity>
   );
@@ -28,7 +41,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 350,
-    backgroundColor: colorStyles.mainColor,
     borderRadius: 15,
   },
   text: {

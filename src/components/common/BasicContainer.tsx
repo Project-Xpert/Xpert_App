@@ -1,5 +1,6 @@
 import {ReactNode} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Keyboard, Pressable, StyleSheet, View} from 'react-native';
+import {colorStyles} from '../../assets/styles/color';
 
 interface ContainerProps {
   children: ReactNode;
@@ -12,14 +13,22 @@ const BasicContainer = (props: ContainerProps) => {
     ...styles.container,
   };
 
-  return <View style={containerStyle}>{props.children}</View>;
+  return (
+    <Pressable style={containerStyle} onPress={Keyboard.dismiss}>
+      {props.children}
+    </Pressable>
+  );
 };
 
 const styles = StyleSheet.create({
+  pressable: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 35,
     alignItems: 'center',
+    backgroundColor: colorStyles.defaultWhite,
   },
 });
 
