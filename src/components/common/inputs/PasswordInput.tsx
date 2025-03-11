@@ -1,6 +1,7 @@
 import {
   NativeSyntheticEvent,
   StyleSheet,
+  Text,
   TextInput,
   TextInputChangeEventData,
   TextInputEndEditingEventData,
@@ -19,6 +20,7 @@ interface InputProps {
   value: string;
   marginTop: number;
   placeHolder: string;
+  errorMessage?: string;
   onChange: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
 }
 
@@ -66,6 +68,7 @@ const PasswordInput = (props: InputProps) => {
       <TouchableOpacity onPress={onPressVisibility} style={styles.btn}>
         {showPassword ? <SeePasswordIcon isActivated={isActivated} /> : <HidePasswordIcon isActivated={isActivated}/>}
       </TouchableOpacity>
+      <Text style={styles.errorMessage}>{props.errorMessage}</Text>
     </View>
   );
 };
@@ -94,6 +97,14 @@ const styles = StyleSheet.create({
     right: 15,
     bottom: 13,
   },
+  errorMessage: {
+    position: 'absolute',
+    bottom: -16,
+    left: 15,
+    fontSize: 12,
+    fontFamily: fontStyle.SUIT.Regular,
+    color: colorStyles.defaultRed
+  }
 });
 
 export default PasswordInput;

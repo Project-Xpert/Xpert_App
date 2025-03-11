@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 350,
-    borderRadius: 15,
     backgroundColor: colorStyles.mainColor,
+    borderRadius: 15,
   },
   text: {
     fontSize: 20,

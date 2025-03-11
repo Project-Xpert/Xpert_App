@@ -1,13 +1,6 @@
 import BasicHeader from '../../components/common/headers/BasicHeader';
 import BasicContainer from '../../components/common/BasicContainer';
-import {
-  NativeSyntheticEvent,
-  StyleSheet,
-  Text,
-  TextInputChangeEventData,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {fontStyle} from '../../assets/styles/fontStyles';
 import {colorStyles} from '../../assets/styles/color';
 import Button from '../../components/common/buttons/Button';
@@ -17,16 +10,60 @@ import SocialLoginBtn from '../../components/Login/SocialLogin';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import LoginIdIcon from '../../assets/image/icon/input/loginId/LoginIdIcon';
+import {UserAPI} from '../../api/user';
+import { TokenManager } from '../../api/util/tokenManager';
 
 const Login = () => {
   const navigation = useNavigation<NavigationProp<any>>();
   const [data, setData] = useState({userId: '', password: ''});
+  const [errorMessage, setErrorMessage] = useState({userId: '', password: ''})
 
   const onDataChange = (name: string, value: string) => {
     setData({...data, [name]: value});
   };
 
-  const onLoginBtnPress = () => {};
+ const checkDataIsValid = () => {
+  let isValid = true
+  let newErrorMessage = { ...errorMessage }
+
+  if (data.userId.length < 3 || data.userId.length > 20) {
+    newErrorMessage.userId = "로그인용 아이디는 3글자 이상, 20글자 이하여야 합니다."
+    isValid = false
+  } else {
+    newErrorMessage.userId = ''
+  }
+
+  if (data.password.length <= 0) {
+    newErrorMessage.password = "비밀번호를 입력해주시길 바랍니다."
+    isValid = false
+  } else {
+    newErrorMessage.password = ''
+  }
+
+  setErrorMessage(newErrorMessage)
+
+  return isValid
+}
+
+  const onLoginBtnPress = () => {
+    if (checkDataIsValid()) {
+      UserAPI.Login(data)
+        .then(response => {
+          console.log(response);
+          TokenManager.saveToken(response.data.accessToken)
+          navigation.navigate("Home")
+        })
+        .catch(e => {
+          console.log(e.response)
+          if (e.response?.status === 401 || e.response?.status === 404) {
+            setErrorMessage({
+              userId: "아이디와 비밀번호를 다시한번 확인해주세요",
+              password : "아이디와 비밀번호를 다시한번 확인해주세요"
+            })
+          }
+        });
+    }
+  };
 
   const onSignupBtnPress = () => {
     navigation.navigate('Signup');
@@ -46,14 +83,16 @@ const Login = () => {
       <BasicInput
         value={data.userId}
         marginTop={40}
-        placeHolder={'로그인 아이디를 입력해주세요'}
-        onChange={e => onDataChange('userId', e.nativeEvent.text)}
         Icon={LoginIdIcon}
-        />
+        placeHolder={'로그인 아이디를 입력해주세요'}
+        errorMessage={errorMessage.userId}
+        onChange={e => onDataChange('userId', e.nativeEvent.text)}
+      />
       <PasswordInput
         value={data.password}
         marginTop={20}
         placeHolder={'비밀번호를 입력해주세요'}
+        errorMessage={errorMessage.password}
         onChange={e => onDataChange('password', e.nativeEvent.text)}
       />
       <Button

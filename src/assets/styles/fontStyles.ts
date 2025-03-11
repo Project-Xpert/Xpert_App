@@ -1,13 +1,13 @@
 const SUIT = {
   Thin: 'SUIT-Thin',
-  ExtraLight: 'SUIT-Bold',
-  Light: 'SUIT-Bold',
-  Regular: 'SUIT-Bold',
-  Medium: 'SUIT-Bold',
-  SemiBold: 'SUIT-Bold',
+  ExtraLight: 'SUIT-ExtraLight',
+  Light: 'SUIT-Light',
+  Regular: 'SUIT-Regular',
+  Medium: 'SUIT-Medium',
+  SemiBold: 'SUIT-SemiBold',
   Bold: 'SUIT-Bold',
-  ExtraBold: 'SUIT-Bold',
-  Heavy: 'SUIT-Bold',
+  ExtraBold: 'SUIT-ExtraBold',
+  Heavy: 'SUIT-Heavy',
 };
 
 export const fontStyle = {SUIT};
