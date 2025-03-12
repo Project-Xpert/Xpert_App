@@ -17,7 +17,8 @@ const defaultData = {
   username: '',
   password: '',
   passwordCheck: '',
-  profile: '',
+  profile:
+    'https://i.pinimg.com/474x/d4/14/d7/d414d72eba60aef68af188b6214d47e7.jpg',
 };
 
 const useSignupData = create<SignupData>(set => ({

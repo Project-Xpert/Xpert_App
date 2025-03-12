@@ -6,6 +6,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 interface HeaderProps {
   text: string;
+  hideArrowBtn?: boolean;
 }
 
 const BasicHeader = (props: HeaderProps) => {
@@ -17,9 +18,11 @@ const BasicHeader = (props: HeaderProps) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.arrowBtn} onPress={onArrowPress}>
-        <LeftArrowBtn />
-      </TouchableOpacity>
+      {!props.hideArrowBtn && (
+        <TouchableOpacity style={styles.arrowBtn} onPress={onArrowPress}>
+          <LeftArrowBtn />
+        </TouchableOpacity>
+      )}
       <Text style={styles.text}>{props.text}</Text>
     </View>
   );
