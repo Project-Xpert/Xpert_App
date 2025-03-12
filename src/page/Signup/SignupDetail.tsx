@@ -11,12 +11,15 @@ import {UserAPI} from '../../api/user';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import RNFS from 'react-native-fs';
+import env from '../../../env';
 
 const SignupDetail = () => {
   const navigator = useNavigation<NavigationProp<any>>();
   const [errorMessage, setErrorMessage] = useState('');
+  const [fileData, setFileData] = useState({name: '', type: ''});
   const {userId, email, password, username, profile, setData, initData} =
     useSignupData();
+
   const dataIsValid = 1 <= username.length && username.length <= 20;
 
   const launchImageLib = () => {
@@ -24,6 +27,10 @@ const SignupDetail = () => {
       if (res.assets) {
         console.log(res.assets[0]);
         setData({profile: res.assets[0].uri});
+        setFileData({
+          name: res.assets[0].fileName || 'basicName',
+          type: res.assets[0].type || 'image/jpg',
+        });
       }
     });
   };
@@ -35,11 +42,11 @@ const SignupDetail = () => {
   const onSignupBtnPress = async () => {
     if (dataIsValid) {
       const formdata = new FormData();
-      if (profile) {
+      if (profile !== env.BASE_PROFILE_URL) {
         const image = {
           uri: profile.replace('file://', ''),
-          type: 'image/jpg',
-          name: 'test',
+          name: fileData.name,
+          type: fileData.type,
         };
         formdata.append('file', image);
       }

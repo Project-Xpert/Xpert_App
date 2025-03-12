@@ -1,4 +1,5 @@
 import {create} from 'zustand';
+import env from '../../env';
 
 interface SignupData {
   userId: string;
@@ -17,8 +18,7 @@ const defaultData = {
   username: '',
   password: '',
   passwordCheck: '',
-  profile:
-    'https://i.pinimg.com/474x/d4/14/d7/d414d72eba60aef68af188b6214d47e7.jpg',
+  profile: env.BASE_PROFILE_URL,
 };
 
 const useSignupData = create<SignupData>(set => ({
