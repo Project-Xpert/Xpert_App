@@ -7,8 +7,13 @@ import {fontStyle} from '../../assets/styles/fontStyles';
 import EmailCodeInput from '../../components/EmailCode/EmailCodeInput';
 import {useEffect, useRef, useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
+import {UserAPI} from '../../api/user';
+import useSignupData from '../../data/signupData';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const EmailCode = () => {
+  const navigator = useNavigation<NavigationProp<any>>();
+  const {email} = useSignupData();
   const [code, setCode] = useState(['', '', '', '']);
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [time, setTime] = useState(120);
@@ -20,6 +25,14 @@ const EmailCode = () => {
     useRef<TextInput>(null),
     useRef<TextInput>(null),
   ];
+
+  const sendCode = () => {
+    UserAPI.SendCode({mail: email})
+      .then()
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   const setTimeInterval = () => {
     const intervalId = setInterval(() => {
@@ -37,6 +50,7 @@ const EmailCode = () => {
   };
 
   useEffect(() => {
+    sendCode();
     const intervalId = setTimeInterval();
     return () => clearInterval(intervalId);
   }, []);
@@ -88,9 +102,31 @@ const EmailCode = () => {
       setTimeInterval();
     }
     setTime(prev => 120);
+    sendCode();
+    setErrorMessage('');
+    setSelectedIdx(0);
+    setCode(['', '', '', '']);
   };
 
-  const verifyCode = () => {};
+  const verifyCode = () => {
+    if (code.join('').length == 4) {
+      UserAPI.VerifyCode({
+        mail: email,
+        code: code.join(''),
+      })
+        .then(response => {
+          navigator.navigate('SignupDetail');
+        })
+        .catch(e => {
+          console.log(e);
+          if (e.response?.data.code == 401) {
+            setErrorMessage('코드를 다시 한번 확인을 해주세요');
+          }
+        });
+    } else {
+      setErrorMessage('코드를 입력해주세요');
+    }
+  };
 
   return (
     <BasicContainer paddingTop={155}>
