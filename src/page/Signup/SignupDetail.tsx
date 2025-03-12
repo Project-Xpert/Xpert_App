@@ -1,16 +1,23 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Platform, StyleSheet, View} from 'react-native';
 import BasicContainer from '../../components/common/BasicContainer';
 import BasicHeader from '../../components/common/headers/BasicHeader';
 import BasicInput from '../../components/common/inputs/BasicInput';
-import {useState} from 'react';
 import LoginIdIcon from '../../assets/image/icon/input/loginId/LoginIdIcon';
 import ProfileEditBtn from '../../components/common/buttons/ProfileEditBtn';
 import Button from '../../components/common/buttons/Button';
 import {launchImageLibrary} from 'react-native-image-picker';
 import useSignupData from '../../data/signupData';
+import {UserAPI} from '../../api/user';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {useState} from 'react';
+import RNFS from 'react-native-fs';
 
 const SignupDetail = () => {
-  const {username, profile, setData} = useSignupData();
+  const navigator = useNavigation<NavigationProp<any>>();
+  const [errorMessage, setErrorMessage] = useState('');
+  const {userId, email, password, username, profile, setData, initData} =
+    useSignupData();
+  const dataIsValid = 1 <= username.length && username.length <= 20;
 
   const launchImageLib = () => {
     launchImageLibrary({mediaType: 'photo'}, res => {
@@ -24,7 +31,43 @@ const SignupDetail = () => {
   const onDataChanage = (name: string, value: string) => {
     setData({[name]: value});
   };
-  const onSignupBtnPress = () => {};
+
+  const onSignupBtnPress = async () => {
+    if (dataIsValid) {
+      const formdata = new FormData();
+      if (profile) {
+        const image = {
+          uri: profile.replace('file://', ''),
+          type: 'image/jpg',
+          name: 'test',
+        };
+        formdata.append('file', image);
+      }
+
+      console.log(JSON.stringify({userId, email, username, password}));
+
+      const json = JSON.stringify({userId, email, username, password});
+      const jsonPath = `${RNFS.TemporaryDirectoryPath}/body.json`;
+      RNFS.writeFile(jsonPath, json, 'utf8');
+
+      formdata.append('body', {
+        uri: `file://${jsonPath}`,
+        type: 'application/json',
+        name: 'body.json',
+      });
+
+      UserAPI.Signup(formdata)
+        .then(response => {
+          initData();
+          navigator.navigate('Landing');
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      setErrorMessage('유저의 이름을 1글자 이상 20글자 이하로 작성해주세요');
+    }
+  };
 
   return (
     <BasicContainer paddingTop={140}>
@@ -41,6 +84,7 @@ const SignupDetail = () => {
         onChange={e => {
           onDataChanage('username', e.nativeEvent.text);
         }}
+        errorMessage={errorMessage}
       />
 
       <Button

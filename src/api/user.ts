@@ -11,6 +11,15 @@ const Login = async (dto: LoginRequestDto) => {
   return await axios.post(`${BASE_PATH}/login`, dto);
 };
 
+const Signup = async (formdata: FormData) => {
+  console.log(formdata);
+  return await axios.post(`${BASE_PATH}/signup`, formdata, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
 interface CheckAttributeIsUniqueRequestDto {
   userId: String;
   email: String;
@@ -39,4 +48,10 @@ const VerifyCode = async (dto: VerifyCodeRequestDto) => {
   return await axios.post(`${BASE_PATH}/verify/code`, dto);
 };
 
-export const UserAPI = {Login, SendCode, VerifyCode, CheckAttributeIsUnique};
+export const UserAPI = {
+  Login,
+  Signup,
+  SendCode,
+  VerifyCode,
+  CheckAttributeIsUnique,
+};

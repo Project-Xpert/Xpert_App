@@ -7,6 +7,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 interface HeaderProps {
   text: string;
   hideArrowBtn?: boolean;
+  btnNavigate?: string;
 }
 
 const BasicHeader = (props: HeaderProps) => {

@@ -11,55 +11,56 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import LoginIdIcon from '../../assets/image/icon/input/loginId/LoginIdIcon';
 import {UserAPI} from '../../api/user';
-import { TokenManager } from '../../api/util/tokenManager';
+import {TokenManager} from '../../api/util/tokenManager';
 
 const Login = () => {
   const navigation = useNavigation<NavigationProp<any>>();
   const [data, setData] = useState({userId: '', password: ''});
-  const [errorMessage, setErrorMessage] = useState({userId: '', password: ''})
+  const [errorMessage, setErrorMessage] = useState({userId: '', password: ''});
 
   const onDataChange = (name: string, value: string) => {
     setData({...data, [name]: value});
   };
 
- const checkDataIsValid = () => {
-  let isValid = true
-  let newErrorMessage = { ...errorMessage }
+  const checkDataIsValid = () => {
+    let isValid = true;
+    let newErrorMessage = {...errorMessage};
 
-  if (data.userId.length < 3 || data.userId.length > 20) {
-    newErrorMessage.userId = "로그인용 아이디는 3글자 이상, 20글자 이하여야 합니다."
-    isValid = false
-  } else {
-    newErrorMessage.userId = ''
-  }
+    if (data.userId.length < 3 || data.userId.length > 20) {
+      newErrorMessage.userId =
+        '로그인용 아이디는 3글자 이상, 20글자 이하여야 합니다.';
+      isValid = false;
+    } else {
+      newErrorMessage.userId = '';
+    }
 
-  if (data.password.length <= 0) {
-    newErrorMessage.password = "비밀번호를 입력해주시길 바랍니다."
-    isValid = false
-  } else {
-    newErrorMessage.password = ''
-  }
+    if (data.password.length <= 0) {
+      newErrorMessage.password = '비밀번호를 입력해주시길 바랍니다.';
+      isValid = false;
+    } else {
+      newErrorMessage.password = '';
+    }
 
-  setErrorMessage(newErrorMessage)
+    setErrorMessage(newErrorMessage);
 
-  return isValid
-}
+    return isValid;
+  };
 
   const onLoginBtnPress = () => {
     if (checkDataIsValid()) {
       UserAPI.Login(data)
         .then(response => {
           console.log(response);
-          TokenManager.saveToken(response.data.accessToken)
-          navigation.navigate("Home")
+          TokenManager.saveToken(response.data.accessToken);
+          navigation.navigate('Home');
         })
         .catch(e => {
-          console.log(e.response)
+          console.log(e.response);
           if (e.response?.status === 401 || e.response?.status === 404) {
             setErrorMessage({
-              userId: "아이디와 비밀번호를 다시한번 확인해주세요",
-              password : "아이디와 비밀번호를 다시한번 확인해주세요"
-            })
+              userId: '아이디와 비밀번호를 다시한번 확인해주세요',
+              password: '아이디와 비밀번호를 다시한번 확인해주세요',
+            });
           }
         });
     }
