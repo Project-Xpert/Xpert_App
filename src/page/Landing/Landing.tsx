@@ -10,6 +10,7 @@ import {StyleSheet, View} from 'react-native';
 import {useState} from 'react';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {colorStyles} from '../../assets/styles/color';
+import {screenSize} from '../../assets/styles/screenSize';
 
 const Landing = () => {
   const [index, setIndex] = useState(0);
@@ -55,10 +56,10 @@ const Landing = () => {
           />
         </Swiper>
       </View>
-      <IndexBars activeIdx={index} marginTop={132} />
+      <IndexBars activeIdx={index} marginTop={screenSize.getVH(14.4)} />
       <Button
         text={'시작하기'}
-        marginTop={32}
+        marginTop={screenSize.getVH(3.5)}
         onPress={onButtonPress}
         size={'mid'}
       />
@@ -68,13 +69,14 @@ const Landing = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 130,
+    flex: 1,
+    paddingTop: screenSize.getVH(11),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colorStyles.defaultWhite,
   },
   swiperContainer: {
-    height: 470,
+    height: screenSize.getVH(54.5),
   },
 });
 

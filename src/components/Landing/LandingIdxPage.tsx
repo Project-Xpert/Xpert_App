@@ -2,6 +2,7 @@ import {StyleSheet, View, Text} from 'react-native';
 import {colorStyles} from '../../assets/styles/color';
 import {ElementType} from 'react';
 import {fontStyle} from '../../assets/styles/fontStyles';
+import {screenSize} from '../../assets/styles/screenSize';
 
 interface LandingPageProps {
   LandingImg: ElementType;
@@ -12,7 +13,7 @@ interface LandingPageProps {
 const LandingIdxPage = (props: LandingPageProps) => {
   return (
     <View style={styles.container}>
-      <props.LandingImg />
+      <props.LandingImg width={screenSize.getVW(70)} />
       <Text style={styles.title}>{props.titleText}</Text>
       <Text style={styles.description}>{props.description}</Text>
     </View>
@@ -22,22 +23,22 @@ const LandingIdxPage = (props: LandingPageProps) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    height: 500,
+    height: screenSize.getVH(52),
   },
   title: {
-    fontSize: 30,
+    fontSize: screenSize.getVH(3.3),
     fontFamily: fontStyle.SUIT.Bold,
     textAlign: 'center',
     color: colorStyles.basicText,
-    marginTop: 45,
+    marginTop: screenSize.getVH(3),
     letterSpacing: -0.5,
   },
   description: {
-    fontSize: 18,
+    fontSize: screenSize.getVH(2.2),
     fontFamily: fontStyle.SUIT.Regular,
     textAlign: 'center',
     color: colorStyles.descriptionGray,
-    marginTop: 20,
+    marginTop: screenSize.getVH(2.2),
   },
 });
 

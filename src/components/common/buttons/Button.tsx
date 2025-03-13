@@ -1,6 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
+import {screenSize} from '../../../assets/styles/screenSize';
 
 interface ButtonProps {
   text: string;
@@ -16,7 +17,12 @@ const Button = (props: ButtonProps) => {
     backgroundColor: props.disable
       ? colorStyles.disableGray
       : colorStyles.mainColor,
-    height: props.size === 'small' ? 50 : props.size === 'mid' ? 60 : 80,
+    height:
+      props.size === 'small'
+        ? screenSize.getVH(5.5)
+        : props.size === 'mid'
+        ? screenSize.getVH(6.6)
+        : screenSize.getVH(13.3),
     ...styles.container,
   };
 
@@ -40,7 +46,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 350,
+    width: screenSize.getVW(81.1),
     borderRadius: 15,
   },
   text: {
