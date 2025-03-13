@@ -3,6 +3,7 @@ import LeftArrowBtn from '../../../assets/image/icon/button/leftArrowBtn.svg';
 import {Text} from 'react-native-gesture-handler';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {screenSize} from '../../../assets/styles/screenSize';
 
 interface HeaderProps {
   text: string;
@@ -34,20 +35,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    width: Dimensions.get('screen').width,
-    height: 70,
+    width: screenSize.width,
+    height: screenSize.getVH(7.7),
     position: 'absolute',
-    top: 70,
+    top: screenSize.getVH(6.6),
   },
   arrowBtn: {
     position: 'absolute',
-    left: 40,
+    left: screenSize.getVW(11.6),
   },
   text: {
     fontFamily: fontStyle.SUIT.SemiBold,
     letterSpacing: -0.5,
-    lineHeight: 30,
-    fontSize: 25,
+    lineHeight: screenSize.getVH(3.3),
+    fontSize: screenSize.getVH(2.7),
   },
 });
 

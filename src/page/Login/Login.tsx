@@ -12,6 +12,7 @@ import {useState} from 'react';
 import LoginIdIcon from '../../assets/image/icon/input/loginId/LoginIdIcon';
 import {UserAPI} from '../../api/user';
 import {TokenManager} from '../../api/util/tokenManager';
+import {screenSize} from '../../assets/styles/screenSize';
 
 const Login = () => {
   const navigation = useNavigation<NavigationProp<any>>();
@@ -71,7 +72,7 @@ const Login = () => {
   };
 
   return (
-    <BasicContainer paddingTop={140}>
+    <BasicContainer paddingTop={screenSize.getVH(18.7)}>
       <BasicHeader text={'로그인'} />
       <Text style={styles.title}>
         <Text style={styles.highlightedTitle}>투자의 고수가 </Text>
@@ -83,7 +84,7 @@ const Login = () => {
 
       <BasicInput
         value={data.userId}
-        marginTop={40}
+        marginTop={screenSize.getVH(4.4)}
         Icon={LoginIdIcon}
         placeHolder={'로그인 아이디를 입력해주세요'}
         errorMessage={errorMessage.userId}
@@ -91,14 +92,14 @@ const Login = () => {
       />
       <PasswordInput
         value={data.password}
-        marginTop={20}
+        marginTop={screenSize.getVH(2.2)}
         placeHolder={'비밀번호를 입력해주세요'}
         errorMessage={errorMessage.password}
         onChange={e => onDataChange('password', e.nativeEvent.text)}
       />
       <Button
         text={'로그인'}
-        marginTop={30}
+        marginTop={screenSize.getVH(3.3)}
         size={'small'}
         onPress={onLoginBtnPress}
       />
@@ -136,63 +137,63 @@ const Login = () => {
 
 const styles = StyleSheet.create({
   title: {
-    width: 340,
-    marginTop: 30,
+    width: '100%',
     fontFamily: fontStyle.SUIT.ExtraBold,
     color: colorStyles.basicText,
-    fontSize: 35,
+    fontSize: screenSize.getVH(3.8),
     letterSpacing: -0.5,
   },
   highlightedTitle: {
     color: colorStyles.mainColor,
   },
   description: {
-    width: 340,
-    marginTop: 15,
+    width: '100%',
+    marginTop: screenSize.getVH(1.6),
     fontFamily: fontStyle.SUIT.Medium,
     color: colorStyles.descriptionGray,
-    fontSize: 15,
+    fontSize: screenSize.getVH(1.6),
   },
   menuContainer: {
-    width: 265,
-    height: 60,
-    marginTop: 25,
+    width: screenSize.getVW(61.8),
+    height: screenSize.getVH(2.2),
+    marginTop: screenSize.getVH(3.3),
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     color: colorStyles.basicText,
     fontFamily: fontStyle.SUIT.Medium,
-    fontSize: 15,
+    fontSize: screenSize.getVH(1.6),
   },
   separatorBar: {
-    width: 1,
-    height: 15,
+    width: screenSize.getVH(0.15),
+    height: screenSize.getVH(1.6),
     backgroundColor: colorStyles.descriptionGray,
   },
   horizontalSpearatorContainer: {
-    width: 340,
-    height: 20,
-    marginTop: 50,
+    width: '100%',
+    height: screenSize.getVH(2.2),
+    marginTop: screenSize.getVH(12.5),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   horizontalBar: {
-    width: 45,
-    height: 1,
+    width: screenSize.getVW(12.5),
+    height: screenSize.getVH(0.15),
     backgroundColor: colorStyles.descriptionGray,
   },
   horizontalInfo: {
-    lineHeight: 20,
-    fontSize: 15,
+    lineHeight: screenSize.getVH(2.2),
+    fontSize: screenSize.getVH(1.6),
     color: colorStyles.descriptionGray,
     fontFamily: fontStyle.SUIT.Medium,
   },
   socialLoginContainer: {
-    marginTop: 40,
+    marginTop: screenSize.getVH(5.5),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: 280,
+    width: screenSize.getVW(69.7),
   },
 });
 

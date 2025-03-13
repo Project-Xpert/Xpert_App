@@ -1,5 +1,6 @@
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {colorStyles} from '../../assets/styles/color';
+import {screenSize} from '../../assets/styles/screenSize';
 
 interface BtnProps {
   socialType: 'google' | 'github' | 'kakao';
@@ -22,8 +23,8 @@ const SocialLoginBtn = (props: BtnProps) => {
 
 const style = StyleSheet.create({
   container: {
-    width: 60,
-    height: 60,
+    width: screenSize.getVH(6.6),
+    height: screenSize.getVH(6.6),
     borderRadius: 100,
     borderWidth: 1,
     borderColor: colorStyles.defaultBlack,

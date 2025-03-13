@@ -13,6 +13,7 @@ import {
 import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import {ElementType, useState} from 'react';
+import {screenSize} from '../../../assets/styles/screenSize';
 
 interface InputProps {
   Icon: ElementType;
@@ -63,29 +64,25 @@ const BasicInput = (props: InputProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: 350,
-    height: 50,
-  },
   input: {
-    width: 350,
-    height: 50,
+    width: screenSize.getVW(82),
+    height: screenSize.getVH(5.5),
     fontFamily: fontStyle.SUIT.Medium,
-    fontSize: 15,
-    borderWidth: 0.5,
+    fontSize: screenSize.getVH(1.6),
+    borderWidth: screenSize.getVH(0.075),
     borderRadius: 15,
-    paddingLeft: 54,
+    paddingLeft: screenSize.getVW(11.3),
   },
   icon: {
     position: 'absolute',
-    left: 15,
-    bottom: 13,
+    left: screenSize.getVW(3.4),
+    bottom: screenSize.getVH(1.4),
   },
   errorMessage: {
     position: 'absolute',
-    bottom: -16,
-    left: 15,
-    fontSize: 12,
+    bottom: -screenSize.getVH(1.7),
+    left: screenSize.getVH(1.4),
+    fontSize: screenSize.getVH(1.3),
     fontFamily: fontStyle.SUIT.Regular,
     color: colorStyles.defaultRed,
   },

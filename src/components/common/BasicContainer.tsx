@@ -1,6 +1,7 @@
 import {ReactNode} from 'react';
 import {Keyboard, Pressable, StyleSheet, View} from 'react-native';
 import {colorStyles} from '../../assets/styles/color';
+import {screenSize} from '../../assets/styles/screenSize';
 
 interface ContainerProps {
   children: ReactNode;
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 35,
+    paddingHorizontal: screenSize.getVW(9.3),
     alignItems: 'center',
     backgroundColor: colorStyles.defaultWhite,
   },
