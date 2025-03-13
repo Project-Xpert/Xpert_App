@@ -22,7 +22,7 @@ const Button = (props: ButtonProps) => {
         ? screenSize.getVH(5.5)
         : props.size === 'mid'
         ? screenSize.getVH(6.6)
-        : screenSize.getVH(13.3),
+        : screenSize.getVH(8.8),
     ...styles.container,
   };
 

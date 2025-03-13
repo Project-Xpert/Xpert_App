@@ -1,6 +1,7 @@
 import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native';
 import EditBtn from '../../../assets/image/icon/button/editBtn.svg';
 import {colorStyles} from '../../../assets/styles/color';
+import {screenSize} from '../../../assets/styles/screenSize';
 
 interface ButtonProps {
   style?: StyleProp<ViewStyle>;
@@ -19,9 +20,9 @@ const ProfileEditBtn = (props: ButtonProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: screenSize.getVH(3.3),
+    height: screenSize.getVH(3.3),
+    borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colorStyles.defaultBlack,

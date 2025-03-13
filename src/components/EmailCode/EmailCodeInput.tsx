@@ -8,6 +8,7 @@ import {
 import {colorStyles} from '../../assets/styles/color';
 import {fontStyle} from '../../assets/styles/fontStyles';
 import {Ref, useState} from 'react';
+import {screenSize} from '../../assets/styles/screenSize';
 
 interface InputProps {
   text: string;
@@ -62,12 +63,12 @@ const EmailCodeInput = (props: InputProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 28,
-    width: 75,
-    height: 75,
+    paddingHorizontal: screenSize.getVH(3.3),
+    width: screenSize.getVH(8.2),
+    height: screenSize.getVH(8.2),
     borderRadius: 15,
     borderWidth: 0.5,
-    fontSize: 30,
+    fontSize: screenSize.getVH(3.3),
     fontFamily: fontStyle.SUIT.Bold,
     color: colorStyles.basicText,
   },

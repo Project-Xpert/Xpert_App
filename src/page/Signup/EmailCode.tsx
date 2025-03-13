@@ -10,6 +10,7 @@ import {TextInput} from 'react-native-gesture-handler';
 import {UserAPI} from '../../api/user';
 import useSignupData from '../../data/signupData';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {screenSize} from '../../assets/styles/screenSize';
 
 const EmailCode = () => {
   const navigator = useNavigation<NavigationProp<any>>();
@@ -177,7 +178,7 @@ const EmailCode = () => {
       </TouchableOpacity>
       <Button
         text={'인증코드 확인'}
-        marginTop={10}
+        marginTop={screenSize.getVW(2)}
         size={'large'}
         onPress={verifyCode}
         disable={time <= 0}
@@ -188,24 +189,24 @@ const EmailCode = () => {
 
 const styles = StyleSheet.create({
   description: {
-    width: 340,
-    fontSize: 15,
-    lineHeight: 20,
+    width: screenSize.getVW(82),
+    fontSize: screenSize.getVH(1.7),
+    lineHeight: screenSize.getVH(2.2),
     fontFamily: fontStyle.SUIT.Medium,
     color: colorStyles.descriptionGray,
   },
   inputContainer: {
-    width: 340,
-    height: 75,
-    marginTop: 35,
+    width: screenSize.getVW(82),
+    height: screenSize.getVH(8.3),
+    marginTop: screenSize.getVH(3.8),
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   centerLeftTime: {
-    marginTop: 35,
-    fontSize: 15,
-    lineHeight: 20,
+    marginTop: screenSize.getVH(3.8),
+    fontSize: screenSize.getVH(1.7),
+    lineHeight: screenSize.getVH(2.2),
     fontFamily: fontStyle.SUIT.Medium,
     color: colorStyles.descriptionGray,
   },
@@ -214,24 +215,24 @@ const styles = StyleSheet.create({
     color: colorStyles.basicText,
   },
   reSendBtn: {
-    marginTop: 320,
-    width: 100,
+    marginTop: screenSize.getVH(37.5),
+    width: screenSize.getVW(23.8),
   },
   resendText: {
     width: '100%',
-    fontSize: 15,
-    lineHeight: 20,
+    fontSize: screenSize.getVH(1.7),
+    lineHeight: screenSize.getVH(2.2),
     textAlign: 'center',
     fontFamily: fontStyle.SUIT.Medium,
     color: colorStyles.mainColor,
     textDecorationLine: 'underline',
   },
   errorMessage: {
-    marginTop: 15,
+    marginTop: screenSize.getVH(1.7),
     color: colorStyles.defaultRed,
     fontFamily: fontStyle.SUIT.SemiBold,
-    fontSize: 15,
-    width: 340,
+    fontSize: screenSize.getVH(1.7),
+    width: '100%',
     textAlign: 'center',
   },
 });

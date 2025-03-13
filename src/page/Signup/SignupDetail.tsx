@@ -12,6 +12,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import RNFS from 'react-native-fs';
 import env from '../../../env';
+import {screenSize} from '../../assets/styles/screenSize';
 
 const SignupDetail = () => {
   const navigator = useNavigation<NavigationProp<any>>();
@@ -20,7 +21,7 @@ const SignupDetail = () => {
   const {userId, email, password, username, profile, setData, initData} =
     useSignupData();
 
-  const dataIsValid = 1 <= username.length && username.length <= 20;
+  const dataIsValid = 1 <= username.length && username.length <= 10;
 
   const launchImageLib = () => {
     launchImageLibrary({mediaType: 'photo'}, res => {
@@ -72,12 +73,12 @@ const SignupDetail = () => {
           console.log(err);
         });
     } else {
-      setErrorMessage('유저의 이름을 1글자 이상 20글자 이하로 작성해주세요');
+      setErrorMessage('유저의 이름을 1글자 이상 10글자 이하로 작성해주세요');
     }
   };
 
   return (
-    <BasicContainer paddingTop={140}>
+    <BasicContainer paddingTop={screenSize.getVH(16)}>
       <BasicHeader text={'세부정보 입력'} hideArrowBtn />
       <View>
         <Image style={styles.profile} src={profile} />
@@ -86,7 +87,7 @@ const SignupDetail = () => {
       <BasicInput
         Icon={LoginIdIcon}
         value={username}
-        marginTop={50}
+        marginTop={screenSize.getVH(5.5)}
         placeHolder={'닉네임을 입력해주세요'}
         onChange={e => {
           onDataChanage('username', e.nativeEvent.text);
@@ -96,7 +97,7 @@ const SignupDetail = () => {
 
       <Button
         text={'회원가입'}
-        marginTop={300}
+        marginTop={screenSize.getVH(36.7)}
         size={'large'}
         onPress={onSignupBtnPress}
       />
@@ -106,15 +107,15 @@ const SignupDetail = () => {
 
 const styles = StyleSheet.create({
   profile: {
-    width: 150,
-    height: 150,
+    width: screenSize.getVH(16.5),
+    height: screenSize.getVH(16.5),
     borderRadius: 75,
-    marginTop: 50,
+    marginTop: screenSize.getVH(5.5),
   },
   editBtn: {
     position: 'absolute',
-    bottom: 5,
-    right: 5,
+    bottom: screenSize.getVH(0.5),
+    right: screenSize.getVH(0.5),
   },
 });
 
