@@ -78,7 +78,7 @@ const SignupDetail = () => {
   };
 
   return (
-    <BasicContainer paddingTop={screenSize.getVH(16)}>
+    <BasicContainer paddingTop={screenSize.getVH(12.35)}>
       <BasicHeader text={'세부정보 입력'} hideArrowBtn />
       <View>
         <Image style={styles.profile} src={profile} />
@@ -97,7 +97,7 @@ const SignupDetail = () => {
 
       <Button
         text={'회원가입'}
-        marginTop={screenSize.getVH(36.7)}
+        marginTop={screenSize.getVH(37.7)}
         size={'large'}
         onPress={onSignupBtnPress}
       />
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     width: screenSize.getVH(16.5),
     height: screenSize.getVH(16.5),
     borderRadius: 75,
-    marginTop: screenSize.getVH(5.5),
+    marginTop: screenSize.getVH(2.2),
   },
   editBtn: {
     position: 'absolute',

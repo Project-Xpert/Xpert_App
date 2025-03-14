@@ -72,7 +72,7 @@ const Login = () => {
   };
 
   return (
-    <BasicContainer paddingTop={screenSize.getVH(18.7)}>
+    <BasicContainer paddingTop={screenSize.getVH(12.35)}>
       <BasicHeader text={'로그인'} />
       <Text style={styles.title}>
         <Text style={styles.highlightedTitle}>투자의 고수가 </Text>

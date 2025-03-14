@@ -1,4 +1,4 @@
-import {Dimensions, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import LeftArrowBtn from '../../../assets/image/icon/button/leftArrowBtn.svg';
 import {Text} from 'react-native-gesture-handler';
 import {fontStyle} from '../../../assets/styles/fontStyles';
@@ -38,11 +38,11 @@ const styles = StyleSheet.create({
     width: screenSize.width,
     height: screenSize.getVH(7.7),
     position: 'absolute',
-    top: screenSize.getVH(6.6),
+    top: 0,
   },
   arrowBtn: {
     position: 'absolute',
-    left: screenSize.getVW(11.6),
+    left: screenSize.getVW(10),
   },
   text: {
     fontFamily: fontStyle.SUIT.SemiBold,

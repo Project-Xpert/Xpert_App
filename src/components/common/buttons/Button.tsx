@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: screenSize.getVW(82),
+    width: screenSize.getVW(84),
     borderRadius: 15,
   },
   text: {

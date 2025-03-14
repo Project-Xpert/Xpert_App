@@ -56,7 +56,7 @@ const Landing = () => {
           />
         </Swiper>
       </View>
-      <IndexBars activeIdx={index} marginTop={screenSize.getVH(14.4)} />
+      <IndexBars activeIdx={index} marginTop={screenSize.getVH(11.4)} />
       <Button
         text={'시작하기'}
         marginTop={screenSize.getVH(3.5)}
@@ -70,7 +70,7 @@ const Landing = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: screenSize.getVH(11),
+    paddingTop: screenSize.getVH(9.5),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colorStyles.defaultWhite,

@@ -65,7 +65,7 @@ const BasicInput = (props: InputProps) => {
 
 const styles = StyleSheet.create({
   input: {
-    width: screenSize.getVW(82),
+    width: screenSize.getVW(84),
     height: screenSize.getVH(5.5),
     fontFamily: fontStyle.SUIT.Medium,
     fontSize: screenSize.getVH(1.6),

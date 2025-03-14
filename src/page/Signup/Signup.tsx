@@ -107,7 +107,7 @@ const Signup = () => {
   };
 
   return (
-    <BasicContainer paddingTop={screenSize.getVH(18.7)}>
+    <BasicContainer paddingTop={screenSize.getVH(12.35)}>
       <BasicHeader text={'회원가입'} />
 
       <Text style={styles.title}>
@@ -151,7 +151,7 @@ const Signup = () => {
 
       <Button
         text={'인증코드 확인'}
-        marginTop={screenSize.getVH(22)}
+        marginTop={screenSize.getVH(21.5)}
         size={'large'}
         onPress={signup}
       />

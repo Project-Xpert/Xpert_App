@@ -130,7 +130,7 @@ const EmailCode = () => {
   };
 
   return (
-    <BasicContainer paddingTop={155}>
+    <BasicContainer paddingTop={screenSize.getVH(12.35)}>
       <BasicHeader text={'이메일 인증'} />
       <Text style={styles.description}>
         {'선택하신 방법으로 인증코드가 발송되었습니다.' +
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     color: colorStyles.descriptionGray,
   },
   inputContainer: {
-    width: screenSize.getVW(82),
+    width: screenSize.getVW(84),
     height: screenSize.getVH(8.3),
     marginTop: screenSize.getVH(3.8),
     flexDirection: 'row',
