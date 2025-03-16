@@ -9,6 +9,7 @@ import EmailCode from './src/page/Signup/EmailCode';
 import SignupDetail from './src/page/Signup/SignupDetail';
 import {SafeAreaView} from 'react-native';
 import {colorStyles} from './src/assets/styles/color';
+import InvestHome from './src/page/Invest/InvestHome';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
           <Stack.Screen name="EmailCode" component={EmailCode} />
           <Stack.Screen name="SignupDetail" component={SignupDetail} />
           <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Invest" component={InvestHome} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

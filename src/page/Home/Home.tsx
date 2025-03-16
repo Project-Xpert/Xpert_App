@@ -27,10 +27,12 @@ const Home = () => {
                 안녕하세요! 오늘도 투자를 해봅시다!
               </Text>
             </View>
-            <Image src={env.BASE_PROFILE_URL} style={styles.profile} />
+            <TouchableOpacity>
+              <Image src={env.BASE_PROFILE_URL} style={styles.profile} />
+            </TouchableOpacity>
           </View>
 
-          <TouchableOpacity
+          <View
             style={{...styles.widthInfoBox, marginTop: screenSize.getVH(3.8)}}>
             <CoinImg
               width={screenSize.getVH(7.7)}
@@ -42,7 +44,7 @@ const Home = () => {
               </Text>
               <Text style={styles.bigText}>200,000원 이네요</Text>
             </View>
-          </TouchableOpacity>
+          </View>
           <TouchableOpacity
             style={{...styles.widthInfoBox, marginTop: screenSize.getVH(1.6)}}>
             <TalkImg
@@ -88,7 +90,9 @@ const Home = () => {
 
           <View style={styles.rankConatiner}>
             {[1, 2, 3].map(idx => {
-              return <FriendRank rank={idx} name={'오송주'} money={190} />;
+              return (
+                <FriendRank key={idx} rank={idx} name={'오송주'} money={190} />
+              );
             })}
             <View style={styles.friendRankMoveDescription}>
               <TouchableOpacity>

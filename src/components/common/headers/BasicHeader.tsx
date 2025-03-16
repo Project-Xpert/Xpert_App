@@ -22,7 +22,7 @@ const BasicHeader = (props: HeaderProps) => {
     <View style={styles.container}>
       {!props.hideArrowBtn && (
         <TouchableOpacity style={styles.arrowBtn} onPress={onArrowPress}>
-          <LeftArrowBtn />
+          <LeftArrowBtn width={screenSize.getVW(2.8)} />
         </TouchableOpacity>
       )}
       <Text style={styles.text}>{props.text}</Text>
