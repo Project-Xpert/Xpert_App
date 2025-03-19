@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, View} from 'react-native';
+import {Animated, StyleSheet, View} from 'react-native';
 import {screenSize} from '../../assets/styles/screenSize';
 import BasicContainer from '../../components/common/BasicContainer';
 import BottomNav from '../../components/common/BottomNav';
@@ -10,54 +10,106 @@ import StockHome from './stock/StockHome';
 import BondHome from './bond/BondHome';
 import GoldHome from './gold/GoldHome';
 import FXHome from './FX/FXHome';
-import Swiper from 'react-native-swiper';
+import useInvestNavData from '../../data/investNavData';
+
+const getPage = (
+  pageName: 'account' | 'stock' | 'bond' | 'FX' | 'gold',
+  activeAnim?: boolean,
+) => {
+  if (pageName === 'account') {
+    return <AccountHome />;
+  } else if (pageName === 'stock') {
+    return <StockHome />;
+  } else if (pageName === 'bond') {
+    return <BondHome />;
+  } else if (pageName === 'FX') {
+    return <FXHome />;
+  } else if (pageName === 'gold') {
+    return <GoldHome />;
+  }
+};
 
 const InvestHome = () => {
-  const swiperRef = useRef<ScrollView>(null);
+  const translateX = useRef(new Animated.Value(0)).current;
+  const nextPageTranslateX = useRef(new Animated.Value(0)).current;
+  const nextPageOpacity = useRef(new Animated.Value(0)).current;
+  const {lastPage, setData} = useInvestNavData();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState<
     'account' | 'stock' | 'bond' | 'FX' | 'gold'
-  >('account');
+  >(lastPage);
+  const [nextPage, setNextPage] = useState<
+    'account' | 'stock' | 'bond' | 'FX' | 'gold'
+  >(lastPage);
 
   useEffect(() => {
-    const pages = ['account', 'stock', 'bond', 'FX', 'gold'];
-
-    console.log(pages.indexOf(currentPage));
-    if (swiperRef.current) {
-      swiperRef.current.scrollTo({
-        x:
-          pages.indexOf(currentPage) *
-          (screenSize.width - screenSize.getVW(9.3 * 2)),
-        animated: true,
-      });
+    if (isLoading) {
+      setIsLoading(false);
+      return;
     }
-  }, [currentPage]);
+
+    setData({lastPage: nextPage});
+    const pages = ['account', 'stock', 'bond', 'FX', 'gold'];
+    const isLeftOfCurrentPage =
+      pages.indexOf(nextPage) < pages.indexOf(currentPage);
+
+    nextPageTranslateX.setValue(isLeftOfCurrentPage ? -400 : 400);
+    nextPageOpacity.setValue(1);
+
+    Animated.parallel([
+      Animated.timing(translateX, {
+        toValue: 400 * (isLeftOfCurrentPage ? 1 : -1),
+        duration: 350,
+        useNativeDriver: true,
+      }),
+      Animated.timing(nextPageTranslateX, {
+        toValue: 0,
+        duration: 350,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setCurrentPage(nextPage);
+      setTimeout(() => {
+        translateX.setValue(0);
+        nextPageOpacity.setValue(0);
+      }, 0);
+    });
+  }, [nextPage]);
 
   const onPress = (moveTo: 'account' | 'stock' | 'bond' | 'FX' | 'gold') => {
-    setCurrentPage(moveTo);
+    setNextPage(moveTo);
   };
 
   return (
     <BasicContainer paddingTop={screenSize.getVH(9.3)}>
-      <BasicHeader text={'투자하기'} />
-      <InvestNav currentPage={currentPage} onPress={onPress} />
-      <ScrollView
-        ref={swiperRef}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        scrollEnabled={false}>
-        <AccountHome />
-        <StockHome />
-        <BondHome />
-        <FXHome />
-        <GoldHome />
-      </ScrollView>
+      <BasicHeader text={'투자하기'} hideArrowBtn />
+      <InvestNav currentPage={nextPage} onPress={onPress} />
+      <View style={{width: screenSize.width - screenSize.getVW(9 * 2)}}>
+        <Animated.View style={{transform: [{translateX}], ...styles.container}}>
+          {getPage(currentPage)}
+        </Animated.View>
+        <Animated.View
+          style={{
+            transform: [{translateX: nextPageTranslateX}],
+            opacity: nextPageOpacity,
+            ...styles.container,
+          }}>
+          {getPage(nextPage)}
+        </Animated.View>
+      </View>
       <BottomNav pageName={'Invest'} />
     </BasicContainer>
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    alignItems: 'center',
+    width: screenSize.width - screenSize.getVW(9 * 2),
+    height: screenSize.getVH(63),
+  },
+});
 
 export default InvestHome;

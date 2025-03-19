@@ -1,7 +1,7 @@
 import {StyleSheet, View} from 'react-native';
 import UnderBarBtn from '../common/buttons/UnderBarBtn';
 import {screenSize} from '../../assets/styles/screenSize';
-import {useState} from 'react';
+import {colorStyles} from '../../assets/styles/color';
 
 interface NavProps {
   currentPage: 'account' | 'stock' | 'bond' | 'FX' | 'gold';
@@ -44,10 +44,13 @@ const InvestNav = (props: NavProps) => {
 
 const styles = StyleSheet.create({
   topNavigatorConatiner: {
+    marginBottom: screenSize.getVH(2.2),
     width: screenSize.getVW(70),
     flexDirection: 'row',
     alignItems: 'center',
+    zIndex: 100,
     justifyContent: 'space-between',
+    backgroundColor: colorStyles.defaultWhite,
   },
 });
 

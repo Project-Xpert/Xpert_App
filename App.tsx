@@ -27,8 +27,16 @@ const App = () => {
           <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="EmailCode" component={EmailCode} />
           <Stack.Screen name="SignupDetail" component={SignupDetail} />
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="Invest" component={InvestHome} />
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{animation: 'fade'}}
+          />
+          <Stack.Screen
+            name="Invest"
+            component={InvestHome}
+            options={{animation: 'fade'}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

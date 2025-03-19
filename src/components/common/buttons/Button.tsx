@@ -36,7 +36,7 @@ const Button = (props: ButtonProps) => {
     <TouchableOpacity
       style={containerStyle}
       onPress={onPress}
-      activeOpacity={props.disable ? 1 : 0}>
+      activeOpacity={props.disable ? 1 : 0.5}>
       <Text style={styles.text}>{props.text}</Text>
     </TouchableOpacity>
   );
@@ -46,12 +46,11 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: screenSize.getVW(84),
+    width: screenSize.width - screenSize.getVW(9.3 * 2),
     borderRadius: 15,
   },
   text: {
-    fontSize: 20,
-    lineHeight: 20,
+    fontSize: screenSize.getVH(2.2),
     fontFamily: fontStyle.SUIT.Bold,
     color: colorStyles.defaultWhite,
   },

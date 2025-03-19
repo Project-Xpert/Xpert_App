@@ -59,7 +59,7 @@ const UnderBarBtn = (props: btnProps) => {
   return (
     <TouchableOpacity
       style={styles.container}
-      activeOpacity={1}
+      activeOpacity={0}
       onPress={onPress}>
       <Animated.Text
         style={textStyle}
