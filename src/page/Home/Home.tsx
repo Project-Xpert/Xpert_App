@@ -81,7 +81,7 @@ const Home = () => {
                 {'AI의 투자 분석 리포트를\n투자에 활용해보세요'}
               </Text>
               <Text style={styles.heightBoxMoveDescription}>
-                {'최근 뉴스 보러 가기 >'}
+                {'분석 리포트 보러가기 >'}
               </Text>
             </TouchableOpacity>
           </View>

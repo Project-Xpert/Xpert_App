@@ -13,6 +13,9 @@ import InvestHome from './src/page/Invest/InvestHome';
 import BuyStock from './src/page/Invest/stock/BuyStock';
 import StockDetail from './src/page/Invest/stock/StockDetail';
 import BuyStockDetail from './src/page/Invest/stock/BuyStockDetail';
+import AccountDetail from './src/page/Invest/account/AccountDetail';
+import CreateAccount from './src/page/Invest/account/CreateAccount';
+import CreateAccountDetail from './src/page/Invest/account/\bCreateAccountDetail';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -40,6 +43,12 @@ const App = () => {
             component={InvestHome}
             options={{animation: 'fade'}}
           />
+          <Stack.Screen name="AccountDetail" component={AccountDetail} />
+          <Stack.Screen
+            name="CreateAccountDetail"
+            component={CreateAccountDetail}
+          />
+          <Stack.Screen name="CreateAccount" component={CreateAccount} />
           <Stack.Screen name="BuyStock" component={BuyStock} />
           <Stack.Screen name="StockDetail" component={StockDetail} />
           <Stack.Screen name="BuyStockDetail" component={BuyStockDetail} />

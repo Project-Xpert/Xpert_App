@@ -29,7 +29,7 @@ const getPage = (pageName: 'account' | 'stock' | 'bond' | 'FX' | 'gold') => {
 const InvestHome = () => {
   const translateX = useRef(new Animated.Value(0)).current;
   const nextPageTranslateX = useRef(new Animated.Value(0)).current;
-  const nextPageOpacity = useRef(new Animated.Value(-1)).current;
+  const nextPageOpacity = useRef(new Animated.Value(0)).current;
   const {lastPage, setData} = useInvestNavData();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -46,33 +46,35 @@ const InvestHome = () => {
       return;
     }
 
-    setData({lastPage: nextPage});
-    const pages = ['account', 'stock', 'bond', 'FX', 'gold'];
-    const isLeftOfCurrentPage =
-      pages.indexOf(nextPage) < pages.indexOf(currentPage);
+    setTimeout(() => {
+      setData({lastPage: nextPage});
+      const pages = ['account', 'stock', 'bond', 'FX', 'gold'];
+      const isLeftOfCurrentPage =
+        pages.indexOf(nextPage) < pages.indexOf(currentPage);
 
-    nextPageTranslateX.setValue(isLeftOfCurrentPage ? -400 : 400);
-    nextPageOpacity.setValue(1);
+      nextPageTranslateX.setValue(isLeftOfCurrentPage ? -400 : 400);
+      nextPageOpacity.setValue(1);
 
-    Animated.parallel([
-      Animated.timing(translateX, {
-        toValue: 400 * (isLeftOfCurrentPage ? 1 : -1),
-        duration: 350,
-        useNativeDriver: true,
-      }),
-      Animated.timing(nextPageTranslateX, {
-        toValue: 0,
-        duration: 350,
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      setCurrentPage(nextPage);
-      setTimeout(() => {
-        translateX.setValue(0);
-        nextPageOpacity.setValue(0);
-        nextPageTranslateX.setValue(400);
-      }, 0);
-    });
+      Animated.parallel([
+        Animated.timing(translateX, {
+          toValue: 400 * (isLeftOfCurrentPage ? 1 : -1),
+          duration: 350,
+          useNativeDriver: true,
+        }),
+        Animated.timing(nextPageTranslateX, {
+          toValue: 0,
+          duration: 350,
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        setCurrentPage(nextPage);
+        setTimeout(() => {
+          translateX.setValue(0);
+          nextPageOpacity.setValue(0);
+          nextPageTranslateX.setValue(400);
+        }, 0);
+      });
+    }, 0);
   }, [nextPage]);
 
   const onPress = (moveTo: 'account' | 'stock' | 'bond' | 'FX' | 'gold') => {

@@ -7,6 +7,7 @@ import {useEffect, useRef, useState} from 'react';
 interface btnProps {
   text: string;
   disable: boolean;
+  marginLeft?: number;
   onPress: () => void;
 }
 
@@ -58,7 +59,7 @@ const UnderBarBtn = (props: btnProps) => {
 
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={{...styles.container, marginLeft: props.marginLeft}}
       activeOpacity={0}
       onPress={onPress}>
       <Animated.Text

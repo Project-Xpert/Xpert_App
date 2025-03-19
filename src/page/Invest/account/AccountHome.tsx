@@ -4,18 +4,25 @@ import InvestHomeContainer from '../../../components/Invest/InvestHomeContainer'
 import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import CoinBagImg from '../../../assets/image/common/coinbag.svg';
-import StockDetailBtn from '../../../components/Invest/stock/StockDetailBtn';
 import Button from '../../../components/common/buttons/Button';
+import AccountDetailBtn from '../../../components/Invest/account/AccountDetailBtn';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const AccountHome = () => {
-  const onPress = () => {};
+  const navigator = useNavigation<NavigationProp<any>>();
+
+  const onPress = () => {
+    navigator.navigate('CreateAccount');
+  };
+
+  const onAccountDetailBtnPress = () => {
+    navigator.navigate('AccountDetail');
+  };
 
   return (
     <InvestHomeContainer>
       <Text style={styles.topDescription}>
-        {
-          '모의투자 특성상 연이자를 월이자로 변경하였으며,\n적금과 이자는 매월 1일에 정산됩니다.'
-        }
+        {'적금과 이자는 매월 1일에 정산됩니다.'}
       </Text>
       <View style={styles.topInfoBoxContainer}>
         <CoinBagImg
@@ -29,12 +36,24 @@ const AccountHome = () => {
       </View>
       <Text style={styles.title}>예금 통장</Text>
       <View>
-        <StockDetailBtn />
-        <StockDetailBtn />
+        <AccountDetailBtn
+          name={'신한은행 예금통장'}
+          subDescription={'예금액 - 100,000'}
+          onPress={onAccountDetailBtnPress}
+        />
+        <AccountDetailBtn
+          name={'신한은행 예금통장'}
+          subDescription={'예금액 - 100,000'}
+          onPress={onAccountDetailBtnPress}
+        />
       </View>
       <Text style={styles.title}>적금 통장</Text>
       <View>
-        <StockDetailBtn />
+        <AccountDetailBtn
+          name={'신한은행 주택청약 적금'}
+          subDescription={'총 적금액 - 100,000'}
+          onPress={onAccountDetailBtnPress}
+        />
       </View>
       <Button
         text={'새로운 예적금 통장 만들러 가기'}
