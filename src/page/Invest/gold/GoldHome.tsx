@@ -10,7 +10,7 @@ const GoldHome = () => {
   const onClick = () => {};
 
   return (
-    <InvestHomeContainer disableScrollView>
+    <InvestHomeContainer>
       <Text style={styles.topDescription}>
         {'한국 공공 데이터 포털 기준의 금 시세입니다.\n' +
           '한국 데이터 포털 특성상 변동 데이터가 누락되는 날도\n' +
@@ -23,9 +23,10 @@ const GoldHome = () => {
       <Text style={styles.basicText}>
         어제보다 <Text style={styles.redHighlight}>약 1.3% 상승</Text> 했어요
       </Text>
+
       <Button
         text={'금 사고팔러 가기'}
-        marginTop={screenSize.getVH(14.4)}
+        marginTop={screenSize.getVH(11.25)}
         size={'mid'}
         onPress={onClick}
       />

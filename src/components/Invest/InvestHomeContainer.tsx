@@ -5,28 +5,18 @@ import {ScrollView} from 'react-native-gesture-handler';
 
 interface ContainerProps {
   children: ReactNode;
-  disableScrollView?: boolean;
 }
 
 const InvestHomeContainer = (props: ContainerProps) => {
   return (
     <View>
-      {!props.disableScrollView && (
-        <ScrollView style={{width: screenSize.width}}>
-          <View style={styles.container}>
-            <View style={{width: screenSize.width - screenSize.getVW(9.8) * 2}}>
-              {props.children}
-            </View>
-          </View>
-        </ScrollView>
-      )}
-      {props.disableScrollView && (
+      <ScrollView style={{width: screenSize.width}}>
         <View style={styles.container}>
           <View style={{width: screenSize.width - screenSize.getVW(9.8) * 2}}>
             {props.children}
           </View>
         </View>
-      )}
+      </ScrollView>
     </View>
   );
 };

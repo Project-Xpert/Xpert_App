@@ -6,9 +6,18 @@ import {fontStyle} from '../../../assets/styles/fontStyles';
 import CoinBagImg from '../../../assets/image/common/coinbag.svg';
 import StockDetailBtn from '../../../components/Invest/stock/StockDetailBtn';
 import Button from '../../../components/common/buttons/Button';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const StockHome = () => {
-  const onPress = () => {};
+  const navigator = useNavigation<NavigationProp<any>>();
+
+  const onStockDetailBtnPress = () => {
+    navigator.navigate('StockDetail');
+  };
+
+  const onPress = () => {
+    navigator.navigate('BuyStock');
+  };
 
   return (
     <InvestHomeContainer>
@@ -28,13 +37,13 @@ const StockHome = () => {
 
       <Text style={styles.title}>현재 가진 해외 주식</Text>
       <View>
-        <StockDetailBtn />
-        <StockDetailBtn />
+        <StockDetailBtn onPress={onStockDetailBtnPress} />
+        <StockDetailBtn onPress={onStockDetailBtnPress} />
       </View>
 
       <Text style={styles.title}>현재 가진 국내 주식</Text>
       <View>
-        <StockDetailBtn />
+        <StockDetailBtn onPress={onStockDetailBtnPress} />
       </View>
 
       <Button

@@ -10,6 +10,9 @@ import SignupDetail from './src/page/Signup/SignupDetail';
 import {SafeAreaView} from 'react-native';
 import {colorStyles} from './src/assets/styles/color';
 import InvestHome from './src/page/Invest/InvestHome';
+import BuyStock from './src/page/Invest/stock/BuyStock';
+import StockDetail from './src/page/Invest/stock/StockDetail';
+import BuyStockDetail from './src/page/Invest/stock/BuyStockDetail';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -37,6 +40,9 @@ const App = () => {
             component={InvestHome}
             options={{animation: 'fade'}}
           />
+          <Stack.Screen name="BuyStock" component={BuyStock} />
+          <Stack.Screen name="StockDetail" component={StockDetail} />
+          <Stack.Screen name="BuyStockDetail" component={BuyStockDetail} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

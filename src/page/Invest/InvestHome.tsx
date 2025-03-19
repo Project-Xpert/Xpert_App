@@ -12,10 +12,7 @@ import GoldHome from './gold/GoldHome';
 import FXHome from './FX/FXHome';
 import useInvestNavData from '../../data/investNavData';
 
-const getPage = (
-  pageName: 'account' | 'stock' | 'bond' | 'FX' | 'gold',
-  activeAnim?: boolean,
-) => {
+const getPage = (pageName: 'account' | 'stock' | 'bond' | 'FX' | 'gold') => {
   if (pageName === 'account') {
     return <AccountHome />;
   } else if (pageName === 'stock') {
@@ -32,7 +29,7 @@ const getPage = (
 const InvestHome = () => {
   const translateX = useRef(new Animated.Value(0)).current;
   const nextPageTranslateX = useRef(new Animated.Value(0)).current;
-  const nextPageOpacity = useRef(new Animated.Value(0)).current;
+  const nextPageOpacity = useRef(new Animated.Value(-1)).current;
   const {lastPage, setData} = useInvestNavData();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -73,6 +70,7 @@ const InvestHome = () => {
       setTimeout(() => {
         translateX.setValue(0);
         nextPageOpacity.setValue(0);
+        nextPageTranslateX.setValue(400);
       }, 0);
     });
   }, [nextPage]);
@@ -108,7 +106,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     width: screenSize.width - screenSize.getVW(9 * 2),
-    height: screenSize.getVH(63),
+    height: screenSize.getVH(65),
   },
 });
 

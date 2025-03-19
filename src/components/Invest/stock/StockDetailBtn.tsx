@@ -4,9 +4,13 @@ import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import RightArrowBtn from '../../../assets/image/icon/button/rightArrowBtn.svg';
 
-const StockDetailBtn = () => {
+interface BtnProps {
+  onPress: () => void;
+}
+
+const StockDetailBtn = (props: BtnProps) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={props.onPress}>
       <View style={styles.imgContainer}>
         <Image
           style={styles.logo}

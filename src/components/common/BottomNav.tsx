@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     backgroundColor: colorStyles.defaultWhite,
     width: screenSize.width,
-    height: screenSize.getVH(11.1),
+    height: screenSize.getVH(9),
     paddingHorizontal: screenSize.getVW(10.7),
   },
 });

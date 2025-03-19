@@ -1,13 +1,11 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {colorStyles} from '../../../assets/styles/color';
 import {screenSize} from '../../../assets/styles/screenSize';
 import {LineChart} from 'react-native-gifted-charts';
 import {fontStyle} from '../../../assets/styles/fontStyles';
-
-interface data {
-  xLabelValue: string;
-  value: number;
-}
+import GraphPeriodBtn from './GraphPeriodBtn';
+import {useState} from 'react';
+import {ChartStyle} from '../../../assets/styles/chartStyle';
 
 const mockGoldPriceData = {
   data: [
@@ -49,82 +47,45 @@ const getMaxMinVaule = () => {
 };
 
 const Graph = () => {
+  const [period, setPeriod] = useState<1 | 6 | 12 | 36>(1);
   const {maxValue, minValue} = getMaxMinVaule();
   const step = Math.ceil((maxValue - minValue) / 4);
 
-  const customYAxisLabels = Array.from(
-    {length: Math.ceil((maxValue - minValue) / step) + 3},
-    (_, i) => (minValue - step + i * step).toString(),
-  );
-
-  const getGraphData = (minVaule: number, stepValue: number) => {
-    const data = mockGoldPriceData.data.map(v => ({
-      value: v.value - minVaule + stepValue,
-      xLabelValue: v.xLabelValue,
-    }));
-
-    return data;
-  };
-
-  const pointerConfig = {
-    pointerStripColor: 'lightgray',
-    pointerStripWidth: screenSize.getVW(0.4),
-    pointerColor: 'lightgray',
-    radius: screenSize.getVH(0.5),
-    pointerLabelWidth: screenSize.getVW(42),
-    pointerLabelHeight: screenSize.getVH(9.9),
-    activatePointersOnLongPress: true,
-    autoAdjustPointerLabelPosition: false,
-    pointerLabelComponent: (items: data[]) => {
-      const price = items[0].value + minValue - step;
-      const index = mockGoldPriceData.data.findIndex(
-        item => item.xLabelValue === items[0].xLabelValue,
-      );
-
-      return (
-        <View
-          style={{
-            ...styles.graphLabel,
-            marginLeft: screenSize.getVW(
-              index < mockGoldPriceData.data.length / 2 ? 4.5 : -22.5,
-            ),
-          }}>
-          <Text style={styles.basicText}>{items[0].xLabelValue}</Text>
-          <Text style={styles.basicText}>{'$' + price + '.0'}</Text>
-        </View>
-      );
-    },
+  const onPeriodBtnPress = (newPeriod: 1 | 6 | 12 | 36) => {
+    setPeriod(newPeriod);
   };
 
   return (
     <View style={styles.graphContainer}>
+      <View style={styles.graphBtnContainer}>
+        <GraphPeriodBtn
+          disable={period !== 36}
+          period={'3년'}
+          onPress={() => onPeriodBtnPress(36)}
+        />
+        <GraphPeriodBtn
+          disable={period !== 12}
+          period={'1년'}
+          onPress={() => onPeriodBtnPress(12)}
+        />
+        <GraphPeriodBtn
+          disable={period !== 6}
+          period={'6개월'}
+          onPress={() => onPeriodBtnPress(6)}
+        />
+        <GraphPeriodBtn
+          disable={period !== 1}
+          period={'1개월'}
+          onPress={() => onPeriodBtnPress(1)}
+        />
+      </View>
       <LineChart
-        areaChart
-        disableScroll
-        pointerConfig={pointerConfig}
-        data={getGraphData(minValue, step)}
-        width={screenSize.getVW(70)}
-        height={screenSize.getVH(20)}
-        thickness={screenSize.getVH(0.2)}
-        color="#FF8808"
-        startFillColor="#FFC799"
-        endFillColor1="#FFF7EF"
-        startOpacity1={0.7}
-        endOpacity={0.8}
-        hideDataPoints
-        rulesType="solid"
-        yAxisTextStyle={{
-          fontSize: screenSize.getVH(1.2),
-          color: colorStyles.descriptionGray,
-        }}
-        yAxisColor={colorStyles.defaultWhite}
-        yAxisLabelTexts={customYAxisLabels}
-        xAxisColor={colorStyles.descriptionGray}
-        initialSpacing={0}
-        endSpacing={0}
-        stepValue={step}
-        maxValue={maxValue - minValue + step * 2}
-        spacing={screenSize.getVW(69.5) / (mockGoldPriceData.data.length - 1)}
+        {...ChartStyle.getLinChartConfigAndStyle(
+          maxValue,
+          minValue,
+          step,
+          mockGoldPriceData.data,
+        )}
       />
     </View>
   );
@@ -132,9 +93,14 @@ const Graph = () => {
 
 const styles = StyleSheet.create({
   graphContainer: {
-    marginRight: screenSize.getVW(20),
     width: screenSize.getVW(83.3),
-    height: screenSize.getVH(22.5),
+  },
+  graphBtnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingRight: screenSize.getVW(3),
+    width: screenSize.getVW(83.3),
+    marginBottom: screenSize.getVH(1.5),
   },
   graphLabel: {
     height: screenSize.getVH(5.5),
