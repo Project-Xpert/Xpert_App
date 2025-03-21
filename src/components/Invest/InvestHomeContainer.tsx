@@ -1,5 +1,5 @@
 import {ReactNode} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {screenSize} from '../../assets/styles/screenSize';
 import {ScrollView} from 'react-native-gesture-handler';
 
@@ -11,11 +11,11 @@ const InvestHomeContainer = (props: ContainerProps) => {
   return (
     <View>
       <ScrollView style={{width: screenSize.width}}>
-        <View style={styles.container}>
+        <TouchableOpacity style={styles.container} activeOpacity={1}>
           <View style={{width: screenSize.width - screenSize.getVW(9.8) * 2}}>
             {props.children}
           </View>
-        </View>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );

@@ -24,9 +24,6 @@ const BasicContainer = (props: ContainerProps) => {
 };
 
 const styles = StyleSheet.create({
-  pressable: {
-    flex: 1,
-  },
   container: {
     flex: 1,
     paddingHorizontal: screenSize.getVW(9.3),
