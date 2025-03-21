@@ -7,7 +7,6 @@ interface NewsProps {
   imageLink?: string;
   heading: string;
   companyName: string;
-  time: string;
   onPress: () => void;
 }
 
@@ -35,8 +34,6 @@ const BasicNews = (prop: NewsProps) => {
         </Text>
         <View style={styles.descriptionContainer}>
           <Text style={styles.descrption}>{prop.companyName}</Text>
-          <View style={styles.separationCircle} />
-          <Text style={styles.descrption}>{prop.time}</Text>
         </View>
       </View>
     </TouchableOpacity>

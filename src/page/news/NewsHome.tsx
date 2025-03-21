@@ -30,7 +30,6 @@ interface DefaultNews {
   link: string;
   title: string;
   company: string;
-  time: string;
 }
 
 const NewsHome = () => {
@@ -117,7 +116,6 @@ const NewsHome = () => {
                     imageLink={element.imageUrl}
                     heading={element.title}
                     companyName={element.company}
-                    time={element.time}
                     onPress={() => onNewsDetailPress(element.link)}
                   />
                 );
