@@ -10,7 +10,7 @@ import {screenSize} from '../../assets/styles/screenSize';
 import BasicContainer from '../../components/common/BasicContainer';
 import BasicHeader from '../../components/common/headers/BasicHeader';
 import {fontStyle} from '../../assets/styles/fontStyles';
-import {useEffect, useState} from 'react';
+import {ReactNode, useEffect, useState} from 'react';
 import {colorStyles} from '../../assets/styles/color';
 import BottomNav from '../../components/common/BottomNav';
 import {NewsAPI} from '../../api/news';
@@ -27,21 +27,84 @@ type NewsDetailProps = {
   route: NewsDetailRouteProp;
 };
 
+enum TextStyleEnum {
+  title = 'title',
+  body = 'body',
+  imgDescription = 'imgDescription',
+}
+
+const getTextStyle = (styleType: TextStyleEnum) => {
+  let textStyle = {};
+
+  if (styleType === TextStyleEnum.title) {
+    textStyle = titleStyles.text;
+  } else if (styleType === TextStyleEnum.body) {
+    textStyle = bodyStyles.text;
+  } else if (styleType === TextStyleEnum.imgDescription) {
+    textStyle = newsImgStyles.description;
+  }
+
+  return textStyle;
+};
+
 const NewsDetail = ({route}: NewsDetailProps) => {
   const {link} = route.params;
-
   const [data, setData] = useState({
-    imageUrl: '',
     title: '',
     company: '',
     time: '',
     contents: '',
+    imageData: [{link: '', description: ''}],
   });
+
+  const getImage = (): ReactNode => {
+    const imageDatum = data.imageData.shift();
+
+    if (imageDatum) {
+      return (
+        <View key={imageDatum.link} style={newsImgStyles.newsImgContainer}>
+          <Image style={newsImgStyles.newsImg} src={imageDatum?.link} />
+          <View style={newsImgStyles.descriptionContainer}>
+            {splitSentenceToWord(
+              imageDatum.description,
+              imageDatum.link,
+              TextStyleEnum.imgDescription,
+            )}
+          </View>
+        </View>
+      );
+    } else {
+      return <View></View>;
+    }
+  };
+
+  const splitSentenceToWord = (
+    sentence: string,
+    keyPrefix: string | number,
+    styleType: TextStyleEnum,
+  ): ReactNode[] => {
+    const results: ReactNode[] = [];
+    const textStyle = getTextStyle(styleType);
+
+    // 단어가 img_section이면 이미지 view로 대체, 아니면 일반 텍스트로 출력
+    sentence.split(' ').map((word, idx) => {
+      if (word === 'img_section') {
+        results.push(getImage());
+      } else {
+        results.push(
+          <Text key={`${keyPrefix}-${idx}`} style={textStyle}>
+            {word}{' '}
+          </Text>,
+        );
+      }
+    });
+
+    return results;
+  };
 
   useEffect(() => {
     NewsAPI.getNewsDetail(link)
       .then(response => {
-        console.log(response);
         setData(response.data);
       })
       .catch(e => {
@@ -53,43 +116,25 @@ const NewsDetail = ({route}: NewsDetailProps) => {
     <BasicContainer paddingTop={screenSize.getVH(9.3)}>
       <BasicHeader text={'경제 뉴스'} />
 
-      <View style={styles.scrollView}>
+      <View style={containerStyles.scrollView}>
         <ScrollView>
           <TouchableOpacity style={{alignItems: 'center'}} activeOpacity={1}>
-            <View style={styles.newsContainer}>
-              <View style={styles.titleContainer}>
-                {data.title.split(' ').map((text, idx) => {
-                  return (
-                    <Text key={idx} style={styles.title}>
-                      {text}{' '}
-                    </Text>
-                  );
-                })}
+            <View style={containerStyles.newsContainer}>
+              <View style={titleStyles.titleContainer}>
+                {splitSentenceToWord(data.title, 'title', TextStyleEnum.title)}
               </View>
 
-              <View style={styles.descriptionContainer}>
-                <Text style={styles.descrption}>{data.company}</Text>
-                <View style={styles.separationCircle} />
-                <Text style={styles.descrption}>{data.time}</Text>
+              <View style={descriptionStyles.descriptionContainer}>
+                <Text style={descriptionStyles.descrption}>{data.company}</Text>
+                <View style={descriptionStyles.separationCircle} />
+                <Text style={descriptionStyles.descrption}>{data.time}</Text>
               </View>
 
-              {data.imageUrl != '' && (
-                <Image src={data.imageUrl} style={styles.mainImg} />
-              )}
-
-              <View style={styles.newsBodyContainer}>
-                {data.contents.split('\n').map((texts, idx1) => {
-                  const textNodes = texts.split(' ').map((text, idx2) => {
-                    return (
-                      <Text key={`${idx1}-${idx2}`} style={styles.bodyText}>
-                        {text}{' '}
-                      </Text>
-                    );
-                  });
-
+              <View style={bodyStyles.newsBodyContainer}>
+                {data.contents.split('\n').map((context, idx) => {
                   return (
-                    <View key={idx1} style={styles.bodyTextContainer}>
-                      {textNodes}
+                    <View key={idx} style={bodyStyles.textContainer}>
+                      {splitSentenceToWord(context, idx, TextStyleEnum.body)}
                     </View>
                   );
                 })}
@@ -104,11 +149,8 @@ const NewsDetail = ({route}: NewsDetailProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
+// styles
+const containerStyles = StyleSheet.create({
   scrollView: {
     width: screenSize.width,
     height: screenSize.getVH(70),
@@ -116,19 +158,26 @@ const styles = StyleSheet.create({
   newsContainer: {
     width: screenSize.getVW(82),
   },
-  title: {
+});
+
+const titleStyles = StyleSheet.create({
+  titleContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  text: {
     lineHeight: screenSize.getVH(3.3),
     fontSize: screenSize.getVH(2.7),
     fontFamily: fontStyle.SUIT.Bold,
     color: colorStyles.basicText,
   },
+});
+
+const descriptionStyles = StyleSheet.create({
   descriptionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: screenSize.getVH(1.1),
-  },
-  newsBodyContainer: {
-    marginTop: screenSize.getVH(4.5),
   },
   descrption: {
     color: colorStyles.descriptionGray,
@@ -142,18 +191,45 @@ const styles = StyleSheet.create({
     backgroundColor: colorStyles.descriptionGray,
     marginHorizontal: screenSize.getVH(0.6),
   },
-  mainImg: {
+});
+
+const newsImgStyles = StyleSheet.create({
+  newsImgContainer: {
     marginTop: screenSize.getVH(2.2),
+    marginBottom: screenSize.getVH(2.2),
+    width: screenSize.getVW(83.3),
+    alignItems: 'center',
+  },
+  newsImg: {
     width: screenSize.getVW(83.3),
     height: screenSize.getVH(24.4),
     borderRadius: screenSize.getVH(1.6),
+    resizeMode: 'contain',
   },
-  bodyTextContainer: {
+  descriptionContainer: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: screenSize.getVW(75),
+  },
+  description: {
+    marginTop: screenSize.getVH(0.5),
+    fontSize: screenSize.getVH(1.4),
+    fontFamily: fontStyle.SUIT.Medium,
+    color: colorStyles.descriptionGray,
+  },
+});
+
+const bodyStyles = StyleSheet.create({
+  newsBodyContainer: {
+    marginTop: screenSize.getVH(4.5),
+  },
+  textContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: screenSize.getVW(80),
   },
-  bodyText: {
+  text: {
     color: colorStyles.basicText,
     fontSize: screenSize.getVH(1.6),
   },

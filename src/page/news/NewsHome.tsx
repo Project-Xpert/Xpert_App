@@ -59,9 +59,7 @@ const NewsHome = () => {
   };
 
   return (
-    <BasicContainer paddingTop={screenSize.getVH(9.3)}>
-      <BasicHeader text={'경제 뉴스'} hideArrowBtn />
-
+    <BasicContainer paddingTop={screenSize.getVH(0)}>
       <View style={styles.newsScrollView}>
         <ScrollView
           refreshControl={
@@ -70,6 +68,8 @@ const NewsHome = () => {
               onRefresh={() => setIsRefreshing(true)}
             />
           }>
+          <BasicHeader text={'경제 뉴스'} hideArrowBtn />
+
           <TouchableOpacity style={styles.contentContainer} activeOpacity={1}>
             <Text style={styles.topDescription}>
               {
@@ -78,11 +78,7 @@ const NewsHome = () => {
             </Text>
             <Text style={styles.title}>헤드라인</Text>
             <View style={styles.headlineScrollView}>
-              <Swiper
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                showsPagination={false}
-                loop={false}>
+              <Swiper horizontal showsPagination={false} loop={true}>
                 {data.headlines.map((headline, idx) => {
                   return (
                     <HeadlineNews
@@ -153,10 +149,11 @@ const styles = StyleSheet.create({
     height: screenSize.getVH(33.5),
   },
   newsScrollView: {
-    height: screenSize.getVH(70),
+    height: screenSize.getVH(79.3),
     width: screenSize.width,
   },
   contentContainer: {
+    marginTop: screenSize.getVH(9.3),
     width: screenSize.width,
     alignItems: 'center',
   },

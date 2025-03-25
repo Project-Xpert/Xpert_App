@@ -1,4 +1,4 @@
-import {Image, Platform, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import BasicContainer from '../../components/common/BasicContainer';
 import BasicHeader from '../../components/common/headers/BasicHeader';
 import BasicInput from '../../components/common/inputs/BasicInput';
@@ -10,7 +10,6 @@ import useSignupData from '../../data/signupData';
 import {UserAPI} from '../../api/user';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
-import RNFS from 'react-native-fs';
 import env from '../../../env';
 import {screenSize} from '../../assets/styles/screenSize';
 
@@ -55,14 +54,11 @@ const SignupDetail = () => {
       console.log(JSON.stringify({userId, email, username, password}));
 
       const json = JSON.stringify({userId, email, username, password});
-      const jsonPath = `${RNFS.TemporaryDirectoryPath}/body.json`;
-      RNFS.writeFile(jsonPath, json, 'utf8');
-
-      formdata.append('body', {
-        uri: `file://${jsonPath}`,
+      const blob = new Blob([json], {
         type: 'application/json',
-        name: 'body.json',
+        lastModified: 0,
       });
+      formdata.append('body', blob);
 
       UserAPI.Signup(formdata)
         .then(response => {

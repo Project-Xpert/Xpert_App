@@ -4,6 +4,7 @@ import {Text} from 'react-native-gesture-handler';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {screenSize} from '../../../assets/styles/screenSize';
+import {colorStyles} from '../../../assets/styles/color';
 
 interface HeaderProps {
   text: string;
@@ -39,6 +40,8 @@ const styles = StyleSheet.create({
     height: screenSize.getVH(7.7),
     position: 'absolute',
     top: 0,
+    backgroundColor: colorStyles.defaultWhite,
+    zIndex: 100,
   },
   arrowBtn: {
     position: 'absolute',
