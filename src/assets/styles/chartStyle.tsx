@@ -2,6 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {colorStyles} from './color';
 import {screenSize} from './screenSize';
 import {fontStyle} from './fontStyles';
+import moneyFormatter from '../../util/moneyFormatter';
 
 interface data {
   xLabelValue: string;
@@ -16,7 +17,7 @@ const getLinChartConfigAndStyle = (
 ) => {
   const customYAxisLabels = Array.from(
     {length: Math.ceil((maxValue - minValue) / step) + 3},
-    (_, i) => (minValue - step + i * step).toString(),
+    (_, i) => moneyFormatter((minValue - step + i * step).toString()),
   );
 
   const getGraphData = (minVaule: number, stepValue: number) => {
@@ -47,10 +48,12 @@ const getLinChartConfigAndStyle = (
         <View
           style={{
             ...styles.graphLabel,
-            marginLeft: screenSize.getVW(index < data.length / 2 ? 4.5 : -22.5),
+            marginLeft: screenSize.getVW(index < data.length / 2 ? 5 : -30),
           }}>
           <Text style={styles.basicText}>{items[0].xLabelValue}</Text>
-          <Text style={styles.basicText}>{'$' + price + '.0'}</Text>
+          <Text style={styles.basicText}>
+            {moneyFormatter(String(price)) + '원'}
+          </Text>
         </View>
       );
     },
@@ -74,6 +77,7 @@ const getLinChartConfigAndStyle = (
     yAxisTextStyle: {
       fontSize: screenSize.getVH(1.2),
       color: colorStyles.descriptionGray,
+      width: screenSize.getVW(12),
     },
     yAxisColor: colorStyles.defaultWhite,
     yAxisLabelTexts: customYAxisLabels,
@@ -103,7 +107,7 @@ const styles = StyleSheet.create({
   },
   graphLabel: {
     height: screenSize.getVH(5.5),
-    width: screenSize.getVW(23.8),
+    width: screenSize.getVW(30),
     justifyContent: 'center',
     marginTop: screenSize.getVH(13.3),
     paddingHorizontal: screenSize.getVW(3.3),

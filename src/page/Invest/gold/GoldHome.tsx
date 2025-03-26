@@ -3,10 +3,46 @@ import {screenSize} from '../../../assets/styles/screenSize';
 import InvestHomeContainer from '../../../components/Invest/InvestHomeContainer';
 import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
-import Graph from '../../../components/common/graph/Graph';
 import Button from '../../../components/common/buttons/Button';
+import {useEffect, useState} from 'react';
+import {GoldAPI} from '../../../api/gold';
+import Graph from '../../../components/common/graph/Graph';
+import moneyFormatter from '../../../util/moneyFormatter';
+
+interface goldDatum {
+  mkp: string;
+  clpr: string;
+  basDt: string;
+}
 
 const GoldHome = () => {
+  const [goldData, setGoldData] = useState<goldDatum[]>([
+    {mkp: '0', clpr: '0', basDt: ''},
+    {mkp: '0', clpr: '0', basDt: ''},
+  ]);
+  const [flRate, setFlRate] = useState('0');
+
+  const calFlRate = () => {
+    let prevPriceNum = parseInt(goldData[1].clpr);
+    let currentPriceNum = parseInt(goldData[0].mkp);
+
+    setFlRate(((currentPriceNum - prevPriceNum) / 100).toFixed(2));
+  };
+
+  useEffect(() => {
+    GoldAPI.getGoldPriceData()
+      .then(response => {
+        setGoldData(response.data.goldPrices);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }, []);
+
+  useEffect(() => {
+    calFlRate();
+  }, [goldData]);
+
   const onClick = () => {};
 
   return (
@@ -16,12 +52,41 @@ const GoldHome = () => {
           '한국 데이터 포털 특성상 변동 데이터가 누락되는 날도\n' +
           '있는 점 양해 부탁드립니다.'}
       </Text>
-      <Graph />
-      <Text
-        style={styles.basicText}>{`기준가격 (원/g) : ${'135,473.01'}`}</Text>
-      <Text style={styles.basicText}>{`시가 (원/g) : ${'136,827.74'}`}</Text>
+      <Graph
+        data={goldData.map(element => ({
+          value: parseInt(element.clpr),
+          xLabelValue:
+            element.basDt.substring(0, 4) +
+            '년 ' +
+            element.basDt.substring(4, 6) +
+            '월 ' +
+            element.basDt.substring(6, 8) +
+            '일',
+        }))}
+      />
       <Text style={styles.basicText}>
-        어제보다 <Text style={styles.redHighlight}>약 1.3% 상승</Text> 했어요
+        {`기준가격 (원/kg) : ${moneyFormatter(goldData[1].clpr)}`}
+      </Text>
+      <Text style={styles.basicText}>
+        {`종가 (원/kg) : ${moneyFormatter(goldData[0].mkp)}`}
+      </Text>
+      <Text style={styles.basicText}>
+        {parseInt(flRate) == 0 ? (
+          '어제 이후로 금 값이 변하지 않았어요.'
+        ) : (
+          <Text>
+            어제보다{' '}
+            <Text
+              style={
+                parseInt(flRate) < 0
+                  ? styles.blueHighlight
+                  : styles.redHighlight
+              }>
+              약 {flRate}% {parseInt(flRate) < 0 ? '하락' : '상승'}
+            </Text>{' '}
+            했어요
+          </Text>
+        )}
       </Text>
 
       <Button
@@ -57,6 +122,9 @@ const styles = StyleSheet.create({
   },
   redHighlight: {
     color: colorStyles.defaultRed,
+  },
+  blueHighlight: {
+    color: colorStyles.defaultBlue,
   },
 });
 

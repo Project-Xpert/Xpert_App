@@ -7,53 +7,32 @@ import GraphPeriodBtn from './GraphPeriodBtn';
 import {useState} from 'react';
 import {ChartStyle} from '../../../assets/styles/chartStyle';
 
-const mockGoldPriceData = {
-  data: [
-    {value: 1000, xLabelValue: '2023.01'},
-    {value: 1200, xLabelValue: '2023.02'},
-    {value: 1210, xLabelValue: '2023.03'},
-    {value: 1320, xLabelValue: '2023.04'},
-    {value: 1310, xLabelValue: '2023.05'},
-    {value: 1200, xLabelValue: '2023.06'},
-    {value: 1210, xLabelValue: '2023.07'},
-    {value: 1210, xLabelValue: '2023.08'},
-    {value: 1320, xLabelValue: '2023.09'},
-    {value: 1310, xLabelValue: '2023.10'},
-    {value: 1200, xLabelValue: '2023.11'},
-    {value: 1210, xLabelValue: '2023.12'},
-    {value: 3200, xLabelValue: '2024.01'},
-    {value: 3100, xLabelValue: '2024.02'},
-    {value: 1210, xLabelValue: '2024.03'},
-    {value: 1320, xLabelValue: '2024.04'},
-    {value: 1310, xLabelValue: '2024.05'},
-    {value: 1200, xLabelValue: '2024.06'},
-    {value: 1210, xLabelValue: '2024.07'},
-    {value: 1210, xLabelValue: '2024.08'},
-    {value: 1320, xLabelValue: '2024.09'},
-    {value: 1310, xLabelValue: '2024.10'},
-    {value: 1200, xLabelValue: '2024.11'},
-    {value: 2000, xLabelValue: '2024.12'},
-    {value: 3000, xLabelValue: '2025.01'},
-    {value: 1000, xLabelValue: '2025.02'},
-  ],
-};
+interface data {
+  xLabelValue: string;
+  value: number;
+}
 
-const getMaxMinVaule = () => {
-  const vaules = mockGoldPriceData.data.map(v => v.value);
-  const minValue = Math.min(...vaules);
-  const maxValue = Math.max(...vaules);
+interface graphProps {
+  data: data[];
+}
 
-  return {maxValue, minValue};
-};
-
-const Graph = () => {
+const Graph = (props: graphProps) => {
   const [period, setPeriod] = useState<1 | 6 | 12 | 36>(1);
-  const {maxValue, minValue} = getMaxMinVaule();
-  const step = Math.ceil((maxValue - minValue) / 4);
 
   const onPeriodBtnPress = (newPeriod: 1 | 6 | 12 | 36) => {
     setPeriod(newPeriod);
   };
+
+  const getMaxMinVaule = () => {
+    const vaules = props.data.map(v => v.value);
+    const minValue = Math.min(...vaules);
+    const maxValue = Math.max(...vaules);
+
+    return {maxValue, minValue};
+  };
+
+  const {maxValue, minValue} = getMaxMinVaule();
+  const step = Math.ceil((maxValue - minValue) / 4);
 
   return (
     <View style={styles.graphContainer}>
@@ -84,7 +63,7 @@ const Graph = () => {
           maxValue,
           minValue,
           step,
-          mockGoldPriceData.data,
+          props.data.slice(0, period * 30).reverse(),
         )}
       />
     </View>
@@ -94,6 +73,7 @@ const Graph = () => {
 const styles = StyleSheet.create({
   graphContainer: {
     width: screenSize.getVW(83.3),
+    height: screenSize.getVH(27.5),
   },
   graphBtnContainer: {
     flexDirection: 'row',
