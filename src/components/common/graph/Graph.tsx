@@ -4,7 +4,7 @@ import {screenSize} from '../../../assets/styles/screenSize';
 import {LineChart} from 'react-native-gifted-charts';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import GraphPeriodBtn from './GraphPeriodBtn';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {ChartStyle} from '../../../assets/styles/chartStyle';
 
 interface data {
@@ -18,21 +18,68 @@ interface graphProps {
 
 const Graph = (props: graphProps) => {
   const [period, setPeriod] = useState<1 | 6 | 12 | 36>(1);
+  const [data, setData] = useState<data[]>([]);
+  const [maxValue, setMaxValue] = useState(0);
+  const [minValue, setMinValue] = useState(0);
+  const [step, setStep] = useState(0);
 
   const onPeriodBtnPress = (newPeriod: 1 | 6 | 12 | 36) => {
     setPeriod(newPeriod);
   };
 
-  const getMaxMinVaule = () => {
-    const vaules = props.data.map(v => v.value);
-    const minValue = Math.min(...vaules);
-    const maxValue = Math.max(...vaules);
+  const calculateStartDate = () => {
+    const targetDate = new Date();
+    targetDate.setMonth(targetDate.getMonth() - (period % 12));
+    targetDate.setFullYear(targetDate.getFullYear() - Math.floor(period / 12));
+    return [
+      targetDate.getFullYear(),
+      targetDate.getMonth() + 1,
+      targetDate.getDate(),
+    ];
+  };
+
+  const isDatumDateIsBigger = (date: string) => {
+    const targetDate = calculateStartDate();
+    const datumDate = date.split(' ').map(element => {
+      return parseInt(element);
+    });
+
+    const yearIsBigger = targetDate[0] < datumDate[0];
+    const monthIsBigger =
+      targetDate[0] == datumDate[0] && targetDate[1] < datumDate[1];
+    const dateIsBigger =
+      targetDate[0] == datumDate[0] &&
+      targetDate[1] == datumDate[1] &&
+      targetDate[2] <= datumDate[2];
+
+    return yearIsBigger || monthIsBigger || dateIsBigger;
+  };
+
+  const getMaxMinValue = (data: data[]) => {
+    if (data.length <= 0) {
+      return {maxValue: 0, minValue: 0};
+    }
+
+    const values = data.map(v => v.value);
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
 
     return {maxValue, minValue};
   };
 
-  const {maxValue, minValue} = getMaxMinVaule();
-  const step = Math.ceil((maxValue - minValue) / 4);
+  useEffect(() => {
+    const graphData = props.data.filter(datum =>
+      isDatumDateIsBigger(datum.xLabelValue),
+    );
+
+    const {maxValue, minValue} = getMaxMinValue(graphData);
+
+    setMaxValue(maxValue);
+    setMinValue(minValue);
+    setStep(Math.ceil((maxValue - minValue) / 4));
+
+    setData(graphData.reverse());
+  }, [props.data, period]);
 
   return (
     <View style={styles.graphContainer}>
@@ -58,12 +105,13 @@ const Graph = (props: graphProps) => {
           onPress={() => onPeriodBtnPress(1)}
         />
       </View>
+
       <LineChart
         {...ChartStyle.getLinChartConfigAndStyle(
           maxValue,
           minValue,
           step,
-          props.data.slice(0, period * 30).reverse(),
+          data,
         )}
       />
     </View>

@@ -17,16 +17,14 @@ const getLinChartConfigAndStyle = (
 ) => {
   const customYAxisLabels = Array.from(
     {length: Math.ceil((maxValue - minValue) / step) + 3},
-    (_, i) => moneyFormatter((minValue - step + i * step).toString()),
+    (_, i) => moneyFormatter(minValue - step + i * step),
   );
 
-  const getGraphData = (minVaule: number, stepValue: number) => {
-    const result = data.map(v => ({
-      value: v.value - minVaule + stepValue,
+  const getGraphData = (minValue: number, stepValue: number) => {
+    return data.map(v => ({
+      value: v.value - minValue + stepValue,
       xLabelValue: v.xLabelValue,
     }));
-
-    return result;
   };
 
   const pointerConfig = {
@@ -84,9 +82,9 @@ const getLinChartConfigAndStyle = (
     xAxisColor: colorStyles.descriptionGray,
     initialSpacing: 0,
     endSpacing: 0,
-    stepValue: step,
-    maxValue: maxValue - minValue + step * 2,
     spacing: screenSize.getVW(69.5) / (data.length - 1),
+    stepValue: step,
+    maxValue: step * 6,
   };
 
   return chartConfig;

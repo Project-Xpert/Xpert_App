@@ -12,20 +12,19 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 interface goldDatum {
   mkp: string;
-  clpr: string;
   basDt: string;
 }
 
 const GoldHome = () => {
   const navigator = useNavigation<NavigationProp<any>>();
   const [goldData, setGoldData] = useState<goldDatum[]>([
-    {mkp: '0', clpr: '0', basDt: ''},
-    {mkp: '0', clpr: '0', basDt: ''},
+    {mkp: '0', basDt: ''},
+    {mkp: '0', basDt: ''},
   ]);
   const [flRate, setFlRate] = useState('0');
 
   const calFlRate = () => {
-    let prevPriceNum = parseInt(goldData[1].clpr);
+    let prevPriceNum = parseInt(goldData[1].mkp);
     let currentPriceNum = parseInt(goldData[0].mkp);
 
     setFlRate(((currentPriceNum - prevPriceNum) / 100).toFixed(2));
@@ -56,9 +55,10 @@ const GoldHome = () => {
           '한국 데이터 포털 특성상 변동 데이터가 누락되는 날도\n' +
           '있는 점 양해 부탁드립니다.'}
       </Text>
+
       <Graph
         data={goldData.map(element => ({
-          value: parseInt(element.clpr),
+          value: parseInt(element.mkp),
           xLabelValue:
             element.basDt.substring(0, 4) +
             '년 ' +
@@ -68,11 +68,12 @@ const GoldHome = () => {
             '일',
         }))}
       />
+
       <Text style={styles.basicText}>
-        {`기준가격 (원/g) : ${moneyFormatter(goldData[1].clpr)}`}
+        {`어제의 시장가 (원/g) : ${moneyFormatter(goldData[1].mkp)}`}
       </Text>
       <Text style={styles.basicText}>
-        {`종가 (원/g) : ${moneyFormatter(goldData[0].mkp)}`}
+        {`오늘의 시장가 (원/g) : ${moneyFormatter(goldData[0].mkp)}`}
       </Text>
       <Text style={styles.basicText}>
         {parseInt(flRate) == 0 ? (

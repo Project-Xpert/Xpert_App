@@ -21,7 +21,7 @@ interface dropdownProps {
 
 const SelectionInput = (props: dropdownProps) => {
   const [showDropbox, setShowDropbox] = useState(false);
-  const [selectedIdx, setSeletedIdx] = useState(-1);
+  const [selectedIdx, setSelectedIdx] = useState(-1);
 
   const containerStyle = {
     ...containerStyles.container,
@@ -43,9 +43,9 @@ const SelectionInput = (props: dropdownProps) => {
 
   const onDropdownPress = (idx: number) => {
     if (idx === selectedIdx) {
-      setSeletedIdx(-1);
+      setSelectedIdx(-1);
     } else {
-      setSeletedIdx(idx);
+      setSelectedIdx(idx);
     }
     setShowDropbox(false);
   };
@@ -76,6 +76,7 @@ const SelectionInput = (props: dropdownProps) => {
             {props.dropdownMenus.map((dropdownMenu, idx) => {
               return (
                 <DropdownMenu
+                  key={idx}
                   isSelected={selectedIdx === idx}
                   onPress={() => onDropdownPress(idx)}
                   dropdownText={dropdownMenu}
