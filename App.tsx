@@ -19,6 +19,7 @@ import CreateAccountDetail from './src/page/Invest/account/CreateAccountDetail';
 import NewsHome from './src/page/news/NewsHome';
 import NewsDetail from './src/page/news/NewsDetail';
 import TradeGold from './src/page/Invest/gold/TradeGold';
+import SocialHome from './src/page/social/SocialHome';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -46,6 +47,16 @@ const App = () => {
             component={InvestHome}
             options={{animation: 'fade'}}
           />
+          <Stack.Screen
+            name="News"
+            component={NewsHome}
+            options={{animation: 'fade'}}
+          />
+          <Stack.Screen
+            name="Social"
+            component={SocialHome}
+            options={{animation: 'fade'}}
+          />
           <Stack.Screen name="AccountDetail" component={AccountDetail} />
           <Stack.Screen
             name="CreateAccountDetail"
@@ -56,11 +67,6 @@ const App = () => {
           <Stack.Screen name="StockDetail" component={StockDetail} />
           <Stack.Screen name="BuyStockDetail" component={BuyStockDetail} />
           <Stack.Screen name="TradeGold" component={TradeGold} />
-          <Stack.Screen
-            name="News"
-            component={NewsHome}
-            options={{animation: 'fade'}}
-          />
           <Stack.Screen name="NewsDetail" component={NewsDetail} />
         </Stack.Navigator>
       </NavigationContainer>
