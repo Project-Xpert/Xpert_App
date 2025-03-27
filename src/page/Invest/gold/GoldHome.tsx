@@ -8,6 +8,7 @@ import {useEffect, useState} from 'react';
 import {GoldAPI} from '../../../api/gold';
 import Graph from '../../../components/common/graph/Graph';
 import moneyFormatter from '../../../util/moneyFormatter';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 interface goldDatum {
   mkp: string;
@@ -16,6 +17,7 @@ interface goldDatum {
 }
 
 const GoldHome = () => {
+  const navigator = useNavigation<NavigationProp<any>>();
   const [goldData, setGoldData] = useState<goldDatum[]>([
     {mkp: '0', clpr: '0', basDt: ''},
     {mkp: '0', clpr: '0', basDt: ''},
@@ -43,7 +45,9 @@ const GoldHome = () => {
     calFlRate();
   }, [goldData]);
 
-  const onClick = () => {};
+  const onClick = () => {
+    navigator.navigate('TradeGold');
+  };
 
   return (
     <InvestHomeContainer>
@@ -65,10 +69,10 @@ const GoldHome = () => {
         }))}
       />
       <Text style={styles.basicText}>
-        {`기준가격 (원/kg) : ${moneyFormatter(goldData[1].clpr)}`}
+        {`기준가격 (원/g) : ${moneyFormatter(goldData[1].clpr)}`}
       </Text>
       <Text style={styles.basicText}>
-        {`종가 (원/kg) : ${moneyFormatter(goldData[0].mkp)}`}
+        {`종가 (원/g) : ${moneyFormatter(goldData[0].mkp)}`}
       </Text>
       <Text style={styles.basicText}>
         {parseInt(flRate) == 0 ? (

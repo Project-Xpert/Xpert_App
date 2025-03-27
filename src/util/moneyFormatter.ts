@@ -1,5 +1,7 @@
-export default (price: string) => {
+export default (price: string | number) => {
+  price = String(price);
   let result = '';
+
   for (let i = 0; i < Math.ceil(price.length / 3); i += 1) {
     result =
       ',' +
