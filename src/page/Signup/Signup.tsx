@@ -102,8 +102,8 @@ const Signup = () => {
     }
   };
 
-  const onDataChange = (name: string, vaule: string) => {
-    setData({[name]: vaule});
+  const onDataChange = (name: string, value: string) => {
+    setData({[name]: value});
   };
 
   return (

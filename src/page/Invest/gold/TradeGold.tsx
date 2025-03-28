@@ -8,9 +8,9 @@ import Button from '../../../components/common/buttons/Button';
 import SelectionInput from '../../../components/common/inputs/SelectionInput';
 import {useEffect, useState} from 'react';
 import moneyFormatter from '../../../util/moneyFormatter';
-import PriceInfo from '../../../components/Invest/gold/priceInfo';
 import QuestionBtn from '../../../components/common/buttons/QuestionBtn';
 import BottomInfo from '../../../components/Invest/gold/BottomInfo';
+import PriceInfo from '../../../components/Invest/gold/PriceInfo';
 
 const dropdownMenus = [
   '24k 금 1돈 (3.75g)',

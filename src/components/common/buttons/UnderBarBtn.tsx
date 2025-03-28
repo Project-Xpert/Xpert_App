@@ -14,40 +14,15 @@ interface btnProps {
 const UnderBarBtn = (props: btnProps) => {
   let [underbarWidth, setUnderbarWidth] = useState(0);
 
-  const textColorAnim = useRef(new Animated.Value(0)).current;
-  const barColorAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(textColorAnim, {
-      toValue: props.disable ? 1 : 0,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-
-    Animated.timing(barColorAnim, {
-      toValue: props.disable ? 1 : 0,
-      duration: 300,
-      useNativeDriver: false,
-    }).start();
-  }, [props.disable]);
-
-  const textColorInterpolation = textColorAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colorStyles.basicText, colorStyles.disableGray],
-  });
-
-  const barColorInterpolation = barColorAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colorStyles.mainColor, colorStyles.disableGray],
-  });
-
   const textStyle = {
     ...styles.text,
-    color: textColorInterpolation,
+    color: props.disable ? colorStyles.disableGray : colorStyles.basicText,
   };
   const underbarStyle = {
     ...styles.underbar,
-    backgroundColor: barColorInterpolation,
+    backgroundColor: props.disable
+      ? colorStyles.disableGray
+      : colorStyles.mainColor,
     width: underbarWidth,
   };
 

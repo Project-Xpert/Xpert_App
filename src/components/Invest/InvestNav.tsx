@@ -12,7 +12,7 @@ const InvestNav = (props: NavProps) => {
   const {currentPage, onPress} = props;
 
   return (
-    <View style={styles.topNavigatorConatiner}>
+    <View style={styles.topNavigatorContainer}>
       <UnderBarBtn
         text={'예금/적금'}
         disable={currentPage !== 'account'}
@@ -43,7 +43,7 @@ const InvestNav = (props: NavProps) => {
 };
 
 const styles = StyleSheet.create({
-  topNavigatorConatiner: {
+  topNavigatorContainer: {
     marginBottom: screenSize.getVH(2.2),
     width: screenSize.getVW(70),
     flexDirection: 'row',

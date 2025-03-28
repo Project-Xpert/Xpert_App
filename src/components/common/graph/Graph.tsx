@@ -18,11 +18,11 @@ interface graphProps {
 
 const Graph = (props: graphProps) => {
   const [period, setPeriod] = useState<1 | 6 | 12 | 36>(1);
-  const [data, setData] = useState<data[]>([]);
   const [maxValue, setMaxValue] = useState(0);
   const [minValue, setMinValue] = useState(0);
   const [step, setStep] = useState(0);
-
+  const [data, setData] = useState<data[]>(props.data);
+  const [displayData, setDisplayData] = useState<data[]>(props.data);
   const onPeriodBtnPress = (newPeriod: 1 | 6 | 12 | 36) => {
     setPeriod(newPeriod);
   };
@@ -68,18 +68,23 @@ const Graph = (props: graphProps) => {
   };
 
   useEffect(() => {
-    const graphData = props.data.filter(datum =>
-      isDatumDateIsBigger(datum.xLabelValue),
-    );
+    if (JSON.stringify(data) != JSON.stringify(props.data)) {
+      setData(props.data);
+    }
+  }, [props.data]);
 
-    const {maxValue, minValue} = getMaxMinValue(graphData);
+  useEffect(() => {
+    const newDisplayData = data
+      .filter(datum => isDatumDateIsBigger(datum.xLabelValue))
+      .reverse();
 
+    setDisplayData(newDisplayData);
+
+    const {maxValue, minValue} = getMaxMinValue(newDisplayData);
     setMaxValue(maxValue);
     setMinValue(minValue);
     setStep(Math.ceil((maxValue - minValue) / 4));
-
-    setData(graphData.reverse());
-  }, [props.data, period]);
+  }, [data, period]);
 
   return (
     <View style={styles.graphContainer}>
@@ -111,7 +116,7 @@ const Graph = (props: graphProps) => {
           maxValue,
           minValue,
           step,
-          data,
+          displayData,
         )}
       />
     </View>

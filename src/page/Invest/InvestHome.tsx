@@ -12,7 +12,10 @@ import GoldHome from './gold/GoldHome';
 import FXHome from './FX/FXHome';
 import useInvestNavData from '../../data/investNavData';
 
-const getPage = (pageName: 'account' | 'stock' | 'bond' | 'FX' | 'gold') => {
+const getPage = (
+  pageName: 'account' | 'stock' | 'bond' | 'FX' | 'gold',
+  pageType: 'animation' | 'rendering',
+) => {
   if (pageName === 'account') {
     return <AccountHome />;
   } else if (pageName === 'stock') {
@@ -22,7 +25,7 @@ const getPage = (pageName: 'account' | 'stock' | 'bond' | 'FX' | 'gold') => {
   } else if (pageName === 'FX') {
     return <FXHome />;
   } else if (pageName === 'gold') {
-    return <GoldHome />;
+    return <GoldHome disableAction={pageType === 'animation'} />;
   }
 };
 
@@ -87,7 +90,7 @@ const InvestHome = () => {
       <InvestNav currentPage={nextPage} onPress={onPress} />
       <View style={{width: screenSize.width - screenSize.getVW(9 * 2)}}>
         <Animated.View style={{transform: [{translateX}], ...styles.container}}>
-          {getPage(currentPage)}
+          {getPage(currentPage, 'rendering')}
         </Animated.View>
         <Animated.View
           style={{
@@ -95,7 +98,7 @@ const InvestHome = () => {
             opacity: nextPageOpacity,
             ...styles.container,
           }}>
-          {getPage(nextPage)}
+          {getPage(nextPage, 'animation')}
         </Animated.View>
       </View>
       <BottomNav pageName={'Invest'} />

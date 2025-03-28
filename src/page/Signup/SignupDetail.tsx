@@ -35,7 +35,7 @@ const SignupDetail = () => {
     });
   };
 
-  const onDataChanage = (name: string, value: string) => {
+  const onDataChange = (name: string, value: string) => {
     setData({[name]: value});
   };
 
@@ -86,7 +86,7 @@ const SignupDetail = () => {
         marginTop={screenSize.getVH(5.5)}
         placeHolder={'닉네임을 입력해주세요'}
         onChange={e => {
-          onDataChanage('username', e.nativeEvent.text);
+          onDataChange('username', e.nativeEvent.text);
         }}
         errorMessage={errorMessage}
       />

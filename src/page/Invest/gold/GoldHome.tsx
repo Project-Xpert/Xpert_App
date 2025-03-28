@@ -15,7 +15,11 @@ interface goldDatum {
   basDt: string;
 }
 
-const GoldHome = () => {
+interface HomeProp {
+  disableAction?: boolean;
+}
+
+const GoldHome = (prop: HomeProp) => {
   const navigator = useNavigation<NavigationProp<any>>();
   const [goldData, setGoldData] = useState<goldDatum[]>([
     {mkp: '0', basDt: ''},
@@ -27,17 +31,21 @@ const GoldHome = () => {
     let prevPriceNum = parseInt(goldData[1].mkp);
     let currentPriceNum = parseInt(goldData[0].mkp);
 
-    setFlRate(((currentPriceNum - prevPriceNum) / 100).toFixed(2));
+    setFlRate(
+      (((currentPriceNum - prevPriceNum) / prevPriceNum) * 100).toFixed(3),
+    );
   };
 
   useEffect(() => {
-    GoldAPI.getGoldPriceData()
-      .then(response => {
-        setGoldData(response.data.goldPrices);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    if (!prop.disableAction) {
+      GoldAPI.getGoldPriceData()
+        .then(response => {
+          setGoldData(response.data.goldPrices);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
   }, []);
 
   useEffect(() => {
@@ -76,7 +84,7 @@ const GoldHome = () => {
         {`오늘의 시장가 (원/g) : ${moneyFormatter(goldData[0].mkp)}`}
       </Text>
       <Text style={styles.basicText}>
-        {parseInt(flRate) == 0 ? (
+        {Number.isNaN(parseInt(flRate)) || flRate === '0' ? (
           '어제 이후로 금 값이 변하지 않았어요.'
         ) : (
           <Text>
