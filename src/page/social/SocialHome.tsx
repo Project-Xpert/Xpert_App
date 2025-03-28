@@ -9,6 +9,7 @@ import PostRanking from '../../components/Social/PostRanking';
 import BottomNav from '../../components/common/BottomNav';
 import RankingIcon from '../../assets/image/icon/social/rankIcon.svg';
 import {useState} from 'react';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
 
 interface RankPostData {
   imageUrl?: string;
@@ -52,9 +53,14 @@ const mockData = {
 };
 
 const SocialHome = () => {
+  const navigator = useNavigation<NavigationProp<any>>();
   const [rankPostData, setRankPostData] = useState<RankPostData[]>(
     mockData.rankPosts,
   );
+
+  const handlePostListMove = () => {
+    navigator.navigate('PostList');
+  };
 
   return (
     <BasicContainer paddingTop={screenSize.getVH(9.2)}>
@@ -107,7 +113,9 @@ const SocialHome = () => {
         })}
       </View>
 
-      <TouchableOpacity style={postBtnStyles.container}>
+      <TouchableOpacity
+        style={postBtnStyles.container}
+        onPress={handlePostListMove}>
         <Text style={postBtnStyles.text}>{'게시판 바로가기 >'}</Text>
       </TouchableOpacity>
 

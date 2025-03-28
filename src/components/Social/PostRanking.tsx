@@ -4,6 +4,7 @@ import CommentIcon from '../../assets/image/icon/social/comment.svg';
 import LikeIcon from '../../assets/image/icon/social/like.svg';
 import {fontStyle} from '../../assets/styles/fontStyles';
 import {colorStyles} from '../../assets/styles/color';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 interface RankingProps {
   hideLineBelow: boolean;
@@ -16,6 +17,10 @@ interface RankingProps {
 }
 
 const PostRanking = (props: RankingProps) => {
+  const navigator = useNavigation<NavigationProp<any>>();
+
+  const handleMove = () => {};
+
   return (
     <View>
       <TouchableOpacity style={rankingStyle.container}>

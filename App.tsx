@@ -20,6 +20,7 @@ import NewsHome from './src/page/news/NewsHome';
 import NewsDetail from './src/page/news/NewsDetail';
 import TradeGold from './src/page/Invest/gold/TradeGold';
 import SocialHome from './src/page/social/SocialHome';
+import PostList from './src/page/social/PostList';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -68,6 +69,7 @@ const App = () => {
           <Stack.Screen name="BuyStockDetail" component={BuyStockDetail} />
           <Stack.Screen name="TradeGold" component={TradeGold} />
           <Stack.Screen name="NewsDetail" component={NewsDetail} />
+          <Stack.Screen name="PostList" component={PostList} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
