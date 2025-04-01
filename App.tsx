@@ -21,6 +21,8 @@ import NewsDetail from './src/page/news/NewsDetail';
 import TradeGold from './src/page/Invest/gold/TradeGold';
 import SocialHome from './src/page/social/SocialHome';
 import PostList from './src/page/social/PostList';
+import FXDetail from './src/page/Invest/FX/FXDetail';
+import TradeFX from './src/page/Invest/FX/TradeFX';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -70,6 +72,8 @@ const App = () => {
           <Stack.Screen name="TradeGold" component={TradeGold} />
           <Stack.Screen name="NewsDetail" component={NewsDetail} />
           <Stack.Screen name="PostList" component={PostList} />
+          <Stack.Screen name="FXDetail" component={FXDetail} />
+          <Stack.Screen name="TradeFX" component={TradeFX} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
