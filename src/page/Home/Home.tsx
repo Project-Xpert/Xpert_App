@@ -11,8 +11,15 @@ import TalkImg from '../../assets/image/home/talk.svg';
 import {screenSize} from '../../assets/styles/screenSize';
 import FriendRank from '../../components/Home/FriendRank';
 import {ScrollView} from 'react-native-gesture-handler';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const Home = () => {
+  const navigator = useNavigation<NavigationProp<any>>();
+
+  const handleMypageBtnPress = () => {
+    navigator.navigate('Mypage');
+  };
+
   return (
     <View>
       <ScrollView
@@ -27,7 +34,7 @@ const Home = () => {
                 안녕하세요! 오늘도 투자를 해봅시다!
               </Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={handleMypageBtnPress}>
               <Image src={env.BASE_PROFILE_URL} style={styles.profile} />
             </TouchableOpacity>
           </View>

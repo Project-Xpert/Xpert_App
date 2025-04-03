@@ -23,6 +23,7 @@ import SocialHome from './src/page/social/SocialHome';
 import PostList from './src/page/social/PostList';
 import FXDetail from './src/page/Invest/FX/FXDetail';
 import TradeFX from './src/page/Invest/FX/TradeFX';
+import Mypage from './src/page/Mypage/Mypage';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -58,6 +59,11 @@ const App = () => {
           <Stack.Screen
             name="Social"
             component={SocialHome}
+            options={{animation: 'fade'}}
+          />
+          <Stack.Screen
+            name="Mypage"
+            component={Mypage}
             options={{animation: 'fade'}}
           />
           <Stack.Screen name="AccountDetail" component={AccountDetail} />

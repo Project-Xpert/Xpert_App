@@ -14,13 +14,13 @@ interface navProps {
 
 const BottomNav = (prop: navProps) => {
   const {pageName} = prop;
-  const naviator = useNavigation<NavigationProp<any>>();
+  const navigator = useNavigation<NavigationProp<any>>();
 
   const onNavigate = (
-    naviageTo: 'Home' | 'Invest' | 'News' | 'Social' | 'Mypage',
+    navigateTo: 'Home' | 'Invest' | 'News' | 'Social' | 'Mypage',
   ) => {
-    if (naviageTo !== pageName) {
-      naviator.navigate(naviageTo);
+    if (navigateTo !== pageName) {
+      navigator.navigate(navigateTo);
     }
   };
 
