@@ -76,6 +76,9 @@ const Mypage = () => {
 
             <View style={optionBoxStyles.container}>
               <TouchableOpacity style={optionBoxStyles.innerBtn}>
+                <Text style={optionBoxStyles.btnText}>프로필 수정</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={optionBoxStyles.innerBtn}>
                 <Text style={optionBoxStyles.btnText}>상품 교환 내역</Text>
               </TouchableOpacity>
               <TouchableOpacity style={optionBoxStyles.innerBtn}>

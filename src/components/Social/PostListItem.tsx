@@ -7,11 +7,12 @@ import LikeIcon from '../../assets/image/icon/social/like.svg';
 
 interface itemProps {
   hideUpperLine?: boolean;
+  onPress: () => void;
 }
 
 const PostListItem = (prop: itemProps) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={prop.onPress}>
       {prop.hideUpperLine || <View style={lineStyles.line} />}
 
       <View style={itemStyles.container}>

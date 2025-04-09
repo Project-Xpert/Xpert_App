@@ -8,12 +8,18 @@ import {fontStyle} from '../../assets/styles/fontStyles';
 import {colorStyles} from '../../assets/styles/color';
 import BottomNav from '../../components/common/BottomNav';
 import PostListItem from '../../components/Social/PostListItem';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const PostList = () => {
+  const navigator = useNavigation<NavigationProp<any>>();
   const [mode, setMode] = useState<'new' | 'popularity'>('new');
 
   const handleModeChange = (mode: 'new' | 'popularity') => {
     setMode(mode);
+  };
+
+  const handlePostPress = () => {
+    navigator.navigate('PostDetail');
   };
 
   return (
@@ -44,18 +50,10 @@ const PostList = () => {
       <View style={scrollViewStyle.container}>
         <ScrollView>
           <View style={scrollViewStyle.innerContainer}>
-            <PostListItem />
-            <PostListItem hideUpperLine />
-            <PostListItem hideUpperLine />
-            <PostListItem hideUpperLine />
-            <PostListItem hideUpperLine />
-            <PostListItem hideUpperLine />
-            <PostListItem hideUpperLine />
-            <PostListItem hideUpperLine />
-            <PostListItem hideUpperLine />
-            <PostListItem hideUpperLine />
-            <PostListItem hideUpperLine />
-            <PostListItem hideUpperLine />
+            <PostListItem onPress={handlePostPress} />
+            <PostListItem hideUpperLine onPress={handlePostPress} />
+            <PostListItem hideUpperLine onPress={handlePostPress} />
+            <PostListItem hideUpperLine onPress={handlePostPress} />
           </View>
         </ScrollView>
       </View>
