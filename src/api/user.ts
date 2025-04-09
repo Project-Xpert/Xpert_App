@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {axios} from './util/axios';
 
 const BASE_PATH = '/user';
@@ -48,10 +49,21 @@ const VerifyCode = async (dto: VerifyCodeRequestDto) => {
   return await axios.post(`${BASE_PATH}/verify/code`, dto);
 };
 
+const GetUserData = async () => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.get(`${BASE_PATH}/profile`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 export const UserAPI = {
   Login,
   Signup,
   SendCode,
   VerifyCode,
   CheckAttributeIsUnique,
+  GetUserData,
 };

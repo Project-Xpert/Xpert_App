@@ -15,16 +15,27 @@ import CoinImg from '../../assets/image/home/coin.svg';
 import TwoBtns from '../../components/common/buttons/TwoBtns';
 import BottomNav from '../../components/common/BottomNav';
 import moneyFormatter from '../../util/moneyFormatter';
-
-const mockPage = {
-  userId: 'userHandle',
-  username: '안뇽난열글자안넘지롱',
-  profile:
-    'https://i.pinimg.com/736x/dd/95/aa/dd95aa4d417be1a640d1cf6eac55e44c.jpg',
-  money: 100000000,
-};
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {useEffect} from 'react';
+import {UserAPI} from '../../api/user';
+import useUserData from '../../data/userData';
 
 const Mypage = () => {
+  const userData = useUserData();
+  const navigator = useNavigation<NavigationProp<any>>();
+
+  useEffect(() => {
+    UserAPI.GetUserData()
+      .then(response => {
+        const {userId, username, profile, money} = response.data;
+
+        userData.setData({userId, username, profile, money});
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }, []);
+
   return (
     <BasicContainer paddingTop={screenSize.getVH(8)}>
       <BasicHeader text={'마이페이지'} hideArrowBtn />
@@ -35,12 +46,12 @@ const Mypage = () => {
             style={scrollViewStyles.innerContainer}
             activeOpacity={1}>
             <View style={topUserInfoStyles.container}>
-              <Image style={topUserInfoStyles.profile} src={mockPage.profile} />
+              <Image style={topUserInfoStyles.profile} src={userData.profile} />
               <View style={topUserInfoStyles.innerTextContainer}>
                 <Text style={topUserInfoStyles.username}>
-                  {mockPage.username}님
+                  {userData.username}님
                 </Text>
-                <Text style={topUserInfoStyles.handle}>@{mockPage.userId}</Text>
+                <Text style={topUserInfoStyles.handle}>@{userData.userId}</Text>
               </View>
             </View>
 
@@ -51,10 +62,10 @@ const Mypage = () => {
               />
               <View style={infoBoxStyle.innerTextContainer}>
                 <Text style={infoBoxStyle.mainText}>
-                  {mockPage.username}님의 자산은...
+                  {userData.username}님의 자산은...
                 </Text>
                 <Text style={infoBoxStyle.descriptionText}>
-                  {moneyFormatter(mockPage.money)}원이네요
+                  {moneyFormatter(userData.money)}원이네요
                 </Text>
               </View>
             </View>
@@ -128,11 +139,11 @@ const topUserInfoStyles = StyleSheet.create({
     alignItems: 'center',
   },
   innerTextContainer: {
-    marginLeft: screenSize.getVW(3.5),
+    marginLeft: screenSize.getVW(4.5),
   },
   profile: {
-    width: screenSize.getVH(13.3),
-    height: screenSize.getVH(13.3),
+    width: screenSize.getVH(11.1),
+    height: screenSize.getVH(11.1),
     borderRadius: screenSize.getVH(7),
   },
   username: {

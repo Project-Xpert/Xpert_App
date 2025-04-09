@@ -53,7 +53,7 @@ const GoldHome = (prop: HomeProp) => {
   }, [goldData]);
 
   const onClick = () => {
-    navigator.navigate('TradeGold');
+    navigator.navigate('TradeGold', {price: goldData[0].mkp});
   };
 
   return (

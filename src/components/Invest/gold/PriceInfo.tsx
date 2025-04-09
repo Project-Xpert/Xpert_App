@@ -12,14 +12,14 @@ const PriceInfo = (prop: PriceInfoProps) => {
   return (
     <View style={priceDescriptionStyles.container}>
       <Text style={priceDescriptionStyles.text}>
-        현재 그람당 평균 매입가는{' '}
+        현재 한돈당 평균 매입가는{' '}
         <Text style={highlightedStyles.text}>
           {moneyFormatter(prop.buyPrice)}원{' '}
         </Text>
         입니다
       </Text>
       <Text style={priceDescriptionStyles.text}>
-        현재 그람당 평균 매도가는{' '}
+        현재 한돈당 평균 매도가는{' '}
         <Text style={highlightedStyles.text}>
           {moneyFormatter(prop.sellPrice)}원{' '}
         </Text>

@@ -11,6 +11,8 @@ import moneyFormatter from '../../../util/moneyFormatter';
 import QuestionBtn from '../../../components/common/buttons/QuestionBtn';
 import BottomInfo from '../../../components/Invest/gold/BottomInfo';
 import PriceInfo from '../../../components/Invest/gold/PriceInfo';
+import {UserAPI} from '../../../api/user';
+import {GoldAPI} from '../../../api/gold';
 
 const dropdownMenus = [
   '24k 금 1돈 (3.75g)',
@@ -39,20 +41,20 @@ interface FormData {
   cnt: number | null;
 }
 
-const mockData = {
-  price: 143100,
-  userMoney: 2000000,
+const defaultData = {
+  price: 0,
+  userMoney: 0,
   ownGolds: {
-    '24k': 1,
-    '22k': 2,
+    '24k': 0,
+    '22k': 0,
     '20k': 0,
-    '18k': 2,
-    '16k': 8,
+    '18k': 0,
+    '16k': 0,
   },
 };
 
-const TradeGold = () => {
-  const [displayData, setDisplayData] = useState<DisplayData>(mockData);
+const TradeGold = ({route}: any) => {
+  const [displayData, setDisplayData] = useState<DisplayData>(defaultData);
   const [mode, setMode] = useState<'buy' | 'sell'>('buy');
   const [sellPrice, setSellPrice] = useState(0);
   const [buyPrice, setBuyPrice] = useState(0);
@@ -61,11 +63,34 @@ const TradeGold = () => {
     cnt: null,
   });
 
+  useEffect(() => {
+    GoldAPI.getGoldOwnData()
+      .then(response => {
+        const {userMoney, ownGolds} = response.data;
+
+        const goldData: Record<string, number> = {};
+        ownGolds.map((gold: FormData) => {
+          if (gold.cnt != null) {
+            goldData[gold.goldType] = gold.cnt;
+          }
+        });
+
+        setDisplayData(() => ({
+          userMoney,
+          ownGolds: goldData,
+          price: route.params.price,
+        }));
+      })
+      .catch(e => {
+        console.log(e.response);
+      });
+  }, []);
+
   const itemCnt = Number(data.cnt) || 0;
   const totalBuyPrice = buyPrice * itemCnt;
   const totalSellPrice = sellPrice * itemCnt;
   const isFormFilled = data.goldType != '' && data.cnt;
-  const ownedGoldCnt = displayData.ownGolds[data.goldType] || 0;
+  const ownedGoldCnt = displayData.ownGolds[data.goldType.toUpperCase()] || 0;
 
   const handleModeChange = (mode: 'buy' | 'sell') => {
     setMode(mode);
@@ -87,8 +112,8 @@ const TradeGold = () => {
     const {purity, sellDiscount} = goldPurity[data.goldType] || defaultData;
     const basicPrice = displayData.price * (purity / 99.9);
 
-    setBuyPrice(Math.round((basicPrice * 102.5) / 100));
-    setSellPrice(Math.round((basicPrice * sellDiscount) / 100));
+    setBuyPrice(Math.round((basicPrice * 102.5 * 3.75) / 100));
+    setSellPrice(Math.round((basicPrice * sellDiscount * 3.75) / 100));
   }, [data.goldType]);
 
   return (

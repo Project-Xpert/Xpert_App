@@ -12,9 +12,26 @@ import {screenSize} from '../../assets/styles/screenSize';
 import FriendRank from '../../components/Home/FriendRank';
 import {ScrollView} from 'react-native-gesture-handler';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import useUserData from '../../data/userData';
+import {useEffect} from 'react';
+import {UserAPI} from '../../api/user';
+import moneyFormatter from '../../util/moneyFormatter';
 
 const Home = () => {
+  const userData = useUserData();
   const navigator = useNavigation<NavigationProp<any>>();
+
+  useEffect(() => {
+    UserAPI.GetUserData()
+      .then(response => {
+        const {userId, username, profile, money} = response.data;
+
+        userData.setData({userId, username, profile, money});
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }, []);
 
   const handleMypageBtnPress = () => {
     navigator.navigate('Mypage');
@@ -29,13 +46,13 @@ const Home = () => {
         <BasicContainer paddingTop={screenSize.getVH(3.3)}>
           <View style={styles.topContainer}>
             <View>
-              <Text style={styles.title}>열글자안넘는지테스트님</Text>
+              <Text style={styles.title}>{`${userData.username}님`}</Text>
               <Text style={styles.topDescription}>
                 안녕하세요! 오늘도 투자를 해봅시다!
               </Text>
             </View>
             <TouchableOpacity onPress={handleMypageBtnPress}>
-              <Image src={env.BASE_PROFILE_URL} style={styles.profile} />
+              <Image src={userData.profile} style={styles.profile} />
             </TouchableOpacity>
           </View>
 
@@ -47,9 +64,11 @@ const Home = () => {
             />
             <View style={styles.widthBoxInnerTextContainer}>
               <Text style={styles.descriptionText}>
-                열글자안넘는지테스트님의 자산은...
+                {`${userData.username}님의 자산은...`}
               </Text>
-              <Text style={styles.bigText}>200,000원 이네요</Text>
+              <Text style={styles.bigText}>{`${moneyFormatter(
+                userData.money,
+              )}원 이네요`}</Text>
             </View>
           </View>
           <TouchableOpacity
@@ -119,6 +138,7 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   topContainer: {
+    marginTop: screenSize.getVH(2),
     width: screenSize.getVW(82),
     flexDirection: 'row',
     alignItems: 'center',
