@@ -34,7 +34,7 @@ const Comment = (props: CommentProps) => {
 
 const commentStyles = StyleSheet.create({
   container: {
-    marginTop: screenSize.getVH(2.2),
+    marginTop: screenSize.getVH(2.7),
     width: screenSize.getVW(82),
     flexDirection: 'row',
   },

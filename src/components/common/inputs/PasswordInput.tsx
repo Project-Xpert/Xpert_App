@@ -64,6 +64,7 @@ const PasswordInput = (props: InputProps) => {
         autoCorrect={false}
         autoCapitalize="none"
         returnKeyType="done"
+        textContentType={'oneTimeCode'}
       />
       <TouchableOpacity onPress={onPressVisibility} style={styles.btn}>
         {showPassword ? (
