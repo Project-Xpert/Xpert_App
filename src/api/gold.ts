@@ -17,7 +17,24 @@ const getGoldOwnData = async () => {
   });
 };
 
+interface buyGoldRequestDto {
+  goldType: string;
+  price: number;
+  cnt: number;
+}
+
+const buyGold = async (dto: buyGoldRequestDto) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.put(`${BASE_URL}/buy`, dto, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 export const GoldAPI = {
   getGoldPriceData,
   getGoldOwnData,
+  buyGold,
 };
