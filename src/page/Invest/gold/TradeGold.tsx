@@ -11,8 +11,8 @@ import moneyFormatter from '../../../util/moneyFormatter';
 import QuestionBtn from '../../../components/common/buttons/QuestionBtn';
 import BottomInfo from '../../../components/Invest/gold/BottomInfo';
 import PriceInfo from '../../../components/Invest/gold/PriceInfo';
-import {UserAPI} from '../../../api/user';
 import {GoldAPI} from '../../../api/gold';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const dropdownMenus = [
   '24k 금 1돈 (3.75g)',
@@ -54,6 +54,7 @@ const defaultData = {
 };
 
 const TradeGold = ({route}: any) => {
+  const navigator = useNavigation<NavigationProp<any>>();
   const [displayData, setDisplayData] = useState<DisplayData>(defaultData);
   const [mode, setMode] = useState<'buy' | 'sell'>('buy');
   const [sellPrice, setSellPrice] = useState(0);
@@ -104,7 +105,19 @@ const TradeGold = ({route}: any) => {
     }
   };
 
-  const handleTradeRequest = () => {};
+  const handleTradeRequest = () => {
+    if (mode == 'buy') {
+      GoldAPI.buyGold({
+        goldType: 'G_' + data.goldType.toUpperCase(),
+        price: buyPrice,
+        cnt: data.cnt || 0,
+      })
+        .then(() => navigator.navigate('Invest'))
+        .catch(e => {
+          console.log(e.response);
+        });
+    }
+  };
 
   // calculate price data when goldType changed
   useEffect(() => {

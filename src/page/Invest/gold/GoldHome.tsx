@@ -60,8 +60,8 @@ const GoldHome = (prop: HomeProp) => {
     <InvestHomeContainer>
       <Text style={styles.topDescription}>
         {'한국 공공 데이터 포털 기준의 금 시세입니다.\n' +
-          '한국 데이터 포털 특성상 변동 데이터가 누락되는 날도\n' +
-          '있는 점 양해 부탁드립니다.'}
+          '계산식에 따라 실제 금값과 약간의 오차가 있는 점\n' +
+          '양해 부탁드립니다.'}
       </Text>
 
       <Graph
@@ -91,11 +91,9 @@ const GoldHome = (prop: HomeProp) => {
             어제보다{' '}
             <Text
               style={
-                parseInt(flRate) < 0
-                  ? styles.blueHighlight
-                  : styles.redHighlight
+                Number(flRate) < 0 ? styles.blueHighlight : styles.redHighlight
               }>
-              약 {flRate}% {parseInt(flRate) < 0 ? '하락' : '상승'}
+              약 {flRate}% {Number(flRate) < 0 ? '하락' : '상승'}
             </Text>{' '}
             했어요
           </Text>
