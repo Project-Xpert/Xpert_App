@@ -5,13 +5,14 @@ import BasicInput from '../../components/common/inputs/BasicInput';
 import LoginIdIcon from '../../assets/image/icon/input/loginId/LoginIdIcon';
 import ProfileEditBtn from '../../components/common/buttons/ProfileEditBtn';
 import Button from '../../components/common/buttons/Button';
-import {launchImageLibrary} from 'react-native-image-picker';
 import useSignupData from '../../data/signupData';
 import {UserAPI} from '../../api/user';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import env from '../../../env';
 import {screenSize} from '../../assets/styles/screenSize';
+import ImagePicker from 'react-native-image-crop-picker';
+import RNFS from 'react-native-fs';
 
 const SignupDetail = () => {
   const navigator = useNavigation<NavigationProp<any>>();
@@ -23,13 +24,18 @@ const SignupDetail = () => {
   const dataIsValid = 1 <= username.length && username.length <= 10;
 
   const launchImageLib = () => {
-    launchImageLibrary({mediaType: 'photo'}, res => {
-      if (res.assets) {
-        console.log(res.assets[0]);
-        setData({profile: res.assets[0].uri});
+    ImagePicker.openPicker({
+      width: 500,
+      height: 500,
+      cropping: true,
+      mediaType: 'photo',
+      cropperToolbarTitle: '이미지 자르기',
+    }).then(result => {
+      if (result) {
+        setData({profile: result.path});
         setFileData({
-          name: res.assets[0].fileName || 'basicName',
-          type: res.assets[0].type || 'image/jpg',
+          name: result.filename || 'basicName',
+          type: result.mime || 'image/jpg',
         });
       }
     });
@@ -42,6 +48,19 @@ const SignupDetail = () => {
   const onSignupBtnPress = async () => {
     if (dataIsValid) {
       const formdata = new FormData();
+
+      const fileName = 'dto.json';
+      const json = JSON.stringify({userId, email, username, password});
+      const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
+
+      await RNFS.writeFile(filePath, json, 'utf8');
+
+      formdata.append('body', {
+        uri: `file://${filePath}`,
+        type: 'application/json',
+        name: fileName,
+      });
+
       if (profile !== env.BASE_PROFILE_URL) {
         const image = {
           uri: profile.replace('file://', ''),
@@ -50,15 +69,6 @@ const SignupDetail = () => {
         };
         formdata.append('file', image);
       }
-
-      console.log(JSON.stringify({userId, email, username, password}));
-
-      const json = JSON.stringify({userId, email, username, password});
-      const blob = new Blob([json], {
-        type: 'application/json',
-        lastModified: 0,
-      });
-      formdata.append('body', blob);
 
       UserAPI.Signup(formdata)
         .then(response => {

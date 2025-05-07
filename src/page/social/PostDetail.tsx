@@ -62,6 +62,15 @@ const mockData = {
       createdAt: '2024-09-20',
       likeCnt: 24,
     },
+    {
+      commentId: '2',
+      writer: '무소식이 히소sick',
+      profile:
+        'https://i.pinimg.com/474x/63/d0/79/63d079598cb3e7388d1c229696a48f3e.jpg',
+      contents: '우우 나가라222',
+      createdAt: '2024-09-20',
+      likeCnt: 24,
+    },
   ],
 };
 
@@ -114,9 +123,11 @@ const PostDetail = () => {
             <View>
               {mockData.comments.map((comment, idx) => {
                 return (
-                  <View style={commentStyles.container}>
+                  <View
+                    style={commentStyles.container}
+                    key={`container-${idx}`}>
                     <Comment
-                      key={idx}
+                      key={`comment-${idx}`}
                       profile={comment.profile}
                       writer={comment.writer}
                       content={comment.contents}
@@ -125,8 +136,9 @@ const PostDetail = () => {
                     />
                     {mockData.replies
                       .filter(reply => reply.commentId === comment.commentId)
-                      .map(reply => (
+                      .map((reply, idx) => (
                         <Reply
+                          key={`reply-${idx}`}
                           profile={reply.profile}
                           writer={reply.writer}
                           content={reply.contents}
