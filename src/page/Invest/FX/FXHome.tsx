@@ -1,4 +1,4 @@
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {screenSize} from '../../../assets/styles/screenSize';
 import InvestHomeContainer from '../../../components/Invest/InvestHomeContainer';
 import {colorStyles} from '../../../assets/styles/color';
@@ -7,48 +7,51 @@ import FXDetailBtn from '../../../components/Invest/FX/FXDetailBtn';
 import moneyFormatter from '../../../util/moneyFormatter';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import CountryIcon from '../../../assets/image/icon/country/CountryIcon';
+import {useEffect, useState} from 'react';
+import {FxAPI} from '../../../api/fx';
 
-const mockData = [
-  {
-    country: '미국',
-    FXName: '달러',
-    price: 10000,
-    fluRate: 320,
-  },
-  {
-    country: '스위스',
-    FXName: '프랑',
-    price: 10000,
-    fluRate: -320,
-  },
-  {
-    country: '유럽',
-    FXName: '유로',
-    price: 10000,
-    fluRate: 0,
-  },
-  {
-    country: '일본',
-    FXName: '엔',
-    price: 10000,
-    fluRate: 320,
-  },
-  {
-    country: '영국',
-    FXName: '파운드',
-    price: 10000,
-    fluRate: 320,
-  },
-  {
-    country: '중국',
-    FXName: '위안',
-    price: 10000,
-    fluRate: 320,
-  },
-];
+const countryData = {
+  USD: '미국',
+  JPY: '일본',
+  EUR: '유럽',
+  CNH: '중국',
+  CHF: '스위스',
+  GBP: '영국',
+};
+
+const moneyData = {
+  USD: '달러',
+  JPY: '엔',
+  EUR: '유로',
+  CNH: '위안',
+  CHF: '프랑',
+  GBP: '파운드',
+};
+
+interface FXData {
+  fxType: 'USD' | 'JPY' | 'EUR' | 'CNH' | 'CHF' | 'GBP';
+  price: number;
+  buyPrice: number;
+  sellPrice: number;
+  fluRate: number;
+}
 
 const FXHome = () => {
   const navigator = useNavigation<NavigationProp<any>>();
+  const [fxData, setFxData] = useState<FXData[]>([]);
+
+  useEffect(() => {
+    FxAPI.getFxDataList()
+      .then(response => {
+        console.log(response.data.data);
+        if (response.data) {
+          setFxData(response.data.data);
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }, []);
 
   const handleDetailBtnPress = () => {
     navigator.navigate('FXDetail');
@@ -58,17 +61,17 @@ const FXHome = () => {
     <InvestHomeContainer>
       <Text style={styles.topDescription}>
         {'한국수출입은행에서 외화 가격을 불러오고 있습니다.\n' +
-          '외화 가격은 매일 오전 6시에 갱신됩니다.'}
+          '외화 가격은 30분 마다 갱신됩니다.'}
       </Text>
 
       <View style={containerStyles.container}>
-        {mockData.map((datum, idx) => {
+        {fxData.map((datum, idx) => {
           return (
             <FXDetailBtn
               key={idx}
               onPress={handleDetailBtnPress}
-              country={datum.country}
-              FXName={datum.FXName}
+              country={countryData[datum.fxType]}
+              FXName={moneyData[datum.fxType]}
               price={moneyFormatter(datum.price)}
               fluRate={datum.fluRate}
               CountryIcon={CountryIcon}

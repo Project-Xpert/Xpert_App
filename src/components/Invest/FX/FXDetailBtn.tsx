@@ -25,6 +25,8 @@ const FXDetailBtn = (props: BtnProps) => {
         : colorStyles.defaultBlue,
   };
 
+  const standardFxAmount = props.country == '일본' ? 100 : 1;
+
   return (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
       <View style={styles.imgContainer}>
@@ -34,10 +36,9 @@ const FXDetailBtn = (props: BtnProps) => {
         <Text style={styles.stockName}>
           {props.country + ' ' + props.FXName}
         </Text>
-        <Text
-          style={
-            styles.stockPrice
-          }>{`1${props.FXName}당 ${props.price}원`}</Text>
+        <Text style={styles.stockPrice}>
+          {`${standardFxAmount}${props.FXName}당 ${props.price}원`}
+        </Text>
       </View>
       <Text style={changePercent}>{`(${props.fluRate > 0 ? '+' : ''}${
         props.fluRate

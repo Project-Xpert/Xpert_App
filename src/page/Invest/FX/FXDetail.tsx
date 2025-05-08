@@ -54,6 +54,11 @@ const FXDetail = () => {
           가지고 있어요
         </Text>
         <Text style={bodyStyles.text}>
+          평균 <Text style={highlightColorStyles.text}>1234</Text>원에 사셨고,
+          현재 1달러당 <Text style={highlightColorStyles.text}>2303</Text>
+          원이에요,
+        </Text>
+        <Text style={bodyStyles.text}>
           현재 수익률은 <Text style={getFluRateColor(21.3)}>+21.3%</Text>에요
         </Text>
       </View>
@@ -102,7 +107,7 @@ const priceStyles = StyleSheet.create({
 const bodyStyles = StyleSheet.create({
   container: {
     width: screenSize.getVW(81),
-    height: screenSize.getVH(4.8),
+    height: screenSize.getVH(7.2),
     marginTop: screenSize.getVH(3.3),
     justifyContent: 'space-between',
   },
