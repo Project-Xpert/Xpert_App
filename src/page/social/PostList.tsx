@@ -3,23 +3,62 @@ import {screenSize} from '../../assets/styles/screenSize';
 import BasicContainer from '../../components/common/BasicContainer';
 import SmallBtn from '../../components/common/buttons/SmallBtn';
 import BasicHeader from '../../components/common/headers/BasicHeader';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {fontStyle} from '../../assets/styles/fontStyles';
 import {colorStyles} from '../../assets/styles/color';
 import BottomNav from '../../components/common/BottomNav';
 import PostListItem from '../../components/Social/PostListItem';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {PostAPI} from '../../api/post';
+import CreatePostBtn from '../../components/Social/CreatePostBtn';
+
+interface PostItem {
+  postId: string;
+  writer: string;
+  title: string;
+  createdAt: string;
+  likeCnt: number;
+  commentCnt: number;
+}
 
 const PostList = () => {
   const navigator = useNavigation<NavigationProp<any>>();
-  const [mode, setMode] = useState<'new' | 'popularity'>('new');
+  const [mode, setMode] = useState<'new' | 'popularity'>('popularity');
+  const [postList, setPostList] = useState<PostItem[]>([]);
+
+  useEffect(() => {
+    PostAPI.getPostList()
+      .then(response => {
+        if (response.data) {
+          setPostList(response.data.posts);
+          setMode('new');
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (mode === 'new') {
+      setPostList(
+        [...postList].sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+      );
+    } else {
+      setPostList(
+        [...postList].sort(
+          (a, b) => b.likeCnt + b.commentCnt - (a.likeCnt + a.commentCnt),
+        ),
+      );
+    }
+  }, [mode]);
 
   const handleModeChange = (mode: 'new' | 'popularity') => {
     setMode(mode);
   };
 
-  const handlePostPress = () => {
-    navigator.navigate('PostDetail');
+  const handlePostPress = (postId: string) => {
+    navigator.navigate('PostDetail', {postId});
   };
 
   return (
@@ -50,13 +89,27 @@ const PostList = () => {
       <View style={scrollViewStyle.container}>
         <ScrollView>
           <View style={scrollViewStyle.innerContainer}>
-            <PostListItem onPress={handlePostPress} />
-            <PostListItem hideUpperLine onPress={handlePostPress} />
-            <PostListItem hideUpperLine onPress={handlePostPress} />
-            <PostListItem hideUpperLine onPress={handlePostPress} />
+            {postList.map((post, idx) => {
+              return (
+                <PostListItem
+                  key={post.postId}
+                  hideUpperLine={idx !== 0}
+                  onPress={() => {
+                    handlePostPress(post.postId);
+                  }}
+                  writer={post.writer}
+                  title={post.title}
+                  createdAt={post.createdAt}
+                  likeCnt={post.likeCnt}
+                  commentCnt={post.commentCnt}
+                />
+              );
+            })}
           </View>
         </ScrollView>
       </View>
+
+      <CreatePostBtn />
 
       <BottomNav pageName={'Social'} />
     </BasicContainer>

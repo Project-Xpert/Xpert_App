@@ -2,7 +2,6 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import BasicContainer from '../../components/common/BasicContainer';
 import BasicHeader from '../../components/common/headers/BasicHeader';
 import {screenSize} from '../../assets/styles/screenSize';
-import env from '../../../env';
 import {colorStyles} from '../../assets/styles/color';
 import {fontStyle} from '../../assets/styles/fontStyles';
 import PostRanking from '../../components/Social/PostRanking';
@@ -10,6 +9,7 @@ import BottomNav from '../../components/common/BottomNav';
 import RankingIcon from '../../assets/image/icon/social/rankIcon.svg';
 import {useState} from 'react';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
+import useUserData from '../../data/userData';
 
 interface RankPostData {
   imageUrl?: string;
@@ -53,6 +53,8 @@ const mockData = {
 };
 
 const SocialHome = () => {
+  const {username, profile} = useUserData();
+
   const navigator = useNavigation<NavigationProp<any>>();
   const [rankPostData, setRankPostData] = useState<RankPostData[]>(
     mockData.rankPosts,
@@ -67,13 +69,13 @@ const SocialHome = () => {
       <BasicHeader text={'소셜'} hideArrowBtn />
       <View style={topUserInfoStyles.topContainer}>
         <View>
-          <Text style={topUserInfoStyles.title}>열글자안넘는지테스트님</Text>
+          <Text style={topUserInfoStyles.title}>{username}님</Text>
           <Text style={topUserInfoStyles.topDescription}>
             여기서 사람들과 소통해보세요!
           </Text>
         </View>
         <TouchableOpacity>
-          <Image src={env.BASE_PROFILE_URL} style={topUserInfoStyles.profile} />
+          <Image src={profile} style={topUserInfoStyles.profile} />
         </TouchableOpacity>
       </View>
 

@@ -74,7 +74,7 @@ const mockData = {
   ],
 };
 
-const PostDetail = () => {
+const PostDetail = ({route}: any) => {
   return (
     <BasicContainer paddingTop={screenSize.getVH(9.2)}>
       <BasicHeader text={'글 상세'} />

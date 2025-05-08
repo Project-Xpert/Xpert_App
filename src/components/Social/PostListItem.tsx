@@ -7,6 +7,11 @@ import LikeIcon from '../../assets/image/icon/social/like.svg';
 
 interface itemProps {
   hideUpperLine?: boolean;
+  writer: string;
+  title: string;
+  createdAt: string;
+  likeCnt: number;
+  commentCnt: number;
   onPress: () => void;
 }
 
@@ -17,23 +22,23 @@ const PostListItem = (prop: itemProps) => {
 
       <View style={itemStyles.container}>
         <Text style={titleStyles.text} ellipsizeMode="tail" numberOfLines={1}>
-          지금 미국장 왜이럼? 이건 사곤데
+          {prop.title}
         </Text>
         <View style={itemStyles.bottomInnerContainer}>
           <View style={descriptionStyles.container}>
-            <Text style={descriptionStyles.text}>봇치더록</Text>
+            <Text style={descriptionStyles.text}>{prop.writer}</Text>
             <View style={descriptionStyles.circle} />
-            <Text style={descriptionStyles.text}>2025.03.27</Text>
+            <Text style={descriptionStyles.text}>{prop.createdAt}</Text>
           </View>
 
           <View style={bottomCntStyles.container}>
             <View style={bottomCntStyles.innerContainer}>
               <LikeIcon />
-              <Text style={bottomCntStyles.text}>100</Text>
+              <Text style={bottomCntStyles.text}>{prop.likeCnt}</Text>
             </View>
             <View style={bottomCntStyles.innerContainer}>
               <CommentIcon />
-              <Text style={bottomCntStyles.text}>0</Text>
+              <Text style={bottomCntStyles.text}>{prop.commentCnt}</Text>
             </View>
           </View>
         </View>

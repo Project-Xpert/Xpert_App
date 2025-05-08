@@ -25,6 +25,7 @@ import FXDetail from './src/page/Invest/FX/FXDetail';
 import TradeFX from './src/page/Invest/FX/TradeFX';
 import Mypage from './src/page/Mypage/Mypage';
 import PostDetail from './src/page/social/PostDetail';
+import CreatePost from './src/page/social/CreatePost';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -82,6 +83,7 @@ const App = () => {
           <Stack.Screen name="FXDetail" component={FXDetail} />
           <Stack.Screen name="TradeFX" component={TradeFX} />
           <Stack.Screen name="PostDetail" component={PostDetail} />
+          <Stack.Screen name="CreatePost" component={CreatePost} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
