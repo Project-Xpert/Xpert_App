@@ -13,6 +13,19 @@ const getFxDataList = async () => {
   });
 };
 
+const getFxDetail = async (
+  fxType: 'USD' | 'JPY' | 'EUR' | 'CNH' | 'CHF' | 'GBP',
+) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.get(`${BASE_URL}/detail/${fxType}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 export const FxAPI = {
   getFxDataList,
+  getFxDetail,
 };

@@ -53,8 +53,11 @@ const FXHome = () => {
       });
   }, []);
 
-  const handleDetailBtnPress = () => {
-    navigator.navigate('FXDetail');
+  const handleDetailBtnPress = (
+    fxType: 'USD' | 'JPY' | 'EUR' | 'CNH' | 'CHF' | 'GBP',
+    fluRate: number,
+  ) => {
+    navigator.navigate('FXDetail', {fxType, fluRate});
   };
 
   return (
@@ -69,7 +72,7 @@ const FXHome = () => {
           return (
             <FXDetailBtn
               key={idx}
-              onPress={handleDetailBtnPress}
+              onPress={() => handleDetailBtnPress(datum.fxType, datum.fluRate)}
               country={countryData[datum.fxType]}
               FXName={moneyData[datum.fxType]}
               price={moneyFormatter(datum.price)}

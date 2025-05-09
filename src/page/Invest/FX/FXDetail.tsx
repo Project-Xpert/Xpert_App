@@ -7,9 +7,69 @@ import Button from '../../../components/common/buttons/Button';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import {colorStyles} from '../../../assets/styles/color';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {useEffect, useState} from 'react';
+import {FxAPI} from '../../../api/fx';
 
-const FXDetail = () => {
+const countryData = {
+  USD: '미국',
+  JPY: '일본',
+  EUR: '유럽',
+  CNH: '중국',
+  CHF: '스위스',
+  GBP: '영국',
+};
+
+const moneyData = {
+  USD: '달러',
+  JPY: '엔',
+  EUR: '유로',
+  CNH: '위안',
+  CHF: '프랑',
+  GBP: '파운드',
+};
+
+interface FxDetail {
+  sellPrice: number;
+  buyPrice: number;
+  price: number;
+  amount: number;
+  sumOfBuy: number;
+}
+
+const basicFxDetailData: FxDetail = {
+  sellPrice: 0,
+  buyPrice: 0,
+  price: 0,
+  amount: 0,
+  sumOfBuy: 0,
+};
+
+const FXDetail = ({route}: any) => {
   const navigator = useNavigation<NavigationProp<any>>();
+  const [fxDetail, setFxDetail] = useState<FxDetail>(basicFxDetailData);
+  const fxType: 'USD' | 'JPY' | 'EUR' | 'CNH' | 'CHF' | 'GBP' =
+    route.params.fxType;
+  const standardFxAmount = fxType === 'JPY' ? 100 : 1;
+  const fluRate = route.params.fluRate;
+
+  const totalPrice = fxDetail.amount * fxDetail.price;
+  const avgPrice = Math.round(fxDetail.sumOfBuy / fxDetail.amount) || 0;
+  const profitRate =
+    Number(
+      (((totalPrice - fxDetail.sumOfBuy) / fxDetail.sumOfBuy) * 100).toFixed(2),
+    ) || 0;
+
+  useEffect(() => {
+    FxAPI.getFxDetail(fxType)
+      .then(response => {
+        if (response.data) {
+          setFxDetail(response.data);
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }, []);
 
   const handlerBuyButtonPress = () => {
     navigator.navigate('TradeFX');
@@ -32,34 +92,42 @@ const FXDetail = () => {
 
       <View style={topTitleStyles.container}>
         <CountryIcon
-          country={'미국'}
+          country={countryData[fxType]}
           style={topTitleStyles.icon}
           width={screenSize.getVH(5.5)}
           height={screenSize.getVH(5.5)}
         />
-        <Text style={topTitleStyles.text}>미국 달러</Text>
+        <Text style={topTitleStyles.text}>
+          {`${countryData[fxType]} ${moneyData[fxType]}`}
+        </Text>
       </View>
 
       <Text style={priceStyles.title}>
-        현재 1달러당 <Text style={highlightColorStyles.text}>1,300원</Text>
+        {`현재 ${standardFxAmount}${moneyData[fxType]}당 `}
+        <Text style={highlightColorStyles.text}>{`${fxDetail.price}원`}</Text>
       </Text>
       <Text style={priceStyles.description}>
-        어제보다 <Text style={getFluRateColor(-0.24)}>-0.24%</Text> 변동했어요
+        어제보다 <Text style={getFluRateColor(-0.24)}>{`${fluRate}%`}</Text>{' '}
+        변동했어요
       </Text>
 
       <View style={bodyStyles.container}>
         <Text style={bodyStyles.text}>
           현재{' '}
-          <Text style={highlightColorStyles.text}>10달러 (총 130,000원)을</Text>{' '}
+          <Text style={highlightColorStyles.text}>
+            {`${fxDetail?.amount}${moneyData[fxType]} (총 ${totalPrice}원)을`}
+          </Text>{' '}
           가지고 있어요
         </Text>
         <Text style={bodyStyles.text}>
-          평균 <Text style={highlightColorStyles.text}>1234</Text>원에 사셨고,
-          현재 1달러당 <Text style={highlightColorStyles.text}>2303</Text>
+          평균 <Text style={highlightColorStyles.text}>{avgPrice}</Text>원에
+          사셨고, 현재 1{moneyData[fxType]}당{' '}
+          <Text style={highlightColorStyles.text}>{fxDetail.price}</Text>
           원이에요,
         </Text>
         <Text style={bodyStyles.text}>
-          현재 수익률은 <Text style={getFluRateColor(21.3)}>+21.3%</Text>에요
+          현재 수익률은{' '}
+          <Text style={getFluRateColor(profitRate)}>{profitRate}%</Text>에요
         </Text>
       </View>
 

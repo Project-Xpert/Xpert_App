@@ -15,6 +15,7 @@ interface BtnProps {
 }
 
 const FXDetailBtn = (props: BtnProps) => {
+  const standardFxAmount = props.FXName === '일본' ? 100 : 1;
   const changePercent = {
     ...styles.changePercent,
     color:
@@ -24,8 +25,6 @@ const FXDetailBtn = (props: BtnProps) => {
         ? colorStyles.basicText
         : colorStyles.defaultBlue,
   };
-
-  const standardFxAmount = props.country == '일본' ? 100 : 1;
 
   return (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
