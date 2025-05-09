@@ -72,7 +72,7 @@ const FXDetail = ({route}: any) => {
   }, []);
 
   const handlerBuyButtonPress = () => {
-    navigator.navigate('TradeFX');
+    navigator.navigate('TradeFX', {fxType});
   };
 
   const getFluRateColor = (fluRate: number) => {

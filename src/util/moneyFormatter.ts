@@ -1,5 +1,5 @@
 export default (price: string | number) => {
-  price = String(price);
+  price = String(Math.round(Number(price)));
   let result = '';
 
   for (let i = 0; i < Math.ceil(price.length / 3); i += 1) {

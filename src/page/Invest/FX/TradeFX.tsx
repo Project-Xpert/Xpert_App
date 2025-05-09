@@ -4,31 +4,78 @@ import BasicContainer from '../../../components/common/BasicContainer';
 import QuestionBtn from '../../../components/common/buttons/QuestionBtn';
 import BasicHeader from '../../../components/common/headers/BasicHeader';
 import SmallBtn from '../../../components/common/buttons/SmallBtn';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import UnitInput from '../../../components/common/inputs/UnitInput';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import {colorStyles} from '../../../assets/styles/color';
 import moneyFormatter from '../../../util/moneyFormatter';
 import Button from '../../../components/common/buttons/Button';
+import {FxAPI} from '../../../api/fx';
 
-const mockData = {
-  ttb: 1452,
-  tts: 1481,
-  ownedFX: 1000,
-  userMoney: 1000000,
+const moneyData = {
+  USD: '달러',
+  JPY: '엔',
+  EUR: '유로',
+  CNH: '위안',
+  CHF: '프랑',
+  GBP: '파운드',
 };
 
-const TradeFX = () => {
+const moneyNameData = {
+  USD: '미화',
+  JPY: '엔화',
+  EUR: '유로화',
+  CNH: '위안화',
+  CHF: '프랑화',
+  GBP: '파운드화',
+};
+
+interface TradeData {
+  ttb: number;
+  tts: number;
+  ownedFx: number;
+  userMoney: number;
+}
+
+const TradeFX = ({route}: any) => {
+  const fxType: 'USD' | 'JPY' | 'EUR' | 'CNH' | 'CHF' | 'GBP' =
+    route.params.fxType;
+  const standardFxAmount = fxType === 'JPY' ? 100 : 1;
+  const [fxTradeData, setFxTradeData] = useState<TradeData>({
+    ttb: 0,
+    tts: 0,
+    ownedFx: 0,
+    userMoney: 0,
+  });
+
   const [selectedOption, setSelectedOption] = useState<'toKR' | 'toFX'>('toFX');
   const [value, setValue] = useState<string>('');
 
-  const moneyUnit = selectedOption === 'toFX' ? '달러' : '원';
-  const reverseMoneyUnit = selectedOption === 'toFX' ? '원' : '달러';
-  const moneyName = selectedOption === 'toFX' ? '미화' : '한화';
-  const reverseMoneyName = selectedOption === 'toFX' ? '한화' : '미화';
+  const moneyUnit = selectedOption === 'toFX' ? moneyData[fxType] : '원';
+  const reverseMoneyUnit = selectedOption === 'toFX' ? '원' : moneyData[fxType];
+  const moneyName = selectedOption === 'toFX' ? moneyNameData[fxType] : '한화';
+  const reverseMoneyName =
+    selectedOption === 'toFX' ? '한화' : moneyNameData[fxType];
 
-  const sellPrice = Number(value) * mockData.ttb;
-  const buyPrice = Number(value) * mockData.tts;
+  const sellPrice = (Number(value) / standardFxAmount) * fxTradeData.ttb;
+  const buyPrice = (Number(value) / standardFxAmount) * fxTradeData.tts;
+
+  useEffect(() => {
+    FxAPI.getFxTradeData(fxType)
+      .then(response => {
+        const {buyPrice, sellPrice, ownedFx, userMoney} = response.data;
+
+        setFxTradeData({
+          ttb: sellPrice,
+          tts: buyPrice,
+          ownedFx,
+          userMoney,
+        });
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }, []);
 
   const handleOptionChange = (newOption: 'toKR' | 'toFX') => {
     setSelectedOption(newOption);
@@ -51,16 +98,18 @@ const TradeFX = () => {
 
       <View style={topDescriptionStyles.container}>
         <Text style={topDescriptionStyles.text}>
-          현재 1달러당{' '}
+          현재 {standardFxAmount}
+          {moneyData[fxType]}당{' '}
           <Text style={highlightColorStyles.text}>
-            {`사실땐 ${moneyFormatter(mockData.tts)}원`}
+            {`사실땐 ${moneyFormatter(fxTradeData.tts)}원`}
           </Text>
           입니다
         </Text>
         <Text style={topDescriptionStyles.text}>
-          현재 1달러당{' '}
+          현재 {standardFxAmount}
+          {moneyData[fxType]}당{' '}
           <Text style={highlightColorStyles.text}>
-            {`파실땐 ${moneyFormatter(mockData.ttb)}원`}
+            {`파실땐 ${moneyFormatter(fxTradeData.ttb)}원`}
           </Text>
           입니다
         </Text>
@@ -69,7 +118,11 @@ const TradeFX = () => {
       <View style={topButtonsStyles.container}>
         <View style={topButtonsStyles.innerContainer}>
           <SmallBtn
-            text={'달러로'}
+            text={`${moneyData[fxType]}${
+              fxType == 'JPY' || fxType == 'CNH' || fxType == 'CHF'
+                ? '으로'
+                : '로'
+            }`}
             selected={selectedOption === 'toFX'}
             onClick={() => handleOptionChange('toFX')}
           />
@@ -84,7 +137,7 @@ const TradeFX = () => {
       <UnitInput
         marginTop={screenSize.getVH(2.6)}
         placeholder={'얼마를 환전할까요?'}
-        unit={'달러'}
+        unit={moneyData[fxType]}
         value={value}
         onChange={e => handleInputChange(e.nativeEvent.text)}
       />
@@ -92,7 +145,9 @@ const TradeFX = () => {
       <View style={bottomDescriptionStyles.container}>
         <Text style={bottomDescriptionStyles.text}>
           {`${reverseMoneyName} ${moneyFormatter(
-            selectedOption === 'toFX' ? mockData.userMoney : mockData.ownedFX,
+            selectedOption === 'toFX'
+              ? fxTradeData.userMoney
+              : fxTradeData.ownedFx,
           )}${reverseMoneyUnit} 중에 `}
           {selectedOption === 'toFX'
             ? moneyFormatter(buyPrice)
@@ -103,11 +158,17 @@ const TradeFX = () => {
           {moneyName}{' '}
           <Text style={highlightColorStyles.text}>
             {selectedOption === 'toFX'
-              ? moneyFormatter(value)
+              ? moneyFormatter(value !== '' ? value : 0)
               : moneyFormatter(sellPrice)}
             {moneyUnit}
           </Text>
-          으로 바꿀게요
+          {fxType == 'JPY' ||
+          fxType == 'CNH' ||
+          fxType == 'CHF' ||
+          moneyUnit == '원'
+            ? '으로'
+            : '로'}{' '}
+          바꿀게요
         </Text>
       </View>
 
@@ -117,9 +178,10 @@ const TradeFX = () => {
         size={'large'}
         onPress={handleSellBtnPress}
         disable={
-          (selectedOption === 'toFX' && buyPrice > mockData.userMoney) ||
-          (selectedOption === 'toKR' && Number(value) > mockData.ownedFX) ||
-          value === ''
+          (selectedOption === 'toFX' && buyPrice > fxTradeData.userMoney) ||
+          (selectedOption === 'toKR' && Number(value) > fxTradeData.ownedFx) ||
+          Number(value) % standardFxAmount !== 0 ||
+          Number(value) < 1
         }
       />
     </BasicContainer>

@@ -43,7 +43,6 @@ const FXHome = () => {
   useEffect(() => {
     FxAPI.getFxDataList()
       .then(response => {
-        console.log(response.data.data);
         if (response.data) {
           setFxData(response.data.data);
         }
