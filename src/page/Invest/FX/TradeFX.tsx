@@ -11,6 +11,7 @@ import {colorStyles} from '../../../assets/styles/color';
 import moneyFormatter from '../../../util/moneyFormatter';
 import Button from '../../../components/common/buttons/Button';
 import {FxAPI} from '../../../api/fx';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const moneyData = {
   USD: '달러',
@@ -38,6 +39,7 @@ interface TradeData {
 }
 
 const TradeFX = ({route}: any) => {
+  const navigator = useNavigation<NavigationProp<any>>();
   const fxType: 'USD' | 'JPY' | 'EUR' | 'CNH' | 'CHF' | 'GBP' =
     route.params.fxType;
   const standardFxAmount = fxType === 'JPY' ? 100 : 1;
@@ -86,7 +88,18 @@ const TradeFX = ({route}: any) => {
     setValue(Number.isNaN(newValue) ? '' : String(newValue));
   };
 
-  const handleSellBtnPress = () => {};
+  const handleBuySellBtnPress = () => {
+    if (selectedOption == 'toFX') {
+      FxAPI.buyFx({type: fxType, amount: Number(value) / standardFxAmount})
+        .then(response => {
+          navigator.navigate('Invest');
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    } else {
+    }
+  };
 
   return (
     <BasicContainer paddingTop={screenSize.getVH(9.2)}>
@@ -176,7 +189,7 @@ const TradeFX = ({route}: any) => {
         text={'환전하기'}
         marginTop={screenSize.getVH(40)}
         size={'large'}
-        onPress={handleSellBtnPress}
+        onPress={handleBuySellBtnPress}
         disable={
           (selectedOption === 'toFX' && buyPrice > fxTradeData.userMoney) ||
           (selectedOption === 'toKR' && Number(value) > fxTradeData.ownedFx) ||

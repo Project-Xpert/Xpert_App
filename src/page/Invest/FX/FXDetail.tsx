@@ -115,13 +115,16 @@ const FXDetail = ({route}: any) => {
         <Text style={bodyStyles.text}>
           현재{' '}
           <Text style={highlightColorStyles.text}>
-            {`${fxDetail?.amount}${moneyData[fxType]} (총 ${totalPrice}원)을`}
+            {`${fxDetail.amount * standardFxAmount}${
+              moneyData[fxType]
+            } (총 ${totalPrice}원)을`}
           </Text>{' '}
           가지고 있어요
         </Text>
         <Text style={bodyStyles.text}>
           평균 <Text style={highlightColorStyles.text}>{avgPrice}</Text>원에
-          사셨고, 현재 1{moneyData[fxType]}당{' '}
+          사셨고, 현재 {1 * standardFxAmount}
+          {moneyData[fxType]}당{' '}
           <Text style={highlightColorStyles.text}>{fxDetail.price}</Text>
           원이에요,
         </Text>
