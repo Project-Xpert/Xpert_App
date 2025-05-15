@@ -90,7 +90,7 @@ const TradeFX = ({route}: any) => {
 
   const handleBuySellBtnPress = () => {
     if (selectedOption == 'toFX') {
-      FxAPI.buyFx({type: fxType, amount: Number(value) / standardFxAmount})
+      FxAPI.buyFx({type: fxType, amount: Number(value)})
         .then(response => {
           navigator.navigate('Invest');
         })
@@ -98,6 +98,13 @@ const TradeFX = ({route}: any) => {
           console.error(e);
         });
     } else {
+      FxAPI.sellFx({type: fxType, amount: Number(value)})
+        .then(response => {
+          navigator.navigate('Invest');
+        })
+        .catch(e => {
+          console.error(e);
+        });
     }
   };
 

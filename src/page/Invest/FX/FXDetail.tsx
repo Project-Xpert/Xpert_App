@@ -9,6 +9,7 @@ import {colorStyles} from '../../../assets/styles/color';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {useEffect, useState} from 'react';
 import {FxAPI} from '../../../api/fx';
+import moneyFormatter from '../../../util/moneyFormatter';
 
 const countryData = {
   USD: '미국',
@@ -52,8 +53,9 @@ const FXDetail = ({route}: any) => {
   const standardFxAmount = fxType === 'JPY' ? 100 : 1;
   const fluRate = route.params.fluRate;
 
-  const totalPrice = fxDetail.amount * fxDetail.price;
-  const avgPrice = Math.round(fxDetail.sumOfBuy / fxDetail.amount) || 0;
+  const totalPrice = (fxDetail.amount / standardFxAmount) * fxDetail.price;
+  const avgPrice =
+    Math.round(fxDetail.sumOfBuy / (fxDetail.amount / standardFxAmount)) || 0;
   const profitRate =
     Number(
       (((totalPrice - fxDetail.sumOfBuy) / fxDetail.sumOfBuy) * 100).toFixed(2),
@@ -104,10 +106,12 @@ const FXDetail = ({route}: any) => {
 
       <Text style={priceStyles.title}>
         {`현재 ${standardFxAmount}${moneyData[fxType]}당 `}
-        <Text style={highlightColorStyles.text}>{`${fxDetail.price}원`}</Text>
+        <Text style={highlightColorStyles.text}>{`${moneyFormatter(
+          fxDetail.price,
+        )}원`}</Text>
       </Text>
       <Text style={priceStyles.description}>
-        어제보다 <Text style={getFluRateColor(-0.24)}>{`${fluRate}%`}</Text>{' '}
+        어제보다 <Text style={getFluRateColor(fluRate)}>{`${fluRate}%`}</Text>{' '}
         변동했어요
       </Text>
 
@@ -115,17 +119,22 @@ const FXDetail = ({route}: any) => {
         <Text style={bodyStyles.text}>
           현재{' '}
           <Text style={highlightColorStyles.text}>
-            {`${fxDetail.amount * standardFxAmount}${
+            {`${moneyFormatter(fxDetail.amount)}${
               moneyData[fxType]
-            } (총 ${totalPrice}원)을`}
+            } (총 ${moneyFormatter(totalPrice)}원)을`}
           </Text>{' '}
           가지고 있어요
         </Text>
         <Text style={bodyStyles.text}>
-          평균 <Text style={highlightColorStyles.text}>{avgPrice}</Text>원에
-          사셨고, 현재 {1 * standardFxAmount}
+          평균{' '}
+          <Text style={highlightColorStyles.text}>
+            {moneyFormatter(avgPrice)}
+          </Text>
+          원에 사셨고, 현재 {standardFxAmount}
           {moneyData[fxType]}당{' '}
-          <Text style={highlightColorStyles.text}>{fxDetail.price}</Text>
+          <Text style={highlightColorStyles.text}>
+            {moneyFormatter(fxDetail.price)}
+          </Text>
           원이에요,
         </Text>
         <Text style={bodyStyles.text}>

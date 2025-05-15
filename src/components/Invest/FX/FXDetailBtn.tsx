@@ -15,7 +15,7 @@ interface BtnProps {
 }
 
 const FXDetailBtn = (props: BtnProps) => {
-  const standardFxAmount = props.FXName === '일본' ? 100 : 1;
+  const standardFxAmount = props.FXName === '엔' ? 100 : 1;
   const changePercent = {
     ...styles.changePercent,
     color:

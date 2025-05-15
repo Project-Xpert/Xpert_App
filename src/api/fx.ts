@@ -52,9 +52,25 @@ const buyFx = async (dto: buyFxDto) => {
   });
 };
 
+interface sellFxDto {
+  type: 'USD' | 'JPY' | 'EUR' | 'CNH' | 'CHF' | 'GBP';
+  amount: number;
+}
+
+const sellFx = async (dto: sellFxDto) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.patch(`${BASE_URL}`, dto, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 export const FxAPI = {
   getFxDataList,
   getFxDetail,
   getFxTradeData,
   buyFx,
+  sellFx,
 };
