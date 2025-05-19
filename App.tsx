@@ -14,8 +14,8 @@ import BuyStock from './src/page/Invest/stock/BuyStock';
 import StockDetail from './src/page/Invest/stock/StockDetail';
 import BuyStockDetail from './src/page/Invest/stock/BuyStockDetail';
 import AccountDetail from './src/page/Invest/account/AccountDetail';
-import CreateAccount from './src/page/Invest/account/CreateAccount';
-import CreateAccountDetail from './src/page/Invest/account/CreateAccountDetail';
+import CreateAccountList from './src/page/Invest/account/CreateAccountList';
+import CreateDepositDetail from './src/page/Invest/account/CreateDepositDetail';
 import NewsHome from './src/page/news/NewsHome';
 import NewsDetail from './src/page/news/NewsDetail';
 import TradeGold from './src/page/Invest/gold/TradeGold';
@@ -26,6 +26,8 @@ import TradeFX from './src/page/Invest/FX/TradeFX';
 import Mypage from './src/page/Mypage/Mypage';
 import PostDetail from './src/page/social/PostDetail';
 import CreatePost from './src/page/social/CreatePost';
+import CreateSavingDetail from './src/page/Invest/account/CreateSavingDetail';
+import SuccessCreateAccount from './src/page/Invest/account/SuccessCreateAccount';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -70,10 +72,21 @@ const App = () => {
           />
           <Stack.Screen name="AccountDetail" component={AccountDetail} />
           <Stack.Screen
-            name="CreateAccountDetail"
-            component={CreateAccountDetail}
+            name="CreateDepositDetail"
+            component={CreateDepositDetail}
           />
-          <Stack.Screen name="CreateAccount" component={CreateAccount} />
+          <Stack.Screen
+            name="CreateSavingDetail"
+            component={CreateSavingDetail}
+          />
+          <Stack.Screen
+            name="CreateAccountList"
+            component={CreateAccountList}
+          />
+          <Stack.Screen
+            name="SuccessCreateAccount"
+            component={SuccessCreateAccount}
+          />
           <Stack.Screen name="BuyStock" component={BuyStock} />
           <Stack.Screen name="StockDetail" component={StockDetail} />
           <Stack.Screen name="BuyStockDetail" component={BuyStockDetail} />

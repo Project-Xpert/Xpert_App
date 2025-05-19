@@ -9,19 +9,68 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import UnderBarBtn from '../../../components/common/buttons/UnderBarBtn';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import {DepositAPI} from '../../../api/deposit';
 
 interface SearchTagType {
   accountType: 'ALL' | 'Deposit' | 'Savings';
   bankType: 'ALL' | 'First' | 'Second';
 }
 
-const CreateAccount = () => {
+interface depositItem {
+  companyName: string;
+  productName: string;
+  type: string;
+  rate: number;
+  period: number;
+}
+
+interface savingItem {
+  companyName: string;
+  productName: string;
+  type: string;
+  saveType: string;
+  rate: number;
+  period: number;
+}
+
+interface depositData {
+  prime: depositItem[];
+  subprime: depositItem[];
+}
+
+interface savingData {
+  prime: savingItem[];
+  subprime: savingItem[];
+}
+
+const CreateAccountList = () => {
+  const navigator = useNavigation<NavigationProp<any>>();
+  const [depositData, setDepositData] = useState<depositData>({
+    prime: [],
+    subprime: [],
+  });
+  const [savingData, setSavingData] = useState<savingData>({
+    prime: [],
+    subprime: [],
+  });
   const [searchTag, setSearchTag] = useState<SearchTagType>({
     accountType: 'ALL',
     bankType: 'ALL',
   });
-  const navigator = useNavigation<NavigationProp<any>>();
+
+  useEffect(() => {
+    DepositAPI.getDepositInfoList()
+      .then(response => {
+        if (response.data) {
+          setDepositData(response.data.deposit);
+          setSavingData(response.data.saving);
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }, []);
 
   const onUnderbarPress = (
     name: 'accountType' | 'bankType',
@@ -30,15 +79,21 @@ const CreateAccount = () => {
     setSearchTag({...searchTag, [name]: value});
   };
 
-  const onDetailBtn = () => {
-    navigator.navigate('CreateAccountDetail');
+  const createDepositAccountHandler = (data: depositItem) => {
+    navigator.navigate('CreateDepositDetail', {data});
+  };
+
+  const createSavingAccountHandler = (data: savingItem) => {
+    navigator.navigate('CreateSavingDetail', {data});
   };
 
   return (
     <BasicContainer paddingTop={screenSize.getVH(9.3)}>
       <BasicHeader text={'신규 통장 개설'} />
       <Text style={styles.topDescription}>
-        {'실제 금융권의 예금/적금 정보를\n실시간으로 반영해오고 있습니다.'}
+        {
+          '실제 금융권의 예금/적금 정보를\n금융감독원에서 실시간으로 반영해오고 있습니다.'
+        }
       </Text>
 
       <View style={styles.underBarBtnContainer}>
@@ -84,36 +139,50 @@ const CreateAccount = () => {
       <View style={styles.ScrollViewContainer}>
         <ScrollView style={styles.scrollView}>
           <View style={styles.listContainer}>
-            <AccountDetailBtn
-              name={'신한은행 예금통장'}
-              subDescription={'# 취업시켜줘 # 제발'}
-              onPress={onDetailBtn}
-            />
-            <AccountDetailBtn
-              name={'신한은행 예금통장'}
-              subDescription={'# 취업시켜줘 # 제발'}
-              onPress={onDetailBtn}
-            />
-            <AccountDetailBtn
-              name={'신한은행 예금통장'}
-              subDescription={'# 취업시켜줘 # 제발'}
-              onPress={onDetailBtn}
-            />
-            <AccountDetailBtn
-              name={'신한은행 예금통장'}
-              subDescription={'# 취업시켜줘 # 제발'}
-              onPress={onDetailBtn}
-            />
-            <AccountDetailBtn
-              name={'신한은행 예금통장'}
-              subDescription={'# 취업시켜줘 # 제발'}
-              onPress={onDetailBtn}
-            />
-            <AccountDetailBtn
-              name={'신한은행 예금통장'}
-              subDescription={'# 취업시켜줘 # 제발'}
-              onPress={onDetailBtn}
-            />
+            {searchTag.accountType === 'Savings' ||
+              searchTag.bankType === 'Second' ||
+              depositData.prime.map((datum, idx) => (
+                <AccountDetailBtn
+                  key={idx}
+                  name={datum.productName}
+                  companyName={datum.companyName}
+                  subDescription={`# ${datum.companyName}  # 예금`}
+                  onPress={() => createDepositAccountHandler(datum)}
+                />
+              ))}
+            {searchTag.accountType === 'Savings' ||
+              searchTag.bankType === 'First' ||
+              depositData.subprime.map((datum, idx) => (
+                <AccountDetailBtn
+                  key={idx}
+                  name={datum.productName}
+                  companyName={datum.companyName}
+                  subDescription={`# ${datum.companyName}  # 예금`}
+                  onPress={() => createDepositAccountHandler(datum)}
+                />
+              ))}
+            {searchTag.accountType === 'Deposit' ||
+              searchTag.bankType === 'Second' ||
+              savingData.prime.map((datum, idx) => (
+                <AccountDetailBtn
+                  key={idx}
+                  name={datum.productName}
+                  companyName={datum.companyName}
+                  subDescription={`# ${datum.companyName}  # ${datum.saveType} 적금`}
+                  onPress={() => createSavingAccountHandler(datum)}
+                />
+              ))}
+            {searchTag.accountType === 'Deposit' ||
+              searchTag.bankType === 'First' ||
+              savingData.subprime.map((datum, idx) => (
+                <AccountDetailBtn
+                  key={idx}
+                  name={datum.productName}
+                  companyName={datum.companyName}
+                  subDescription={`# ${datum.companyName}  # ${datum.saveType} 적금`}
+                  onPress={() => createSavingAccountHandler(datum)}
+                />
+              ))}
           </View>
         </ScrollView>
       </View>
@@ -152,4 +221,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateAccount;
+export default CreateAccountList;

@@ -3,9 +3,11 @@ import {screenSize} from '../../../assets/styles/screenSize';
 import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import RightArrowBtn from '../../../assets/image/icon/button/rightArrowBtn.svg';
+import BankLogo from '../../../assets/image/icon/bankLogo/BankLogo';
 
 interface BtnProps {
   name: string;
+  companyName: string;
   subDescription: string;
   onPress: () => void;
 }
@@ -14,14 +16,20 @@ const AccountDetailBtn = (props: BtnProps) => {
   return (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
       <View style={styles.imgContainer}>
-        <Image
+        <BankLogo
+          bank={props.companyName}
           style={styles.logo}
-          src="https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png"
+          width={screenSize.getVH(5)}
+          height={screenSize.getVH(5)}
         />
       </View>
       <View style={styles.stockInfoTextBox}>
-        <Text style={styles.stockName}>{props.name}</Text>
-        <Text style={styles.stockPrice}>{props.subDescription}</Text>
+        <Text style={styles.stockName} ellipsizeMode="tail" numberOfLines={1}>
+          {props.name}
+        </Text>
+        <Text style={styles.stockPrice}>
+          {props.subDescription.replace('주식회사', '').trim()}
+        </Text>
       </View>
 
       <RightArrowBtn
@@ -48,8 +56,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imgContainer: {
-    width: screenSize.getVH(5),
-    height: screenSize.getVH(5),
     borderRadius: screenSize.getVH(2.2),
     backgroundColor: colorStyles.defaultWhite,
     alignItems: 'center',
@@ -72,7 +78,7 @@ const styles = StyleSheet.create({
     color: colorStyles.basicText,
   },
   stockPrice: {
-    width: screenSize.getVW(40),
+    width: screenSize.getVW(45),
     fontSize: screenSize.getVH(1.3),
     fontFamily: fontStyle.SUIT.SemiBold,
     color: colorStyles.descriptionGray,

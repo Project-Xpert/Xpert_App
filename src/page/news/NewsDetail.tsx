@@ -14,18 +14,6 @@ import {ReactNode, useEffect, useState} from 'react';
 import {colorStyles} from '../../assets/styles/color';
 import BottomNav from '../../components/common/BottomNav';
 import {NewsAPI} from '../../api/news';
-import {RouteProp} from '@react-navigation/native';
-
-type RootStackParamList = {
-  Home: undefined;
-  NewsDetail: {link: string};
-};
-
-type NewsDetailRouteProp = RouteProp<RootStackParamList, 'NewsDetail'>;
-
-type NewsDetailProps = {
-  route: NewsDetailRouteProp;
-};
 
 enum TextStyleEnum {
   title = 'title',
@@ -47,7 +35,7 @@ const getTextStyle = (styleType: TextStyleEnum) => {
   return textStyle;
 };
 
-const NewsDetail = ({route}: NewsDetailProps) => {
+const NewsDetail = ({route}: any) => {
   const {link} = route.params;
   const [data, setData] = useState({
     title: '',

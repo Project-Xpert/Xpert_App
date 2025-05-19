@@ -12,7 +12,7 @@ const AccountHome = () => {
   const navigator = useNavigation<NavigationProp<any>>();
 
   const onPress = () => {
-    navigator.navigate('CreateAccount');
+    navigator.navigate('CreateAccountList');
   };
 
   const onAccountDetailBtnPress = () => {
@@ -40,21 +40,44 @@ const AccountHome = () => {
           name={'신한은행 예금통장'}
           subDescription={'예금액 - 100,000'}
           onPress={onAccountDetailBtnPress}
+          companyName={'신한은행'}
         />
         <AccountDetailBtn
-          name={'신한은행 예금통장'}
+          name={'SC제일은행 첫만남예금'}
           subDescription={'예금액 - 100,000'}
           onPress={onAccountDetailBtnPress}
+          companyName={'SC제일은행'}
         />
       </View>
+
       <Text style={styles.title}>적금 통장</Text>
       <View>
         <AccountDetailBtn
-          name={'신한은행 주택청약 적금'}
+          name={'우리은행 주택청약 적금'}
           subDescription={'총 적금액 - 100,000'}
           onPress={onAccountDetailBtnPress}
+          companyName={'우리은행'}
         />
       </View>
+
+      <Text style={styles.title}>만기된 통장</Text>
+      <Text style={styles.bodyDescriptionText}>
+        만기된 통장을 3일 내로 해약하지 않으면 자동 연장됩니다.
+      </Text>
+      <Text style={styles.bodyDescriptionText}>
+        해당되는 개설된 통장이 없습니다.
+      </Text>
+
+      <Text style={styles.title}>연체된 통장</Text>
+      <Text style={styles.bodyDescriptionText}>
+        {
+          '연체된 통장은 3일 내로 미납될시 자동 해약됩니다.\n이 경우 이자는 지금까지 적립된 만큼만 받으실 수 있습니다.'
+        }
+      </Text>
+      <Text style={styles.bodyDescriptionText}>
+        해당되는 개설된 통장이 없습니다.
+      </Text>
+
       <Button
         text={'새로운 예적금 통장 만들러 가기'}
         marginTop={screenSize.getVH(5.5)}
@@ -95,9 +118,15 @@ const styles = StyleSheet.create({
   title: {
     width: screenSize.getVW(80),
     marginTop: screenSize.getVH(3.3),
-    fontSize: screenSize.getVH(1.6),
-    lineHeight: screenSize.getVH(1.6),
+    fontSize: screenSize.getVH(2),
     color: colorStyles.basicText,
+    fontFamily: fontStyle.SUIT.SemiBold,
+  },
+  bodyDescriptionText: {
+    width: screenSize.getVW(80),
+    marginTop: screenSize.getVH(1.1),
+    fontSize: screenSize.getVH(1.6),
+    color: colorStyles.descriptionGray,
     fontFamily: fontStyle.SUIT.Medium,
   },
 });
