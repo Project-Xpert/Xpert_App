@@ -1,11 +1,11 @@
 import {axios} from './util/axios';
 
-const BASE_URL = '/deposit';
+const BASE_URL = '/account';
 
-const getDepositInfoList = async () => {
+const getAccountInfoList = async () => {
   return await axios.get(`${BASE_URL}/info`);
 };
 
 export const DepositAPI = {
-  getDepositInfoList,
+  getAccountInfoList,
 };
