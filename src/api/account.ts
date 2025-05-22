@@ -14,7 +14,13 @@ const getAccountList = async () => {
 };
 
 const getAccountInfoList = async () => {
-  return await axios.get(`${BASE_URL}/info`);
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.get(`${BASE_URL}/info`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
 };
 
 interface CreateAccountDto {
@@ -48,9 +54,39 @@ const getAccountDetail = async (accountId: string) => {
   });
 };
 
+const deleteAccount = async (accountId: string) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.delete(`${BASE_URL}/${accountId}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+interface updateAutoTransferSettingDto {
+  autoTransfer: boolean;
+  autoTransferAmount: number;
+}
+
+const updateAutoTransferSetting = async (
+  accountId: string,
+  body: updateAutoTransferSettingDto,
+) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.patch(`${BASE_URL}/auto-transfer/${accountId}`, body, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 export const AccountAPI = {
   getAccountInfoList,
   getAccountList,
   createAccount,
   getAccountDetail,
+  deleteAccount,
+  updateAutoTransferSetting,
 };

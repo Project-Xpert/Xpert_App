@@ -17,6 +17,7 @@ import {useState} from 'react';
 import Button from '../../../components/common/buttons/Button';
 import CheckModal from '../../../components/modal/CheckModal';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {AccountAPI} from '../../../api/account';
 
 interface DataInterface {
   productName: string;
@@ -37,6 +38,7 @@ const accountType = {
 };
 
 const AutoTransferSetting = ({route}: any) => {
+  const accountId: string = route.params.accountId;
   const data: DataInterface = route.params.data;
   const navigator = useNavigation<NavigationProp<any>>();
   const [autoTransfer, setAutoTransfer] = useState(data.autoTransfer);
@@ -45,11 +47,12 @@ const AutoTransferSetting = ({route}: any) => {
   );
   const [showModal, setShowModal] = useState(false);
 
+  const isSomethingChanged =
+    autoTransferAmount != data.autoTransferAmount ||
+    autoTransfer != data.autoTransfer;
+
   const goBackBtnPress = () => {
-    if (
-      autoTransferAmount != data.autoTransferAmount ||
-      autoTransfer != data.autoTransfer
-    ) {
+    if (isSomethingChanged) {
       setShowModal(true);
     } else {
       navigator.goBack();
@@ -62,6 +65,19 @@ const AutoTransferSetting = ({route}: any) => {
 
   const handleAutoTransferAmountChangeHandler = (value: string) => {
     setAutoTransferAmount(Number(value));
+  };
+
+  const handleConfirmSetting = () => {
+    AccountAPI.updateAutoTransferSetting(accountId, {
+      autoTransfer,
+      autoTransferAmount,
+    })
+      .then(response => {
+        navigator.navigate('Invest');
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   return (
@@ -119,9 +135,8 @@ const AutoTransferSetting = ({route}: any) => {
         text={'이채정보 수정'}
         marginTop={screenSize.getVH(51)}
         size={'large'}
-        onPress={function (): void {
-          throw new Error('Function not implemented.');
-        }}
+        disable={!isSomethingChanged}
+        onPress={handleConfirmSetting}
       />
     </BasicContainer>
   );

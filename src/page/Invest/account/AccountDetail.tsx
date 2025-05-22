@@ -65,7 +65,16 @@ const AccountDetail = ({route}: any) => {
     setShowDeleteAccountModal(true);
   };
 
-  const deleteAccountEventHandler = () => {};
+  const deleteAccountEventHandler = () => {
+    AccountAPI.deleteAccount(accountId)
+      .then(response => {
+        setShowDeleteAccountModal(false);
+        navigator.navigate('Invest');
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
 
   const cancelDeletingAccountEventHandler = () => {
     setShowDeleteAccountModal(false);
@@ -119,7 +128,7 @@ const AccountDetail = ({route}: any) => {
           marginTop={screenSize.getVH(40.3)}
           size={'mid'}
           onPress={() => {
-            navigator.navigate('AutoTransferSetting', {data});
+            navigator.navigate('AutoTransferSetting', {accountId, data});
           }}
         />
       )}

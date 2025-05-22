@@ -74,7 +74,7 @@ const AccountHome = () => {
   return (
     <InvestHomeContainer>
       <Text style={styles.topDescription}>
-        {'적금과 이자는 매월 1일에 정산됩니다.'}
+        {'적금과 이자는 매주 정산됩니다.'}
       </Text>
       <View style={styles.topInfoBoxContainer}>
         <CoinBagImg
@@ -126,7 +126,7 @@ const AccountHome = () => {
 
       <Text style={styles.title}>만기된 통장</Text>
       <Text style={styles.bodyDescriptionText}>
-        만기된 통장을 3일 내로 해약하지 않으면 자동 연장됩니다.
+        만기된 통장을 3일 내로 연장하지 않으면 자동 해약됩니다.
       </Text>
       {data.expiredAccounts.map((datum, idx) => (
         <AccountDetailBtn
