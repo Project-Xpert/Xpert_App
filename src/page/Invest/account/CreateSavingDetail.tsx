@@ -10,6 +10,7 @@ import {NavigationProp, useNavigation} from '@react-navigation/native';
 import UnitInput from '../../../components/common/inputs/UnitInput';
 import {useState} from 'react';
 import CheckBox from '../../../components/common/buttons/Checkbox';
+import {AccountAPI} from '../../../api/account';
 
 interface SavingItem {
   companyName: string;
@@ -35,7 +36,23 @@ const CreateSavingDetail = ({route}: any) => {
   };
 
   const createAccountHandler = () => {
-    navigation.navigate('SuccessCreateAccount');
+    AccountAPI.createAccount({
+      productName: data.productName,
+      companyName: data.companyName,
+      money: money,
+      accountType:
+        data.saveType === '자유적립식' ? 'FREE_SAVINGS' : 'FIXED_SAVINGS',
+      interestType: data.type === '단리' ? 'SIMPLE' : 'COMPOUND',
+      rate: data.rate,
+      autoTransfer: checkBoxState,
+      expirePeriod: data.period,
+    })
+      .then(response => {
+        navigation.navigate('SuccessCreateAccount');
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   return (

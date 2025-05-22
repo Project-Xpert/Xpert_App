@@ -9,7 +9,7 @@ import BasicHeader from '../../../components/common/headers/BasicHeader';
 import {View, Text, StyleSheet} from 'react-native';
 import {useState} from 'react';
 import UnitInput from '../../../components/common/inputs/UnitInput';
-import CheckBox from '../../../components/common/buttons/Checkbox';
+import {AccountAPI} from '../../../api/account';
 
 interface DepositData {
   companyName: string;
@@ -23,18 +23,28 @@ const CreateDepositDetail = ({route}: any) => {
   const data: DepositData = route.params.data;
   const navigation = useNavigation<NavigationProp<any>>();
   const [money, setMoney] = useState(0);
-  const [checkBoxState, setCheckBoxState] = useState(true);
 
   const inputChangeHandler = (value: string) => {
     setMoney(isNaN(Number(value)) ? 0 : Number(value));
   };
 
-  const handleCheckBoxPress = () => {
-    setCheckBoxState(prev => !prev);
-  };
-
   const createAccountHandler = () => {
-    navigation.navigate('SuccessCreateAccount');
+    AccountAPI.createAccount({
+      productName: data.productName,
+      companyName: data.companyName,
+      money: money,
+      accountType: 'DEPOSIT',
+      interestType: data.type === '단리' ? 'SIMPLE' : 'COMPOUND',
+      rate: data.rate,
+      autoTransfer: false,
+      expirePeriod: data.period,
+    })
+      .then(response => {
+        navigation.navigate('SuccessCreateAccount');
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   return (
@@ -67,23 +77,17 @@ const CreateDepositDetail = ({route}: any) => {
         unit={'원'}
         marginTop={screenSize.getVH(2.7)}
         value={money ? String(money) : ''}
-        placeholder={'초기 금액을 입력해주세요'}
+        placeholder={'예치할 금액을 입력해주세요'}
         onChange={e => {
           inputChangeHandler(e.nativeEvent.text);
         }}
-      />
-
-      <CheckBox
-        enabled={checkBoxState}
-        text={'매주 이 금액으로 자동 입금할까요?'}
-        onPress={handleCheckBoxPress}
       />
 
       <Button
         size={'large'}
         text={'통장 개설하기'}
         disable={String(money) === '0'}
-        marginTop={screenSize.getVH(34)}
+        marginTop={screenSize.getVH(37)}
         onPress={createAccountHandler}
       />
     </BasicContainer>

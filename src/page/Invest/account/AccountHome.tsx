@@ -7,16 +7,68 @@ import CoinBagImg from '../../../assets/image/common/coinbag.svg';
 import Button from '../../../components/common/buttons/Button';
 import AccountDetailBtn from '../../../components/Invest/account/AccountDetailBtn';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {useEffect, useState} from 'react';
+import {AccountAPI} from '../../../api/account';
+import {UserAPI} from '../../../api/user';
+import moneyFormatter from '../../../util/moneyFormatter';
+
+interface AccountListItem {
+  accountId: string;
+  productName: string;
+  companyName: string;
+  totalMoney: number;
+  accountType: 'FIXED_SAVINGS' | 'FREE_SAVINGS' | 'DEPOSIT';
+}
+
+interface DataInterface {
+  deposits: AccountListItem[];
+  savings: AccountListItem[];
+  expiredAccounts: AccountListItem[];
+  overdueAccounts: AccountListItem[];
+}
+
+const accountType = {
+  FIXED_SAVINGS: '정액적립식적금',
+  FREE_SAVINGS: '자유적립식적금',
+  DEPOSIT: '정기예금',
+};
 
 const AccountHome = () => {
   const navigator = useNavigation<NavigationProp<any>>();
+  const [userMoney, setUserMoney] = useState(0);
+  const [data, setData] = useState<DataInterface>({
+    deposits: [],
+    savings: [],
+    expiredAccounts: [],
+    overdueAccounts: [],
+  });
+
+  useEffect(() => {
+    AccountAPI.getAccountList()
+      .then(response => {
+        if (response.data) {
+          setData(response.data);
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      });
+
+    UserAPI.GetUserData()
+      .then(response => {
+        setUserMoney(response.data.money);
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  }, []);
 
   const onPress = () => {
     navigator.navigate('CreateAccountList');
   };
 
-  const onAccountDetailBtnPress = () => {
-    navigator.navigate('AccountDetail');
+  const onAccountDetailBtnPress = (accountId: string) => {
+    navigator.navigate('AccountDetail', {accountId});
   };
 
   return (
@@ -31,42 +83,65 @@ const AccountHome = () => {
         />
         <View style={styles.topInfoTextBox}>
           <Text style={styles.topInfoText}>현재 사용 가능한 시드머니</Text>
-          <Text style={styles.topInfoText}>100,000,000원</Text>
+          <Text style={styles.topInfoText}>{`${moneyFormatter(
+            userMoney,
+          )}원`}</Text>
         </View>
       </View>
       <Text style={styles.title}>예금 통장</Text>
       <View>
-        <AccountDetailBtn
-          name={'신한은행 예금통장'}
-          subDescription={'예금액 - 100,000'}
-          onPress={onAccountDetailBtnPress}
-          companyName={'신한은행'}
-        />
-        <AccountDetailBtn
-          name={'SC제일은행 첫만남예금'}
-          subDescription={'예금액 - 100,000'}
-          onPress={onAccountDetailBtnPress}
-          companyName={'SC제일은행'}
-        />
+        {data.deposits.map((datum, idx) => (
+          <AccountDetailBtn
+            key={idx}
+            name={`${datum.companyName} ${datum.productName}`}
+            subDescription={`${accountType[datum.accountType]}통장`}
+            onPress={() => onAccountDetailBtnPress(datum.accountId)}
+            companyName={datum.companyName}
+          />
+        ))}
+        {data.deposits.length <= 0 && (
+          <Text style={styles.bodyDescriptionText}>
+            해당되는 개설된 통장이 없습니다.
+          </Text>
+        )}
       </View>
 
       <Text style={styles.title}>적금 통장</Text>
       <View>
-        <AccountDetailBtn
-          name={'우리은행 주택청약 적금'}
-          subDescription={'총 적금액 - 100,000'}
-          onPress={onAccountDetailBtnPress}
-          companyName={'우리은행'}
-        />
+        {data.savings.map((datum, idx) => (
+          <AccountDetailBtn
+            key={idx}
+            name={`${datum.companyName} ${datum.productName}`}
+            subDescription={`${accountType[datum.accountType]}통장`}
+            onPress={() => onAccountDetailBtnPress(datum.accountId)}
+            companyName={datum.companyName}
+          />
+        ))}
+        {data.savings.length <= 0 && (
+          <Text style={styles.bodyDescriptionText}>
+            해당되는 개설된 통장이 없습니다.
+          </Text>
+        )}
       </View>
 
       <Text style={styles.title}>만기된 통장</Text>
       <Text style={styles.bodyDescriptionText}>
         만기된 통장을 3일 내로 해약하지 않으면 자동 연장됩니다.
       </Text>
-      <Text style={styles.bodyDescriptionText}>
-        해당되는 개설된 통장이 없습니다.
-      </Text>
+      {data.expiredAccounts.map((datum, idx) => (
+        <AccountDetailBtn
+          key={idx}
+          name={`${datum.companyName} ${datum.productName}`}
+          subDescription={`${accountType[datum.accountType]}통장`}
+          onPress={() => onAccountDetailBtnPress(datum.accountId)}
+          companyName={datum.companyName}
+        />
+      ))}
+      {data.expiredAccounts.length <= 0 && (
+        <Text style={styles.bodyDescriptionText}>
+          해당되는 개설된 통장이 없습니다.
+        </Text>
+      )}
 
       <Text style={styles.title}>연체된 통장</Text>
       <Text style={styles.bodyDescriptionText}>
@@ -74,9 +149,20 @@ const AccountHome = () => {
           '연체된 통장은 3일 내로 미납될시 자동 해약됩니다.\n이 경우 이자는 지금까지 적립된 만큼만 받으실 수 있습니다.'
         }
       </Text>
-      <Text style={styles.bodyDescriptionText}>
-        해당되는 개설된 통장이 없습니다.
-      </Text>
+      {data.overdueAccounts.map((datum, idx) => (
+        <AccountDetailBtn
+          key={idx}
+          name={`${datum.companyName} ${datum.productName}`}
+          subDescription={`${accountType[datum.accountType]}통장`}
+          onPress={() => onAccountDetailBtnPress(datum.accountId)}
+          companyName={datum.companyName}
+        />
+      ))}
+      {data.overdueAccounts.length <= 0 && (
+        <Text style={styles.bodyDescriptionText}>
+          해당되는 개설된 통장이 없습니다.
+        </Text>
+      )}
 
       <Button
         text={'새로운 예적금 통장 만들러 가기'}

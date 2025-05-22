@@ -25,7 +25,7 @@ const AccountDetailBtn = (props: BtnProps) => {
       </View>
       <View style={styles.stockInfoTextBox}>
         <Text style={styles.stockName} ellipsizeMode="tail" numberOfLines={1}>
-          {props.name}
+          {props.name.replace('주식회사', '').trim()}
         </Text>
         <Text style={styles.stockPrice}>
           {props.subDescription.replace('주식회사', '').trim()}

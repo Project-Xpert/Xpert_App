@@ -10,7 +10,7 @@ import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import UnderBarBtn from '../../../components/common/buttons/UnderBarBtn';
 import {useEffect, useState} from 'react';
-import {DepositAPI} from '../../../api/account';
+import {AccountAPI} from '../../../api/account';
 
 interface SearchTagType {
   accountType: 'ALL' | 'Deposit' | 'Savings';
@@ -60,7 +60,7 @@ const CreateAccountList = () => {
   });
 
   useEffect(() => {
-    DepositAPI.getAccountInfoList()
+    AccountAPI.getAccountInfoList()
       .then(response => {
         if (response.data) {
           setDepositData(response.data.deposit);

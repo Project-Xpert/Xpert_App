@@ -13,5 +13,5 @@ export const colorStyles = {
   defaultRed: '#FB4A31',
   defaultBlue: '#3227CC',
   selectedDropdownBackGround: '#F2F4FF',
-  transparentBackground: '#6A6A6A',
+  transparentBackground: 'rgba(106, 106, 106, 0.75)',
 };

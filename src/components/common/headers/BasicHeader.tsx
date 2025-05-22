@@ -10,13 +10,20 @@ interface HeaderProps {
   text: string;
   hideArrowBtn?: boolean;
   btnNavigate?: string;
+  doNotGoBack?: boolean;
+  goBackFunc?: () => void;
 }
 
 const BasicHeader = (props: HeaderProps) => {
   const navigator = useNavigation<NavigationProp<any>>();
 
   const onArrowPress = () => {
-    navigator.goBack();
+    if (props.goBackFunc) {
+      props.goBackFunc();
+    }
+    if (!props.doNotGoBack) {
+      navigator.goBack();
+    }
   };
 
   return (

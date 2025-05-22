@@ -28,11 +28,22 @@ import PostDetail from './src/page/social/PostDetail';
 import CreatePost from './src/page/social/CreatePost';
 import CreateSavingDetail from './src/page/Invest/account/CreateSavingDetail';
 import SuccessCreateAccount from './src/page/Invest/account/SuccessCreateAccount';
+import useModalData from './src/data/modalData';
+import AutoTransferSetting from './src/page/Invest/account/AutoTransferSetting';
 
 const Stack = createStackNavigator();
 const App = () => {
+  const {modalEnabled} = useModalData();
+
+  const safeAreaViewStyle = {
+    flex: 1,
+    backgroundColor: modalEnabled
+      ? colorStyles.transparentBackground
+      : colorStyles.defaultWhite,
+  };
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: colorStyles.defaultWhite}}>
+    <SafeAreaView style={safeAreaViewStyle}>
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName="Landing"
@@ -71,6 +82,10 @@ const App = () => {
             options={{animation: 'fade'}}
           />
           <Stack.Screen name="AccountDetail" component={AccountDetail} />
+          <Stack.Screen
+            name="AutoTransferSetting"
+            component={AutoTransferSetting}
+          />
           <Stack.Screen
             name="CreateDepositDetail"
             component={CreateDepositDetail}
