@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {screenSize} from '../../assets/styles/screenSize';
 import BasicContainer from '../../components/common/BasicContainer';
 import BasicHeader from '../../components/common/headers/BasicHeader';
@@ -10,162 +17,222 @@ import Comment from '../../components/Social/Comment';
 import Reply from '../../components/Social/Reply';
 import {ScrollView} from 'react-native-gesture-handler';
 import BottomNav from '../../components/common/BottomNav';
+import {useEffect, useState} from 'react';
+import {PostAPI} from '../../api/post';
+import useModalData from '../../data/modalData';
+import CommentInput from '../../components/Social/post/CommentInput';
+import {CommentAPI} from '../../api/comment';
 
-const mockData = {
-  profile:
-    'https://i.pinimg.com/736x/b0/16/b4/b016b45823aeb706c3963f5e709913bb.jpg',
-  username: '오송주',
-  createdAt: '2025.09.20',
-  title: '잃어도 되는 돈으로 주식을 하라고 하셨지..',
-  mainImg:
-    'https://i.pinimg.com/736x/28/af/32/28af3273e6a1796f33356f53221fb487.jpg',
-  contents:
-    '잃어도 되는돈이 어디있어 내돈 돌려내 내돈돌려내!!!!!\n\n잃어도 되는돈이면 니가 대신 잃든가!!!\n아아악 아아아아아ㅏㅏㅏ 아 진짜로 제발 진짜로 왜 그러는거야 나한테 아 진짜 왜? 왜???? 왜!!!!!!!!!!!',
-  likeCnt: 40,
-  comments: [
-    {
-      commentId: '1',
-      writer: '녹차아킴 학살자',
-      profile:
-        'https://i.pinimg.com/736x/4a/a2/aa/4aa2aa851fc85aa953657248f05e6786.jpg',
-      contents: '아니 근데 이게 말이 됨? 미장 요즘 왜이럼?? 이해가 안되네',
-      createdAt: '2024-09-20',
-      likeCnt: 12,
-    },
-    {
-      commentId: '2',
-      writer: 'Notion Lee',
-      profile:
-        'https://i.pinimg.com/474x/ce/e8/20/cee8205019d2b7ad317087c36a8383c3.jpg',
-      contents: '금에 올인한 나의 승리다 ㅎ',
-      createdAt: '2024-09-20',
-      likeCnt: 11,
-    },
-  ],
-  replies: [
-    {
-      commentId: '1',
-      writer: '해피집사 IN 일본',
-      profile:
-        'https://i.pinimg.com/736x/96/9e/94/969e94ee6653be71e12ea4913c93412d.jpg',
-      contents:
-        '진짜 왜 그럴까요.. 저도 이해가 안되요.. 트럼프가 집권하고 미장이 좋은 날이 없네요..',
-      createdAt: '2024-09-20',
-      likeCnt: 2,
-    },
-    {
-      commentId: '2',
-      writer: '무소식이 히소sick',
-      profile:
-        'https://i.pinimg.com/474x/63/d0/79/63d079598cb3e7388d1c229696a48f3e.jpg',
-      contents: '우우 나가라',
-      createdAt: '2024-09-20',
-      likeCnt: 24,
-    },
-    {
-      commentId: '2',
-      writer: '무소식이 히소sick',
-      profile:
-        'https://i.pinimg.com/474x/63/d0/79/63d079598cb3e7388d1c229696a48f3e.jpg',
-      contents: '우우 나가라222',
-      createdAt: '2024-09-20',
-      likeCnt: 24,
-    },
-  ],
-};
+interface PostDetail {
+  profile: string;
+  username: string;
+  createdAt: string;
+  title: string;
+  contents: string;
+  mainImg: string;
+  likeCnt: number;
+  comments: CommentDetail[];
+  replies: ReplyDetail[];
+}
+
+interface CommentDetail {
+  commentId: string;
+  userId: string;
+  writer: string;
+  profile: string;
+  contents: string;
+  createdAt: string;
+  likeCnt: number;
+}
+
+interface ReplyDetail {
+  replyId: string;
+  commentId: string;
+  userId: string;
+  writer: string;
+  profile: string;
+  contents: string;
+  createdAt: string;
+  likeCnt: number;
+}
 
 const PostDetail = ({route}: any) => {
+  const postId = route.params.postId;
+  const [data, setPostData] = useState<PostDetail>();
+  const {modalEnabled} = useModalData();
+  const [commentContent, setCommentContent] = useState('');
+
+  const reloadPostData = () => {
+    PostAPI.getPostDetail(postId)
+      .then(response => {
+        setPostData(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  useEffect(() => {
+    reloadPostData();
+  }, []);
+
+  const onChange = (value: string) => {
+    setCommentContent(value);
+  };
+
+  const handleCreateCommentEvent = () => {
+    CommentAPI.createComment(postId, {content: commentContent})
+      .then(response => {
+        setCommentContent('');
+        reloadPostData();
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
   return (
-    <BasicContainer paddingTop={screenSize.getVH(9.2)}>
-      <BasicHeader text={'글 상세'} />
+    <KeyboardAvoidingView
+      behavior={'padding'}
+      style={{flex: 1}}
+      keyboardVerticalOffset={screenSize.getVH(-4)}>
+      <BasicContainer paddingTop={screenSize.getVH(9.2)}>
+        <BasicHeader text={'글 상세'} />
 
-      <View style={scrollViewStyles.outerContainer}>
-        <ScrollView>
-          <View style={scrollViewStyles.innerContainer}>
-            <View style={topProfileStyles.container}>
-              <Image style={topProfileStyles.profile} src={mockData.profile} />
-              <View style={topProfileStyles.innerContainer}>
-                <Text style={topProfileStyles.name}>{mockData.username}</Text>
-                <Text style={topProfileStyles.createAt}>
-                  {mockData.createdAt}
-                </Text>
-              </View>
-            </View>
-
-            <Text style={postStyles.title}>{mockData.title}</Text>
-
-            <Image style={postStyles.mainImg} src={mockData.mainImg} />
-
-            <Text style={postStyles.content}>{mockData.contents}</Text>
-
-            {/* bottom container */}
-            <View style={bottomBtnStyle.outerContainer}>
-              <TouchableOpacity style={bottomBtnStyle.container}>
-                <LikeIcon
-                  width={screenSize.getVH(1.6)}
-                  height={screenSize.getVH(1.6)}
-                />
-                <Text style={bottomBtnStyle.text}>{mockData.likeCnt}</Text>
-              </TouchableOpacity>
-              <View style={bottomBtnStyle.betweenElement} />
-              <View style={bottomBtnStyle.container}>
-                <CommentIcon
-                  width={screenSize.getVH(1.6)}
-                  height={screenSize.getVH(1.6)}
-                />
-                <Text style={bottomBtnStyle.text}>12</Text>
-              </View>
-            </View>
-
-            {/* comment container */}
-            <View style={bottomLineStyles.line} />
-
-            <View>
-              {mockData.comments.map((comment, idx) => {
-                return (
-                  <View
-                    style={commentStyles.container}
-                    key={`container-${idx}`}>
-                    <Comment
-                      key={`comment-${idx}`}
-                      profile={comment.profile}
-                      writer={comment.writer}
-                      content={comment.contents}
-                      createdAt={comment.createdAt}
-                      likeCnt={comment.likeCnt}
-                    />
-                    {mockData.replies
-                      .filter(reply => reply.commentId === comment.commentId)
-                      .map((reply, idx) => (
-                        <Reply
-                          key={`reply-${idx}`}
-                          profile={reply.profile}
-                          writer={reply.writer}
-                          content={reply.contents}
-                          createdAt={reply.createdAt}
-                          likeCnt={reply.likeCnt}
-                        />
-                      ))}
-                  </View>
-                );
-              })}
-            </View>
+        {modalEnabled && (
+          <View style={transparentBackground.container}>
+            <View style={transparentBackground.background} />
           </View>
-        </ScrollView>
-      </View>
+        )}
 
-      <BottomNav pageName={'Social'} />
-    </BasicContainer>
+        <View style={scrollViewStyles.outerContainer}>
+          <ScrollView>
+            <View style={scrollViewStyles.innerContainer}>
+              {data && (
+                <View>
+                  <View style={topProfileStyles.container}>
+                    <Image
+                      style={topProfileStyles.profile}
+                      src={data.profile}
+                    />
+                    <View style={topProfileStyles.innerContainer}>
+                      <Text style={topProfileStyles.name}>{data.username}</Text>
+                      <Text style={topProfileStyles.createAt}>
+                        {data.createdAt}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <Text style={postStyles.title}>{data.title}</Text>
+
+                  {data.mainImg && (
+                    <Image style={postStyles.mainImg} src={data.mainImg} />
+                  )}
+
+                  <Text style={postStyles.content}>{data.contents}</Text>
+
+                  {/* bottom container */}
+                  <View style={bottomBtnStyle.outerContainer}>
+                    <TouchableOpacity style={bottomBtnStyle.container}>
+                      <LikeIcon
+                        width={screenSize.getVH(1.6)}
+                        height={screenSize.getVH(1.6)}
+                      />
+                      <Text style={bottomBtnStyle.text}>{data.likeCnt}</Text>
+                    </TouchableOpacity>
+                    <View style={bottomBtnStyle.betweenElement} />
+                    <View style={bottomBtnStyle.container}>
+                      <CommentIcon
+                        width={screenSize.getVH(1.6)}
+                        height={screenSize.getVH(1.6)}
+                      />
+                      <Text style={bottomBtnStyle.text}>
+                        {data.comments.length + data.replies.length}
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* comment container */}
+                  <View style={bottomLineStyles.line} />
+                  {data.comments.length + data.replies.length <= 0 && (
+                    <Text style={commentStyles.text}>
+                      댓글이 없습니다. 첫 댓글을 작성해보세요!
+                    </Text>
+                  )}
+                  <View>
+                    {data.comments.map((comment, idx) => {
+                      return (
+                        <View
+                          style={commentStyles.container}
+                          key={`container-${idx}`}>
+                          <Comment
+                            key={`comment-${idx}`}
+                            profile={comment.profile}
+                            writer={comment.writer}
+                            content={comment.contents}
+                            createdAt={comment.createdAt}
+                            likeCnt={comment.likeCnt}
+                          />
+                          {data.replies
+                            .filter(
+                              reply => reply.commentId === comment.commentId,
+                            )
+                            .map((reply, idx) => (
+                              <Reply
+                                key={`reply-${idx}`}
+                                profile={reply.profile}
+                                writer={reply.writer}
+                                content={reply.contents}
+                                createdAt={reply.createdAt}
+                                likeCnt={reply.likeCnt}
+                              />
+                            ))}
+                        </View>
+                      );
+                    })}
+                  </View>
+                </View>
+              )}
+            </View>
+          </ScrollView>
+        </View>
+
+        <CommentInput
+          value={commentContent}
+          onChange={e => onChange(e.nativeEvent.text)}
+          onPress={handleCreateCommentEvent}
+        />
+
+        <BottomNav pageName={'Social'} />
+      </BasicContainer>
+    </KeyboardAvoidingView>
   );
 };
 
 const scrollViewStyles = StyleSheet.create({
   outerContainer: {
     width: screenSize.width,
-    height: screenSize.getVH(67),
+    height: screenSize.getVH(64.5),
   },
   innerContainer: {
     alignItems: 'center',
+    paddingBottom: screenSize.getVH(2),
+  },
+});
+
+const transparentBackground = StyleSheet.create({
+  background: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: screenSize.width,
+    height: screenSize.height,
+    backgroundColor: colorStyles.transparentBackground,
+  },
+  container: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 9999,
   },
 });
 
@@ -252,6 +319,13 @@ const bottomLineStyles = StyleSheet.create({
 const commentStyles = StyleSheet.create({
   container: {
     alignItems: 'flex-end',
+  },
+  text: {
+    color: colorStyles.disableGray,
+    marginTop: screenSize.getVH(1.6),
+    fontSize: screenSize.getVH(1.6),
+    fontFamily: fontStyle.SUIT.Bold,
+    marginLeft: screenSize.getVW(3.5),
   },
 });
 

@@ -1,10 +1,4 @@
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {screenSize} from '../../assets/styles/screenSize';
 import {colorStyles} from '../../assets/styles/color';
 import {useEffect} from 'react';
