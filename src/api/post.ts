@@ -34,8 +34,23 @@ const createPost = async (formData: FormData) => {
   });
 };
 
+const togglePostLike = async (postId: string) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.patch(
+    `${BASE_URL}/like/${postId}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+};
+
 export const PostAPI = {
   getPostList,
   getPostDetail,
   createPost,
+  togglePostLike,
 };

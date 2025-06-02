@@ -5,11 +5,14 @@ import {colorStyles} from '../../assets/styles/color';
 import LikeBtn from './LikeBtn';
 
 interface CommentProps {
+  commentId: string;
   profile: string;
   writer: string;
   content: string;
   createdAt: string;
   likeCnt: number;
+  isLiked: boolean;
+  refreshFunc: () => void;
 }
 
 const Comment = (props: CommentProps) => {
@@ -25,7 +28,13 @@ const Comment = (props: CommentProps) => {
           <TouchableOpacity>
             <Text style={commentStyles.description}>답글</Text>
           </TouchableOpacity>
-          <LikeBtn likeCnt={props.likeCnt} />
+          <LikeBtn
+            likeCnt={props.likeCnt}
+            enabled={props.isLiked}
+            type={'comment'}
+            id={props.commentId}
+            refreshFunc={props.refreshFunc}
+          />
         </View>
       </View>
     </View>

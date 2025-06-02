@@ -5,11 +5,14 @@ import {colorStyles} from '../../assets/styles/color';
 import LikeBtn from './LikeBtn';
 
 interface CommentProps {
+  replyId: string;
   profile: string;
   writer: string;
   content: string;
   createdAt: string;
   likeCnt: number;
+  isLiked: boolean;
+  refreshFunc: () => void;
 }
 
 const Reply = (props: CommentProps) => {
@@ -22,7 +25,13 @@ const Reply = (props: CommentProps) => {
 
         <View style={commentStyles.bottomDescriptionContainer}>
           <Text style={commentStyles.description}>{props.createdAt}</Text>
-          <LikeBtn likeCnt={props.likeCnt} />
+          <LikeBtn
+            id={props.replyId}
+            likeCnt={props.likeCnt}
+            enabled={props.isLiked}
+            type={'reply'}
+            refreshFunc={props.refreshFunc}
+          />
         </View>
       </View>
     </View>

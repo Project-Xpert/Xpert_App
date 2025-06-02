@@ -1,13 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {axios} from './util/axios';
 
-const BASE_URL = '/comment';
+const BASE_URL = '/reply';
 
 interface createCommentDto {
   content: string;
 }
 
-const createComment = async (postId: string, dto: createCommentDto) => {
+const createReply = async (postId: string, dto: createCommentDto) => {
   const accessToken = await AsyncStorage.getItem('accessToken');
 
   return await axios.post(`${BASE_URL}/${postId}`, dto, {
@@ -17,11 +17,11 @@ const createComment = async (postId: string, dto: createCommentDto) => {
   });
 };
 
-const toggleCommentLike = async (commentId: string) => {
+const toggleReplyLike = async (replyId: string) => {
   const accessToken = await AsyncStorage.getItem('accessToken');
 
   return await axios.patch(
-    `${BASE_URL}/like/${commentId}`,
+    `${BASE_URL}/like/${replyId}`,
     {},
     {
       headers: {
@@ -31,7 +31,7 @@ const toggleCommentLike = async (commentId: string) => {
   );
 };
 
-export const CommentAPI = {
-  createComment,
-  toggleCommentLike,
+export const ReplyAPI = {
+  createReply,
+  toggleReplyLike,
 };

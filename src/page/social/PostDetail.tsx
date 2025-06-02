@@ -13,6 +13,7 @@ import {fontStyle} from '../../assets/styles/fontStyles';
 import {colorStyles} from '../../assets/styles/color';
 import CommentIcon from '../../assets/image/icon/social/comment.svg';
 import LikeIcon from '../../assets/image/icon/social/like.svg';
+import EnabledLikeIcon from '../../assets/image/icon/social/likeEnabled.svg';
 import Comment from '../../components/Social/Comment';
 import Reply from '../../components/Social/Reply';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -31,6 +32,7 @@ interface PostDetail {
   contents: string;
   mainImg: string;
   likeCnt: number;
+  isLiked: boolean;
   comments: CommentDetail[];
   replies: ReplyDetail[];
 }
@@ -43,6 +45,7 @@ interface CommentDetail {
   contents: string;
   createdAt: string;
   likeCnt: number;
+  isLiked: boolean;
 }
 
 interface ReplyDetail {
@@ -54,6 +57,7 @@ interface ReplyDetail {
   contents: string;
   createdAt: string;
   likeCnt: number;
+  isLiked: boolean;
 }
 
 const PostDetail = ({route}: any) => {
@@ -84,6 +88,16 @@ const PostDetail = ({route}: any) => {
     CommentAPI.createComment(postId, {content: commentContent})
       .then(response => {
         setCommentContent('');
+        reloadPostData();
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
+  const handlePostLikeToggle = () => {
+    PostAPI.togglePostLike(postId)
+      .then(response => {
         reloadPostData();
       })
       .catch(e => {
@@ -133,12 +147,28 @@ const PostDetail = ({route}: any) => {
 
                   {/* bottom container */}
                   <View style={bottomBtnStyle.outerContainer}>
-                    <TouchableOpacity style={bottomBtnStyle.container}>
-                      <LikeIcon
-                        width={screenSize.getVH(1.6)}
-                        height={screenSize.getVH(1.6)}
-                      />
-                      <Text style={bottomBtnStyle.text}>{data.likeCnt}</Text>
+                    <TouchableOpacity
+                      style={bottomBtnStyle.container}
+                      onPress={handlePostLikeToggle}>
+                      {data.isLiked ? (
+                        <EnabledLikeIcon
+                          width={screenSize.getVH(1.6)}
+                          height={screenSize.getVH(1.6)}
+                        />
+                      ) : (
+                        <LikeIcon
+                          width={screenSize.getVH(1.6)}
+                          height={screenSize.getVH(1.6)}
+                        />
+                      )}
+                      <Text
+                        style={
+                          data.isLiked
+                            ? bottomBtnStyle.greenText
+                            : bottomBtnStyle.text
+                        }>
+                        {data.likeCnt}
+                      </Text>
                     </TouchableOpacity>
                     <View style={bottomBtnStyle.betweenElement} />
                     <View style={bottomBtnStyle.container}>
@@ -166,25 +196,31 @@ const PostDetail = ({route}: any) => {
                           style={commentStyles.container}
                           key={`container-${idx}`}>
                           <Comment
-                            key={`comment-${idx}`}
+                            key={comment.commentId}
+                            commentId={comment.commentId}
                             profile={comment.profile}
                             writer={comment.writer}
                             content={comment.contents}
                             createdAt={comment.createdAt}
                             likeCnt={comment.likeCnt}
+                            isLiked={comment.isLiked}
+                            refreshFunc={reloadPostData}
                           />
                           {data.replies
                             .filter(
                               reply => reply.commentId === comment.commentId,
                             )
-                            .map((reply, idx) => (
+                            .map(reply => (
                               <Reply
-                                key={`reply-${idx}`}
+                                key={reply.replyId}
+                                replyId={reply.replyId}
                                 profile={reply.profile}
                                 writer={reply.writer}
                                 content={reply.contents}
                                 createdAt={reply.createdAt}
                                 likeCnt={reply.likeCnt}
+                                isLiked={reply.isLiked}
+                                refreshFunc={reloadPostData}
                               />
                             ))}
                         </View>
@@ -304,6 +340,12 @@ const bottomBtnStyle = StyleSheet.create({
     fontSize: screenSize.getVH(1.8),
     fontFamily: fontStyle.SUIT.ExtraBold,
     color: colorStyles.descriptionGray,
+  },
+  greenText: {
+    marginLeft: screenSize.getVW(1.1),
+    fontSize: screenSize.getVH(1.8),
+    fontFamily: fontStyle.SUIT.ExtraBold,
+    color: colorStyles.mainColor,
   },
 });
 
