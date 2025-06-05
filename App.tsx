@@ -30,6 +30,7 @@ import CreateSavingDetail from './src/page/Invest/account/CreateSavingDetail';
 import SuccessCreateAccount from './src/page/Invest/account/SuccessCreateAccount';
 import useModalData from './src/data/modalData';
 import AutoTransferSetting from './src/page/Invest/account/AutoTransferSetting';
+import FriendList from './src/page/social/friend/FriendList';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -112,6 +113,7 @@ const App = () => {
           <Stack.Screen name="TradeFX" component={TradeFX} />
           <Stack.Screen name="PostDetail" component={PostDetail} />
           <Stack.Screen name="CreatePost" component={CreatePost} />
+          <Stack.Screen name="FriendList" component={FriendList} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

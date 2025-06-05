@@ -64,6 +64,10 @@ const SocialHome = () => {
     navigator.navigate('PostList');
   };
 
+  const handleFriendListMove = () => {
+    navigator.navigate('FriendList');
+  };
+
   return (
     <BasicContainer paddingTop={screenSize.getVH(9.2)}>
       <BasicHeader text={'소셜'} hideArrowBtn />
@@ -79,7 +83,9 @@ const SocialHome = () => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={friendBtnStyles.container}>
+      <TouchableOpacity
+        style={friendBtnStyles.container}
+        onPress={handleFriendListMove}>
         <RankingIcon
           width={screenSize.getVH(7.7)}
           height={screenSize.getVH(7.7)}
