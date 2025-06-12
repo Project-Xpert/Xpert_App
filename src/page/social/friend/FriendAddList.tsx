@@ -9,6 +9,7 @@ import SearchBar from '../../../components/common/inputs/SearchBar';
 import {useState} from 'react';
 import {screenSize} from '../../../assets/styles/screenSize';
 import FriendRequestItem from '../../../components/Social/friend/FriendRequestItem';
+import AddFriendBtn from '../../../components/Social/friend/AddFriendBtn';
 
 const FriendAddList = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -33,9 +34,15 @@ const FriendAddList = () => {
 
       <View style={bodyStyles.outerContainer}>
         <ScrollView style={bodyStyles.scrollView}>
-          <View style={bodyStyles.innerContainer}>
-            <FriendRequestItem />
-          </View>
+          {searchKeyword === '' ? (
+            <View style={bodyStyles.innerContainer}>
+              <FriendRequestItem />
+            </View>
+          ) : (
+            <View style={bodyStyles.innerContainer}>
+              <AddFriendBtn isSelected={true} />
+            </View>
+          )}
         </ScrollView>
       </View>
     </View>
