@@ -2,40 +2,43 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {screenSize} from '../../../assets/styles/screenSize';
 import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
-import EnabledCheckIcon from '../../../assets/image/icon/button/enabledCheck.svg';
 
 interface btnProps {
-  isSelected: boolean;
+  userId: string;
+  username: string;
+  profile: string;
+  hadRequested: boolean;
+  onPress: () => void;
 }
 
-const AddFriendBtn = ({isSelected}: btnProps) => {
-  const buttonStyle = {
-    ...btnStyle.container,
-    borderColor: isSelected ? colorStyles.mainColor : colorStyles.disableGray,
-    backgroundColor: isSelected
-      ? colorStyles.mainColor
-      : colorStyles.defaultWhite,
+const AddFriendBtn = (props: btnProps) => {
+  const btnContainerStyle = {
+    ...btnStyles.container,
+    borderColor: props.hadRequested
+      ? colorStyles.defaultRed
+      : colorStyles.mainColor,
+  };
+
+  const btnTextStyle = {
+    ...btnStyles.text,
+    color: props.hadRequested ? colorStyles.defaultRed : colorStyles.mainColor,
   };
 
   return (
-    <TouchableOpacity style={containerStyle.container}>
-      <View style={buttonStyle}>
-        <EnabledCheckIcon
-          width={screenSize.getVH(1.63)}
-          height={screenSize.getVH(1.63)}
-        />
-      </View>
-
-      <Image
-        style={imgStyles.profile}
-        src="https://i.pinimg.com/736x/7b/2f/64/7b2f64bbe7e65efea932f2598d0d3009.jpg"
-      />
+    <View style={containerStyle.container}>
+      <Image style={imgStyles.profile} src={props.profile} />
 
       <View style={textStyles.container}>
-        <Text style={textStyles.title}>Bocchi The Invest!</Text>
-        <Text style={textStyles.subTitle}>@bocchi</Text>
+        <Text style={textStyles.title}>{props.username}</Text>
+        <Text style={textStyles.subTitle}>{`@${props.userId}`}</Text>
       </View>
-    </TouchableOpacity>
+
+      <TouchableOpacity style={btnContainerStyle} onPress={props.onPress}>
+        <Text style={btnTextStyle}>
+          {props.hadRequested ? '요청 취소' : '친구 요청'}
+        </Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -52,14 +55,10 @@ const containerStyle = StyleSheet.create({
 
 const imgStyles = StyleSheet.create({
   profile: {
-    marginLeft: screenSize.getVW(3.5),
+    marginLeft: screenSize.getVW(4.7),
     width: screenSize.getVH(3.8),
     height: screenSize.getVH(3.8),
     borderRadius: screenSize.getVH(2.2),
-  },
-  arrowIcon: {
-    position: 'absolute',
-    right: screenSize.getVW(4.75),
   },
 });
 
@@ -78,15 +77,19 @@ const textStyles = StyleSheet.create({
   },
 });
 
-const btnStyle = StyleSheet.create({
+const btnStyles = StyleSheet.create({
   container: {
+    right: screenSize.getVW(4.7),
+    position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    width: screenSize.getVH(2),
-    height: screenSize.getVH(2),
-    marginLeft: screenSize.getVW(1.2),
-    borderRadius: screenSize.getVW(1.2),
-    borderWidth: screenSize.getVW(0.23),
+    width: screenSize.getVW(15.4),
+    height: screenSize.getVH(2.8),
+    borderWidth: screenSize.getVW(0.24),
+    borderRadius: screenSize.getVH(1.1),
+  },
+  text: {
+    fontSize: screenSize.getVH(1.3),
   },
 });
 

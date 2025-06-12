@@ -2,6 +2,7 @@ import {
   NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
+  Text,
   TextInputChangeEventData,
   View,
 } from 'react-native';
@@ -10,9 +11,21 @@ import {useState} from 'react';
 import {screenSize} from '../../../assets/styles/screenSize';
 import FriendRequestItem from '../../../components/Social/friend/FriendRequestItem';
 import AddFriendBtn from '../../../components/Social/friend/AddFriendBtn';
+import {FriendAPI} from '../../../api/friend';
+import {colorStyles} from '../../../assets/styles/color';
+import {fontStyle} from '../../../assets/styles/fontStyles';
+
+interface userProps {
+  userId: string;
+  username: string;
+  profile: string;
+  hadRequested: boolean;
+}
 
 const FriendAddList = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [mode, setMode] = useState<'request' | 'newFriend'>('request');
+  const [newFriendData, setNewFriendData] = useState<userProps[]>([]);
 
   const handleKeywordChange = (
     e: NativeSyntheticEvent<TextInputChangeEventData>,
@@ -20,8 +33,42 @@ const FriendAddList = () => {
     setSearchKeyword(e.nativeEvent.text);
   };
 
+  const renderSearchData = () => {
+    FriendAPI.searchNonFriendUsers(searchKeyword)
+      .then(response => {
+        console.log(response.data);
+        if (response.data) {
+          setNewFriendData(response.data.users);
+        }
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
   const handleSearchUser = () => {
-    // todo) search api 완성시 연동하기
+    if (searchKeyword.length > 0) {
+      renderSearchData();
+      setMode('newFriend');
+    } else {
+      setMode('request');
+    }
+  };
+
+  const onBtnPress = (userId: string, hadRequested: boolean) => {
+    if (hadRequested) {
+      FriendAPI.deleteFriend(userId)
+        .then(response => renderSearchData())
+        .catch(e => {
+          console.error(e);
+        });
+    } else {
+      FriendAPI.addFriend(userId)
+        .then(response => renderSearchData())
+        .catch(e => {
+          console.error(e);
+        });
+    }
   };
 
   return (
@@ -34,13 +81,29 @@ const FriendAddList = () => {
 
       <View style={bodyStyles.outerContainer}>
         <ScrollView style={bodyStyles.scrollView}>
-          {searchKeyword === '' ? (
+          {mode === 'request' ? (
             <View style={bodyStyles.innerContainer}>
               <FriendRequestItem />
             </View>
           ) : (
-            <View style={bodyStyles.innerContainer}>
-              <AddFriendBtn isSelected={true} />
+            <View>
+              {newFriendData.length === 0 && (
+                <Text style={textStyles.text}>
+                  이런! 해당되는 유저가 한명도 없네요!
+                </Text>
+              )}
+              <View style={bodyStyles.innerContainer}>
+                {newFriendData.map(datum => (
+                  <AddFriendBtn
+                    key={datum.userId}
+                    userId={datum.userId}
+                    username={datum.username}
+                    profile={datum.profile}
+                    hadRequested={datum.hadRequested}
+                    onPress={() => onBtnPress(datum.userId, datum.hadRequested)}
+                  />
+                ))}
+              </View>
             </View>
           )}
         </ScrollView>
@@ -67,6 +130,17 @@ const bodyStyles = StyleSheet.create({
   innerContainer: {
     width: screenSize.width,
     alignItems: 'center',
+  },
+});
+
+const textStyles = StyleSheet.create({
+  text: {
+    width: screenSize.getVW(80),
+    marginTop: screenSize.getVH(1.1),
+    marginLeft: screenSize.getVW(9.8),
+    fontSize: screenSize.getVH(1.6),
+    color: colorStyles.descriptionGray,
+    fontFamily: fontStyle.SUIT.Medium,
   },
 });
 
