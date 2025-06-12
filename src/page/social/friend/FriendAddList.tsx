@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import SearchBar from '../../../components/common/inputs/SearchBar';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {screenSize} from '../../../assets/styles/screenSize';
 import FriendRequestItem from '../../../components/Social/friend/FriendRequestItem';
 import AddFriendBtn from '../../../components/Social/friend/AddFriendBtn';
@@ -22,10 +22,17 @@ interface userProps {
   hadRequested: boolean;
 }
 
+interface requesterProps {
+  userId: string;
+  username: string;
+  profile: string;
+}
+
 const FriendAddList = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
   const [mode, setMode] = useState<'request' | 'newFriend'>('request');
   const [newFriendData, setNewFriendData] = useState<userProps[]>([]);
+  const [requesterData, setRequesterData] = useState<requesterProps[]>([]);
 
   const handleKeywordChange = (
     e: NativeSyntheticEvent<TextInputChangeEventData>,
@@ -33,10 +40,13 @@ const FriendAddList = () => {
     setSearchKeyword(e.nativeEvent.text);
   };
 
+  useEffect(() => {
+    renderRequestData();
+  }, []);
+
   const renderSearchData = () => {
     FriendAPI.searchNonFriendUsers(searchKeyword)
       .then(response => {
-        console.log(response.data);
         if (response.data) {
           setNewFriendData(response.data.users);
         }
@@ -46,11 +56,24 @@ const FriendAddList = () => {
       });
   };
 
+  const renderRequestData = () => {
+    FriendAPI.getRequesters()
+      .then(response => {
+        if (response.data) {
+          setRequesterData(response.data.friends);
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
   const handleSearchUser = () => {
     if (searchKeyword.length > 0) {
       renderSearchData();
       setMode('newFriend');
     } else {
+      renderRequestData();
       setMode('request');
     }
   };
@@ -82,8 +105,22 @@ const FriendAddList = () => {
       <View style={bodyStyles.outerContainer}>
         <ScrollView style={bodyStyles.scrollView}>
           {mode === 'request' ? (
-            <View style={bodyStyles.innerContainer}>
-              <FriendRequestItem />
+            <View>
+              {requesterData.length === 0 && (
+                <Text style={textStyles.text}>
+                  지금은 새로운 친구 요청이 없어요!
+                </Text>
+              )}
+              <View style={bodyStyles.innerContainer}>
+                {requesterData.map(datum => (
+                  <FriendRequestItem
+                    key={datum.userId}
+                    profile={datum.profile}
+                    username={datum.username}
+                    userId={datum.userId}
+                  />
+                ))}
+              </View>
             </View>
           ) : (
             <View>

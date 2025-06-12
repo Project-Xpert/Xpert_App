@@ -13,6 +13,16 @@ const searchNonFriendUsers = async (keyword: string) => {
   });
 };
 
+const getRequesters = async () => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.get(`${BASE_URL}/request`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 const addFriend = async (userId: string) => {
   const accessToken = await AsyncStorage.getItem('accessToken');
 
@@ -39,6 +49,7 @@ const deleteFriend = async (userId: string) => {
 
 export const FriendAPI = {
   searchNonFriendUsers,
+  getRequesters,
   addFriend,
   deleteFriend,
 };

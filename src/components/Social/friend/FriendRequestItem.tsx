@@ -5,17 +5,20 @@ import {fontStyle} from '../../../assets/styles/fontStyles';
 import AcceptBtn from '../../../assets/image/icon/button/acceptBtn.svg';
 import DenyBtn from '../../../assets/image/icon/button/denyBtn.svg';
 
-const FriendRequestItem = () => {
+interface ListItemProps {
+  profile: string;
+  username: string;
+  userId: string;
+}
+
+const FriendRequestItem = (props: ListItemProps) => {
   return (
     <View style={containerStyle.container}>
-      <Image
-        style={imgStyles.profile}
-        src="https://i.pinimg.com/736x/7b/2f/64/7b2f64bbe7e65efea932f2598d0d3009.jpg"
-      />
+      <Image style={imgStyles.profile} src={props.profile} />
 
       <View style={textStyles.container}>
-        <Text style={textStyles.title}>Bocchi The Invest!</Text>
-        <Text style={textStyles.subTitle}>@bocchi</Text>
+        <Text style={textStyles.title}>{props.username}</Text>
+        <Text style={textStyles.subTitle}>@{props.userId}</Text>
       </View>
 
       <View style={btnStyle.container}>
