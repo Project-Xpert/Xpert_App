@@ -65,7 +65,7 @@ const SocialHome = () => {
   };
 
   const handleFriendListMove = () => {
-    navigator.navigate('FriendList');
+    navigator.navigate('Friend');
   };
 
   return (

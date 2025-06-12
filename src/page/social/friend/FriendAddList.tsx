@@ -1,16 +1,16 @@
 import {
   NativeSyntheticEvent,
+  ScrollView,
   StyleSheet,
   TextInputChangeEventData,
   View,
 } from 'react-native';
-import {screenSize} from '../../../assets/styles/screenSize';
 import SearchBar from '../../../components/common/inputs/SearchBar';
-import {ScrollView} from 'react-native-gesture-handler';
-import FriendDetailBtn from '../../../components/Social/friend/FriendDetailBtn';
 import {useState} from 'react';
+import {screenSize} from '../../../assets/styles/screenSize';
+import FriendRequestItem from '../../../components/Social/friend/FriendRequestItem';
 
-const FriendList = () => {
+const FriendAddList = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
 
   const handleKeywordChange = (
@@ -19,29 +19,22 @@ const FriendList = () => {
     setSearchKeyword(e.nativeEvent.text);
   };
 
-  const handleSearchFriend = () => {
+  const handleSearchUser = () => {
     // todo) search api 완성시 연동하기
-  };
-
-  const handleFriendDetailBtnPress = () => {
-    // todo) detail api 완성시 연동하기
   };
 
   return (
     <View style={outerContainerStyle.container}>
       <SearchBar
         value={searchKeyword}
-        searchBtnPressFunc={handleSearchFriend}
+        searchBtnPressFunc={handleSearchUser}
         onChangeFunc={handleKeywordChange}
       />
 
       <View style={bodyStyles.outerContainer}>
         <ScrollView style={bodyStyles.scrollView}>
           <View style={bodyStyles.innerContainer}>
-            <FriendDetailBtn onPress={handleFriendDetailBtnPress} />
-            <FriendDetailBtn onPress={handleFriendDetailBtnPress} />
-            <FriendDetailBtn onPress={handleFriendDetailBtnPress} />
-            <FriendDetailBtn onPress={handleFriendDetailBtnPress} />
+            <FriendRequestItem />
           </View>
         </ScrollView>
       </View>
@@ -70,4 +63,4 @@ const bodyStyles = StyleSheet.create({
   },
 });
 
-export default FriendList;
+export default FriendAddList;
