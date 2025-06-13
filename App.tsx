@@ -32,6 +32,8 @@ import useModalData from './src/data/modalData';
 import AutoTransferSetting from './src/page/Invest/account/AutoTransferSetting';
 import FriendList from './src/page/social/friend/FriendList';
 import FriendHome from './src/page/social/friend/FriendHome';
+import FriendDetail from './src/page/social/friend/FriendDetail';
+import SendMoney from './src/page/social/friend/SendMoney';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -115,6 +117,8 @@ const App = () => {
           <Stack.Screen name="PostDetail" component={PostDetail} />
           <Stack.Screen name="CreatePost" component={CreatePost} />
           <Stack.Screen name="Friend" component={FriendHome} />
+          <Stack.Screen name="FriendDetail" component={FriendDetail} />
+          <Stack.Screen name="SendMoney" component={SendMoney} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

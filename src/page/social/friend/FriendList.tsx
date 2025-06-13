@@ -13,6 +13,7 @@ import {useEffect, useState} from 'react';
 import {FriendAPI} from '../../../api/friend';
 import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
 
 interface friendProps {
   userId: string;
@@ -21,6 +22,7 @@ interface friendProps {
 }
 
 const FriendList = () => {
+  const navigator = useNavigation<NavigationProp<any>>();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [friendData, setFriendData] = useState<friendProps[]>([]);
 
@@ -46,8 +48,8 @@ const FriendList = () => {
       });
   };
 
-  const handleFriendDetailBtnPress = () => {
-    // todo) detail api 완성시 연동하기
+  const handleFriendDetailBtnPress = (userId: string) => {
+    navigator.navigate('FriendDetail', {userId});
   };
 
   return (
@@ -74,7 +76,7 @@ const FriendList = () => {
                 username={datum.username}
                 profile={datum.profile}
                 userId={datum.userId}
-                onPress={handleFriendDetailBtnPress}
+                onPress={() => handleFriendDetailBtnPress(datum.userId)}
               />
             ))}
           </View>
