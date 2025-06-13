@@ -3,15 +3,26 @@ import {
   StyleSheet,
   TextInputChangeEventData,
   View,
+  Text,
 } from 'react-native';
 import {screenSize} from '../../../assets/styles/screenSize';
 import SearchBar from '../../../components/common/inputs/SearchBar';
 import {ScrollView} from 'react-native-gesture-handler';
 import FriendDetailBtn from '../../../components/Social/friend/FriendDetailBtn';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import {FriendAPI} from '../../../api/friend';
+import {colorStyles} from '../../../assets/styles/color';
+import {fontStyle} from '../../../assets/styles/fontStyles';
+
+interface friendProps {
+  userId: string;
+  username: string;
+  profile: string;
+}
 
 const FriendList = () => {
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [friendData, setFriendData] = useState<friendProps[]>([]);
 
   const handleKeywordChange = (
     e: NativeSyntheticEvent<TextInputChangeEventData>,
@@ -19,8 +30,20 @@ const FriendList = () => {
     setSearchKeyword(e.nativeEvent.text);
   };
 
+  useEffect(() => {
+    handleSearchFriend();
+  }, []);
+
   const handleSearchFriend = () => {
-    // todo) search api 완성시 연동하기
+    FriendAPI.getFriendList(searchKeyword)
+      .then(response => {
+        if (response.data) {
+          setFriendData(response.data.friends);
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      });
   };
 
   const handleFriendDetailBtnPress = () => {
@@ -38,10 +61,22 @@ const FriendList = () => {
       <View style={bodyStyles.outerContainer}>
         <ScrollView style={bodyStyles.scrollView}>
           <View style={bodyStyles.innerContainer}>
-            <FriendDetailBtn onPress={handleFriendDetailBtnPress} />
-            <FriendDetailBtn onPress={handleFriendDetailBtnPress} />
-            <FriendDetailBtn onPress={handleFriendDetailBtnPress} />
-            <FriendDetailBtn onPress={handleFriendDetailBtnPress} />
+            {friendData.length === 0 && (
+              <Text style={textStyles.text}>
+                {
+                  '친구 목록이 비어있네요..\n같이 투자하고 경쟁할 친구를 추가해보세요!'
+                }
+              </Text>
+            )}
+            {friendData.map(datum => (
+              <FriendDetailBtn
+                key={datum.userId}
+                username={datum.username}
+                profile={datum.profile}
+                userId={datum.userId}
+                onPress={handleFriendDetailBtnPress}
+              />
+            ))}
           </View>
         </ScrollView>
       </View>
@@ -67,6 +102,16 @@ const bodyStyles = StyleSheet.create({
   innerContainer: {
     width: screenSize.width,
     alignItems: 'center',
+  },
+});
+
+const textStyles = StyleSheet.create({
+  text: {
+    width: screenSize.getVW(80),
+    marginTop: screenSize.getVH(1.1),
+    fontSize: screenSize.getVH(1.6),
+    color: colorStyles.descriptionGray,
+    fontFamily: fontStyle.SUIT.Medium,
   },
 });
 

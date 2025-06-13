@@ -23,6 +23,16 @@ const getRequesters = async () => {
   });
 };
 
+const getFriendList = async (keyword: string) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.get(`${BASE_URL}/list?keyword=${keyword}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 const addFriend = async (userId: string) => {
   const accessToken = await AsyncStorage.getItem('accessToken');
 
@@ -67,4 +77,5 @@ export const FriendAPI = {
   addFriend,
   deleteFriend,
   acceptFriendRequest,
+  getFriendList,
 };

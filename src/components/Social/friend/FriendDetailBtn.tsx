@@ -5,20 +5,20 @@ import ArrowImg from '../../../assets/image/icon/button/rightArrowBtn.svg';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 
 interface btnProps {
+  username: string;
+  profile: string;
+  userId: string;
   onPress: () => void;
 }
 
 const FriendDetailBtn = (props: btnProps) => {
   return (
     <TouchableOpacity style={containerStyles.container} onPress={props.onPress}>
-      <Image
-        style={imgStyles.profile}
-        src="https://i.pinimg.com/736x/7b/2f/64/7b2f64bbe7e65efea932f2598d0d3009.jpg"
-      />
+      <Image style={imgStyles.profile} src={props.profile} />
 
       <View style={textStyles.container}>
-        <Text style={textStyles.title}>Bocchi The Invest!</Text>
-        <Text style={textStyles.subTitle}>@bocchi</Text>
+        <Text style={textStyles.title}>{props.username}</Text>
+        <Text style={textStyles.subTitle}>@{props.userId}</Text>
       </View>
 
       <ArrowImg style={imgStyles.arrowIcon} />
