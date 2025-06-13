@@ -9,6 +9,8 @@ interface ListItemProps {
   profile: string;
   username: string;
   userId: string;
+  onAcceptBtnPress: () => void;
+  onDenyBtnPress: () => void;
 }
 
 const FriendRequestItem = (props: ListItemProps) => {
@@ -22,14 +24,14 @@ const FriendRequestItem = (props: ListItemProps) => {
       </View>
 
       <View style={btnStyle.container}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={props.onAcceptBtnPress}>
           <AcceptBtn
             width={screenSize.getVH(3.3)}
             height={screenSize.getVH(3.3)}
           />
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={props.onDenyBtnPress}>
           <DenyBtn
             width={screenSize.getVH(3.3)}
             height={screenSize.getVH(3.3)}

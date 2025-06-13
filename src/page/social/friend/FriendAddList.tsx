@@ -94,6 +94,22 @@ const FriendAddList = () => {
     }
   };
 
+  const acceptFriendRequestHandler = (userId: string) => {
+    FriendAPI.acceptFriendRequest(userId)
+      .then(response => renderRequestData())
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
+  const denyFriendRequestHandler = (userId: string) => {
+    FriendAPI.deleteFriend(userId)
+      .then(response => renderRequestData())
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
   return (
     <View style={outerContainerStyle.container}>
       <SearchBar
@@ -118,6 +134,12 @@ const FriendAddList = () => {
                     profile={datum.profile}
                     username={datum.username}
                     userId={datum.userId}
+                    onAcceptBtnPress={() =>
+                      acceptFriendRequestHandler(datum.userId)
+                    }
+                    onDenyBtnPress={() =>
+                      denyFriendRequestHandler(datum.userId)
+                    }
                   />
                 ))}
               </View>

@@ -47,9 +47,24 @@ const deleteFriend = async (userId: string) => {
   });
 };
 
+const acceptFriendRequest = async (userId: string) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.patch(
+    `${BASE_URL}/${userId}`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+};
+
 export const FriendAPI = {
   searchNonFriendUsers,
   getRequesters,
   addFriend,
   deleteFriend,
+  acceptFriendRequest,
 };
