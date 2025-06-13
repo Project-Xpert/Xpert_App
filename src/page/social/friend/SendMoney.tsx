@@ -14,9 +14,14 @@ import moneyFormatter from '../../../util/moneyFormatter';
 import UnitInput from '../../../components/common/inputs/UnitInput';
 import {useState} from 'react';
 import Button from '../../../components/common/buttons/Button';
+import {FriendAPI} from '../../../api/friend';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
-const SendMoney = () => {
+const SendMoney = ({route}: any) => {
   const {money} = useUserData();
+  const {userId, username} = route.params;
+  const navigation = useNavigation<NavigationProp<any>>();
+
   const [sendMoneyAmount, setSendMoneyAmount] = useState(0);
 
   const onMoneyChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
@@ -27,12 +32,24 @@ const SendMoney = () => {
     }
   };
 
+  const sendMoneyHandler = () => {
+    FriendAPI.sendMoney(userId, {money: sendMoneyAmount})
+      .then(response => {
+        navigation.navigate('Social');
+        navigation.navigate('Friend');
+        navigation.navigate('FriendDetail', {userId, username});
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
+
   return (
     <BasicContainer paddingTop={screenSize.getVH(9.2)}>
       <BasicHeader text={'송금'} />
 
       <Text style={textStyles.title}>
-        <Text style={textStyles.highlight}>고양이가 너무 기여워</Text>님에게
+        <Text style={textStyles.highlight}>{username}</Text>님에게
         {'\n'}얼마를 송금할까요?
       </Text>
       <Text style={textStyles.description}>
@@ -48,12 +65,11 @@ const SendMoney = () => {
       />
 
       <Button
-        text={'입금하기'}
+        text={'송금하기'}
         marginTop={screenSize.getVH(52)}
         size={'large'}
-        onPress={function (): void {
-          throw new Error('Function not implemented.');
-        }}
+        onPress={sendMoneyHandler}
+        disable={sendMoneyAmount === 0 || sendMoneyAmount > money}
       />
     </BasicContainer>
   );

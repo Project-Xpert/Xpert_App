@@ -81,6 +81,20 @@ const acceptFriendRequest = async (userId: string) => {
   );
 };
 
+interface sendMoneyRequestDto {
+  money: number;
+}
+
+const sendMoney = async (userId: string, request: sendMoneyRequestDto) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.patch(`${BASE_URL}/money/${userId}`, request, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 export const FriendAPI = {
   searchNonFriendUsers,
   getRequesters,
@@ -89,4 +103,5 @@ export const FriendAPI = {
   acceptFriendRequest,
   getFriendList,
   getUserDetail,
+  sendMoney,
 };

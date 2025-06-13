@@ -42,7 +42,7 @@ const FriendDetail = ({route}: any) => {
 
   const sendMoneyEventHandler = () => {
     if (data) {
-      navigation.navigate('SendMoney');
+      navigation.navigate('SendMoney', {userId, username: data.username});
     }
   };
 
