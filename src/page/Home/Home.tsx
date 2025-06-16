@@ -13,13 +13,22 @@ import FriendRank from '../../components/Home/FriendRank';
 import {ScrollView} from 'react-native-gesture-handler';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import useUserData from '../../data/userData';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {UserAPI} from '../../api/user';
 import moneyFormatter from '../../util/moneyFormatter';
+import {FriendAPI} from '../../api/friend';
+
+interface rankingItem {
+  username: string;
+  userId: string;
+  profile: string;
+  money: number;
+}
 
 const Home = () => {
   const userData = useUserData();
   const navigator = useNavigation<NavigationProp<any>>();
+  const [rankingData, setRankingData] = useState<rankingItem[]>([]);
 
   useEffect(() => {
     UserAPI.GetUserData()
@@ -31,105 +40,154 @@ const Home = () => {
       .catch(e => {
         console.log(e);
       });
+
+    FriendAPI.getRanking()
+      .then(response => {
+        if (response.data) {
+          setRankingData(response.data.friends);
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      });
   }, []);
 
   const handleMypageBtnPress = () => {
     navigator.navigate('Mypage');
   };
 
+  const postListMoveHandler = () => {
+    navigator.navigate('Social');
+    navigator.navigate('PostList');
+  };
+
+  const newsListMoveHandler = () => {
+    navigator.navigate('News');
+  };
+
+  const friendMoveHandler = () => {
+    navigator.navigate('Social');
+    navigator.navigate('Friend');
+  };
+
   return (
     <View>
-      <ScrollView
-        horizontal={false}
-        style={{backgroundColor: colorStyles.defaultWhite}}
-        contentContainerStyle={{alignItems: 'center'}}>
-        <BasicContainer paddingTop={screenSize.getVH(3.3)}>
-          <View style={styles.topContainer}>
-            <View>
-              <Text style={styles.title}>{`${userData.username}님`}</Text>
-              <Text style={styles.topDescription}>
-                안녕하세요! 오늘도 투자를 해봅시다!
-              </Text>
+      <View style={styles.outerScrollViewContainer}>
+        <ScrollView
+          horizontal={false}
+          style={{backgroundColor: colorStyles.defaultWhite}}
+          contentContainerStyle={{alignItems: 'center'}}>
+          <BasicContainer paddingTop={screenSize.getVH(3.3)}>
+            <View style={styles.topContainer}>
+              <View>
+                <Text style={styles.title}>{`${userData.username}님`}</Text>
+                <Text style={styles.topDescription}>
+                  안녕하세요! 오늘도 투자를 해봅시다!
+                </Text>
+              </View>
+              <TouchableOpacity onPress={handleMypageBtnPress}>
+                <Image src={userData.profile} style={styles.profile} />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={handleMypageBtnPress}>
-              <Image src={userData.profile} style={styles.profile} />
-            </TouchableOpacity>
-          </View>
 
-          <View
-            style={{...styles.widthInfoBox, marginTop: screenSize.getVH(3.8)}}>
-            <CoinImg
-              width={screenSize.getVH(7.7)}
-              height={screenSize.getVH(7.7)}
-            />
-            <View style={styles.widthBoxInnerTextContainer}>
-              <Text style={styles.descriptionText}>
-                {`${userData.username}님의 자산은...`}
-              </Text>
-              <Text style={styles.bigText}>{`${moneyFormatter(
-                userData.money,
-              )}원 이네요`}</Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            style={{...styles.widthInfoBox, marginTop: screenSize.getVH(1.6)}}>
-            <TalkImg
-              width={screenSize.getVH(7.7)}
-              height={screenSize.getVH(7.7)}
-            />
-            <View style={styles.widthBoxInnerTextContainer}>
-              <Text style={styles.bigText}>나만 투자 망한거 아니에요...</Text>
-              <Text style={styles.descriptionText}>
-                {'눈물나는 투자 이야기 하러 가기 >'}
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-          <View style={styles.heightInfoBoxContainer}>
-            <TouchableOpacity style={styles.heightInfoBox}>
-              <FolderImg
-                width={screenSize.getVH(6.6)}
-                height={screenSize.getVH(6.6)}
+            <View
+              style={{
+                ...styles.widthInfoBox,
+                marginTop: screenSize.getVH(3.8),
+              }}>
+              <CoinImg
+                width={screenSize.getVH(7.7)}
+                height={screenSize.getVH(7.7)}
               />
-              <Text style={styles.heightBoxDescription}>
-                {'지금 정세가 어떤지 알아야\n투자를 잘 할 수 있어요'}
-              </Text>
-              <Text style={styles.heightBoxMoveDescription}>
-                {'최근 뉴스 보러 가기 >'}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.heightInfoBox}>
-              <CalculateImg
-                width={screenSize.getVH(6.6)}
-                height={screenSize.getVH(6.6)}
+              <View style={styles.widthBoxInnerTextContainer}>
+                <Text style={styles.descriptionText}>
+                  {`${userData.username}님의 자산은...`}
+                </Text>
+                <Text style={styles.bigText}>{`${moneyFormatter(
+                  userData.money,
+                )}원 이네요`}</Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={{
+                ...styles.widthInfoBox,
+                marginTop: screenSize.getVH(1.6),
+              }}
+              onPress={postListMoveHandler}>
+              <TalkImg
+                width={screenSize.getVH(7.7)}
+                height={screenSize.getVH(7.7)}
               />
-              <Text style={styles.heightBoxDescription}>
-                {'AI의 투자 분석 리포트를\n투자에 활용해보세요'}
-              </Text>
-              <Text style={styles.heightBoxMoveDescription}>
-                {'분석 리포트 보러가기 >'}
-              </Text>
+              <View style={styles.widthBoxInnerTextContainer}>
+                <Text style={styles.bigText}>나만 투자 망한거 아니에요...</Text>
+                <Text style={styles.descriptionText}>
+                  {'눈물나는 투자 이야기 하러 가기 >'}
+                </Text>
+              </View>
             </TouchableOpacity>
-          </View>
 
-          <Text style={styles.friendText}>친구 랭킹</Text>
-
-          <View style={styles.rankConatiner}>
-            {[1, 2, 3].map(idx => {
-              return (
-                <FriendRank key={idx} rank={idx} name={'오송주'} money={190} />
-              );
-            })}
-            <View style={styles.friendRankMoveDescription}>
-              <TouchableOpacity>
-                <Text style={styles.friendRankMoveText}>
-                  {'전체 친구 랭킹 보러가기 >'}
+            <View style={styles.heightInfoBoxContainer}>
+              <TouchableOpacity
+                style={styles.heightInfoBox}
+                onPress={newsListMoveHandler}>
+                <FolderImg
+                  width={screenSize.getVH(6.6)}
+                  height={screenSize.getVH(6.6)}
+                />
+                <Text style={styles.heightBoxDescription}>
+                  {'지금 정세가 어떤지 알아야\n투자를 잘 할 수 있어요'}
+                </Text>
+                <Text style={styles.heightBoxMoveDescription}>
+                  {'최근 뉴스 보러 가기 >'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.heightInfoBox}>
+                <CalculateImg
+                  width={screenSize.getVH(6.6)}
+                  height={screenSize.getVH(6.6)}
+                />
+                <Text style={styles.heightBoxDescription}>
+                  {'AI의 투자 분석 리포트를\n투자에 활용해보세요'}
+                </Text>
+                <Text style={styles.heightBoxMoveDescription}>
+                  {'분석 리포트 보러가기 >'}
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </BasicContainer>
-      </ScrollView>
+
+            <Text style={styles.friendText}>친구 랭킹 TOP 3</Text>
+
+            <View style={styles.rankContainer}>
+              {rankingData.slice(0, 3).map((datum, idx) => {
+                return (
+                  <FriendRank
+                    key={datum.userId}
+                    rank={idx + 1}
+                    money={datum.money}
+                    profile={datum.profile}
+                    userId={datum.userId}
+                    username={datum.username}
+                  />
+                );
+              })}
+              {rankingData.length === 0 && (
+                <Text style={styles.friendDescription}>
+                  친구 리스트가 비어있네요!
+                </Text>
+              )}
+              <View style={styles.friendRankMoveDescription}>
+                <TouchableOpacity onPress={friendMoveHandler}>
+                  <Text style={styles.friendRankMoveText}>
+                    {rankingData.length === 0
+                      ? '친구 찾으러 가기 >'
+                      : '전체 친구 랭킹 보러가기 >'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </BasicContainer>
+        </ScrollView>
+      </View>
 
       <BottomNav pageName={'Home'} />
     </View>
@@ -143,6 +201,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  outerScrollViewContainer: {
+    width: screenSize.width,
+    height: screenSize.getVH(90.5),
   },
   title: {
     fontFamily: fontStyle.SUIT.ExtraBold,
@@ -223,9 +285,16 @@ const styles = StyleSheet.create({
     fontSize: screenSize.getVH(2.2),
     fontFamily: fontStyle.SUIT.Bold,
   },
-  rankConatiner: {
+  rankContainer: {
     marginTop: screenSize.getVH(1.1),
     margin: screenSize.getVH(13.5),
+  },
+  friendDescription: {
+    marginTop: screenSize.getVH(1.6),
+    width: screenSize.getVW(80),
+    fontSize: screenSize.getVH(1.6),
+    color: colorStyles.descriptionGray,
+    fontFamily: fontStyle.SUIT.Regular,
   },
   friendRankMoveDescription: {
     marginTop: screenSize.getVH(1.6),

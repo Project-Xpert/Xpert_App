@@ -33,6 +33,16 @@ const getFriendList = async (keyword: string) => {
   });
 };
 
+const getRanking = async () => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.get(`${BASE_URL}/ranking`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 const getUserDetail = async (userId: string) => {
   const accessToken = await AsyncStorage.getItem('accessToken');
 
@@ -104,4 +114,5 @@ export const FriendAPI = {
   getFriendList,
   getUserDetail,
   sendMoney,
+  getRanking,
 };

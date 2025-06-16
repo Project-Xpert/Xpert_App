@@ -4,26 +4,53 @@ import {screenSize} from '../../assets/styles/screenSize';
 import {fontStyle} from '../../assets/styles/fontStyles';
 import {colorStyles} from '../../assets/styles/color';
 import moneyFormatter from '../../util/moneyFormatter';
+import useUserData from '../../data/userData';
 
 interface rankProps {
   rank: number;
-  name: string;
+  profile: string;
+  userId: string;
+  username: string;
   money: number;
 }
 
-const FriendRank = (props: rankProps) => {
-  return (
-    <View style={containerStyles.container}>
-      <Text style={textStyles.rankText}>{props.rank}</Text>
+const getRankingIcon = (rank: number) => {
+  if (rank == 1) {
+    return '🥇';
+  } else if (rank == 2) {
+    return '🥈';
+  } else if (rank == 3) {
+    return '🥉';
+  } else {
+    return rank;
+  }
+};
 
-      <Image
-        src="https://shared-comic.pstatic.net/thumb/webtoon/828365/thumbnail/thumbnail_IMAG19_067b80a3-9517-43fb-8b71-570809875797.jpg"
-        style={imageStyles.image}
-      />
+const FriendRank = (props: rankProps) => {
+  const {userId} = useUserData();
+
+  const containerStyle = {
+    ...containerStyles.container,
+    borderColor:
+      props.userId === userId
+        ? colorStyles.mainColor
+        : colorStyles.defaultWhite,
+  };
+
+  return (
+    <View style={containerStyle}>
+      <Text style={textStyles.rankText}>{getRankingIcon(props.rank)}</Text>
+
+      <Image src={props.profile} style={imageStyles.image} />
 
       <View style={textStyles.container}>
-        <Text style={textStyles.title}>Bocchi The Invest!</Text>
-        <Text style={textStyles.subTitle}>@bocchi</Text>
+        <Text style={textStyles.title}>
+          {props.username}
+          {userId === props.userId && (
+            <Text style={textStyles.highlighted}> (나)</Text>
+          )}
+        </Text>
+        <Text style={textStyles.subTitle}>@{props.userId}</Text>
       </View>
 
       <Text style={textStyles.moneyText}>{moneyFormatter(props.money)}원</Text>
@@ -38,6 +65,8 @@ const containerStyles = StyleSheet.create({
     width: screenSize.getVW(82),
     height: screenSize.getVH(6.6),
     flexDirection: 'row',
+    borderRadius: screenSize.getVH(1.5),
+    borderWidth: screenSize.getVH(0.2),
     alignItems: 'center',
   },
 });
@@ -54,21 +83,28 @@ const textStyles = StyleSheet.create({
     textAlign: 'center',
   },
   title: {
+    width: screenSize.getVW(30.6),
     fontSize: screenSize.getVH(1.6),
     fontFamily: fontStyle.SUIT.Bold,
   },
   subTitle: {
+    width: screenSize.getVW(30.6),
     fontSize: screenSize.getVH(1.3),
     fontFamily: fontStyle.SUIT.Medium,
     color: colorStyles.descriptionGray,
   },
   moneyText: {
-    width: screenSize.getVW(28.5),
+    width: screenSize.getVW(25.5),
     fontSize: screenSize.getVH(1.6),
     letterSpacing: -0.5,
     fontFamily: fontStyle.SUIT.Bold,
     textAlign: 'right',
     color: colorStyles.descriptionGray,
+  },
+  highlighted: {
+    color: colorStyles.mainColor,
+    fontSize: screenSize.getVH(1.5),
+    fontFamily: fontStyle.SUIT.Bold,
   },
 });
 
