@@ -17,7 +17,7 @@ const AccountDetailBtn = (props: BtnProps) => {
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
       <View style={styles.imgContainer}>
         <BankLogo
-          bank={props.companyName}
+          bank={props.companyName.replace('주식회사', '').trim()}
           style={styles.logo}
           width={screenSize.getVH(5)}
           height={screenSize.getVH(5)}
