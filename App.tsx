@@ -10,9 +10,6 @@ import SignupDetail from './src/page/Signup/SignupDetail';
 import {SafeAreaView} from 'react-native';
 import {colorStyles} from './src/assets/styles/color';
 import InvestHome from './src/page/Invest/InvestHome';
-import BuyStock from './src/page/Invest/stock/BuyStock';
-import StockDetail from './src/page/Invest/stock/StockDetail';
-import BuyStockDetail from './src/page/Invest/stock/BuyStockDetail';
 import AccountDetail from './src/page/Invest/account/AccountDetail';
 import CreateAccountList from './src/page/Invest/account/CreateAccountList';
 import CreateDepositDetail from './src/page/Invest/account/CreateDepositDetail';
@@ -30,7 +27,6 @@ import CreateSavingDetail from './src/page/Invest/account/CreateSavingDetail';
 import SuccessCreateAccount from './src/page/Invest/account/SuccessCreateAccount';
 import useModalData from './src/data/modalData';
 import AutoTransferSetting from './src/page/Invest/account/AutoTransferSetting';
-import FriendList from './src/page/social/friend/FriendList';
 import FriendHome from './src/page/social/friend/FriendHome';
 import FriendDetail from './src/page/social/friend/FriendDetail';
 import SendMoney from './src/page/social/friend/SendMoney';
@@ -106,9 +102,6 @@ const App = () => {
             name="SuccessCreateAccount"
             component={SuccessCreateAccount}
           />
-          <Stack.Screen name="BuyStock" component={BuyStock} />
-          <Stack.Screen name="StockDetail" component={StockDetail} />
-          <Stack.Screen name="BuyStockDetail" component={BuyStockDetail} />
           <Stack.Screen name="TradeGold" component={TradeGold} />
           <Stack.Screen name="NewsDetail" component={NewsDetail} />
           <Stack.Screen name="PostList" component={PostList} />
