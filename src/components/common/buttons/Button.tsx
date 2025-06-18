@@ -5,7 +5,7 @@ import {screenSize} from '../../../assets/styles/screenSize';
 
 interface ButtonProps {
   text: string;
-  marginTop: number;
+  marginTop?: number;
   size: 'small' | 'mid' | 'large';
   onPress: () => void;
   disable?: boolean;

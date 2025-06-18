@@ -13,6 +13,7 @@ interface ItemProps {
   money: number;
   fluRate: number;
   isBookmarked: boolean;
+  onPress: () => void;
 }
 
 const StockListItem = (props: ItemProps) => {
@@ -27,7 +28,7 @@ const StockListItem = (props: ItemProps) => {
   };
 
   return (
-    <TouchableOpacity style={containerStyles.container}>
+    <TouchableOpacity style={containerStyles.container} onPress={props.onPress}>
       <Text style={textStyles.rankingText}>{props.ranking}</Text>
 
       <Image

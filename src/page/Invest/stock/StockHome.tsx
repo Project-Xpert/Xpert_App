@@ -154,6 +154,10 @@ const StockHome = () => {
   const [interestStockData, setInterestStockData] =
     useState<StocksData[]>(stockMockData);
 
+  const stockDetailHandler = (stockId: string) => {
+    navigator.navigate('StockDetail', {stockId});
+  };
+
   return (
     <InvestHomeContainer>
       <View style={topInfoBoxStyles.container}>
@@ -183,6 +187,7 @@ const StockHome = () => {
               money={datum.money}
               fluRate={datum.fluRate}
               isBookmarked={datum.isBookmarked}
+              onPress={() => stockDetailHandler(datum.stockId)}
             />
           ))}
 
@@ -204,6 +209,7 @@ const StockHome = () => {
           money={datum.money}
           fluRate={datum.fluRate}
           isBookmarked={datum.isBookmarked}
+          onPress={() => stockDetailHandler(datum.stockId)}
         />
       ))}
 
@@ -247,6 +253,7 @@ const StockHome = () => {
           money={datum.money}
           fluRate={datum.fluRate}
           isBookmarked={datum.isBookmarked}
+          onPress={() => stockDetailHandler(datum.stockId)}
         />
       ))}
 

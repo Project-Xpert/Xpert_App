@@ -30,6 +30,7 @@ import AutoTransferSetting from './src/page/Invest/account/AutoTransferSetting';
 import FriendHome from './src/page/social/friend/FriendHome';
 import FriendDetail from './src/page/social/friend/FriendDetail';
 import SendMoney from './src/page/social/friend/SendMoney';
+import StockDetail from './src/page/Invest/stock/StockDetail';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -112,6 +113,7 @@ const App = () => {
           <Stack.Screen name="Friend" component={FriendHome} />
           <Stack.Screen name="FriendDetail" component={FriendDetail} />
           <Stack.Screen name="SendMoney" component={SendMoney} />
+          <Stack.Screen name="StockDetail" component={StockDetail} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
