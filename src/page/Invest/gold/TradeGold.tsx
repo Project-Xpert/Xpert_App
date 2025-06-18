@@ -162,6 +162,7 @@ const TradeGold = ({route}: any) => {
           handleDataChange('goldType', value.split(' ')[0])
         }
         value={data.goldType + ' 금 1돈 (3.75g)'}
+        placeholder={'상품을 선택해주세요'}
       />
       <UnitInput
         marginTop={screenSize.getVH(1.1)}

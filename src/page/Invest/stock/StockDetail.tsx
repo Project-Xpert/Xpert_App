@@ -12,6 +12,7 @@ import AnalystGraph from '../../../components/Invest/stock/AnalystGraph';
 import Button from '../../../components/common/buttons/Button';
 import BottomNav from '../../../components/common/BottomNav';
 import {ScrollView} from 'react-native-gesture-handler';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const mockData: StockData = {
   stockName: '넷플릭스',
@@ -54,6 +55,7 @@ const analystOpinionMap = {
 
 const StockDetail = ({route}: any) => {
   const stockId = route.params.stockId;
+  const navigation = useNavigation<NavigationProp<any>>();
   const [stockData, setStockData] = useState(mockData);
 
   const analystTotalCnt = stockData.analystOpinion?.reduce((a, b) => a + b);
@@ -88,6 +90,10 @@ const StockDetail = ({route}: any) => {
         : stockData.fluAmount > 0
         ? colorStyles.defaultRed
         : colorStyles.basicText,
+  };
+
+  const orderStockHandler = () => {
+    navigation.navigate('BuyStock', {stockId});
   };
 
   return (
@@ -220,9 +226,7 @@ const StockDetail = ({route}: any) => {
         <Button
           size={'mid'}
           text={'주식 주문하러 가기'}
-          onPress={function (): void {
-            throw new Error('Function not implemented.');
-          }}
+          onPress={orderStockHandler}
         />
       </View>
 

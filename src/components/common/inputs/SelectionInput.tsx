@@ -16,6 +16,7 @@ interface dropdownProps {
   dropdownMenus: string[];
   marginTop: number;
   value: string;
+  placeholder: string;
   onChange: (value: string) => void;
 }
 
@@ -58,7 +59,7 @@ const SelectionInput = (props: dropdownProps) => {
         onPress={onPress}>
         <TextInput
           style={inputStyles.input}
-          placeholder="상품을 선택해주세요"
+          placeholder={props.placeholder}
           editable={false}
           onPress={onPress}
           value={selectedIdx === -1 ? '' : props.value}
