@@ -9,12 +9,15 @@ import StockListItem from '../../../components/Invest/stock/StockListItem';
 import SeeMoreBtn from '../../../components/Invest/stock/SeeMoreBtn';
 import CategoryListItem from '../../../components/Invest/stock/CategoryListItem';
 import StockMenu from '../../../components/Invest/stock/StockMenu';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
+import {UserAPI} from '../../../api/user';
+import moneyFormatter from '../../../util/moneyFormatter';
+import {StockAPI} from '../../../api/stock';
 
 interface StocksData {
   stockId: string;
   stockName: string;
-  money: number;
+  price: number;
   fluRate: number;
   isBookmarked: boolean;
 }
@@ -25,86 +28,6 @@ interface CategoryData {
   increaseStockCnt: number;
   fluRate: number;
 }
-
-const stockMockData: StocksData[] = [
-  {
-    stockId: 'AAPL',
-    stockName: '애플',
-    money: 10000,
-    fluRate: -2.4,
-    isBookmarked: true,
-  },
-  {
-    stockId: 'AMKR',
-    stockName: '앰코 테크놀로지',
-    money: 1000,
-    fluRate: 2.4,
-    isBookmarked: true,
-  },
-  {
-    stockId: 'AMZN',
-    stockName: '아마존',
-    money: 100,
-    fluRate: 0.0,
-    isBookmarked: true,
-  },
-  {
-    stockId: 'MS',
-    stockName: '모건스텐리',
-    money: 10,
-    fluRate: -1.4,
-    isBookmarked: true,
-  },
-  {
-    stockId: 'MCD',
-    stockName: '맥도날드',
-    money: 1,
-    fluRate: -1.2,
-    isBookmarked: false,
-  },
-  {
-    stockId: 'V',
-    stockName: '비자',
-    money: 1000,
-    fluRate: -1.2,
-    isBookmarked: false,
-  },
-  {
-    stockId: 'NVDA',
-    stockName: '엔비디아',
-    money: 100,
-    fluRate: 1.2,
-    isBookmarked: false,
-  },
-  {
-    stockId: 'SNAP',
-    stockName: '스냅쳇',
-    money: 100,
-    fluRate: 1.2,
-    isBookmarked: true,
-  },
-  {
-    stockId: 'IBM',
-    stockName: 'IBM',
-    money: 100,
-    fluRate: 1.2,
-    isBookmarked: false,
-  },
-  {
-    stockId: 'LMT',
-    stockName: '록히드 마틴',
-    money: 100,
-    fluRate: 0.2,
-    isBookmarked: true,
-  },
-  {
-    stockId: 'NFLX',
-    stockName: '넷플릭스',
-    money: 100,
-    fluRate: 0.0,
-    isBookmarked: false,
-  },
-];
 
 const categoryMockData: CategoryData[] = [
   {
@@ -144,15 +67,56 @@ const categoryMockData: CategoryData[] = [
   },
 ];
 
+const orderCriteriaList = [
+  'PRICE_DESC',
+  'PRICE_ASC',
+  'RATE_DESC',
+  'RATE_ASC',
+  'RATE_ABS_DESC',
+] as const;
+
 const StockHome = () => {
   const navigator = useNavigation<NavigationProp<any>>();
 
-  const [ownStockData, setOwnStockData] = useState<StocksData[]>(stockMockData);
-  const [liveStockData, setLiveStockData] =
-    useState<StocksData[]>(stockMockData);
+  const [ownStockData, setOwnStockData] = useState<StocksData[]>([]);
+  const [liveStockData, setLiveStockData] = useState<StocksData[]>([]);
+  const [userMoney, setUserMoney] = useState<number>(0);
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
-  const [interestStockData, setInterestStockData] =
-    useState<StocksData[]>(stockMockData);
+  const [interestStockData, setInterestStockData] = useState<StocksData[]>([]);
+  const [orderCriteria, setOrderCriteria] = useState([0, 0, 0, 0]);
+
+  const sortCriteriaChangeHandler = (idx: number, value: number) => {
+    if (0 <= value && value < 5) {
+      const newOrderCriteria = [...orderCriteria];
+      newOrderCriteria[idx] = value;
+
+      setOrderCriteria(newOrderCriteria);
+    }
+  };
+
+  useEffect(() => {
+    StockAPI.getStockData('', orderCriteriaList[orderCriteria[1]])
+      .then(response => {
+        if (response.data) {
+          setLiveStockData(response.data.stocks);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, [orderCriteria[1]]);
+
+  useEffect(() => {
+    UserAPI.GetUserData()
+      .then(response => {
+        if (response.data) {
+          setUserMoney(response.data.money);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
 
   const stockDetailHandler = (stockId: string) => {
     navigator.navigate('StockDetail', {stockId});
@@ -167,7 +131,9 @@ const StockHome = () => {
         />
         <View style={topInfoBoxStyles.textContainer}>
           <Text style={topInfoBoxStyles.text}>현재 사용 가능한 시드머니</Text>
-          <Text style={topInfoBoxStyles.text}>100,000,000원</Text>
+          <Text style={topInfoBoxStyles.text}>
+            {moneyFormatter(userMoney)}원
+          </Text>
         </View>
       </View>
 
@@ -181,7 +147,12 @@ const StockHome = () => {
         <View>
           <Text style={textStyles.title}>현재 가지고 있는 주식</Text>
 
-          <StockMenu />
+          <StockMenu
+            selectedIdx={orderCriteria[0]}
+            onPressHandler={(value: number) => {
+              sortCriteriaChangeHandler(0, value);
+            }}
+          />
 
           {ownStockData.slice(0, 5).map((datum, idx) => (
             <StockListItem
@@ -189,7 +160,7 @@ const StockHome = () => {
               key={`owned_stock_${datum.stockId}`}
               stockName={datum.stockName}
               stockId={datum.stockId}
-              money={datum.money}
+              price={datum.price}
               fluRate={datum.fluRate}
               isBookmarked={datum.isBookmarked}
               onPress={() => stockDetailHandler(datum.stockId)}
@@ -203,7 +174,12 @@ const StockHome = () => {
       {/* 실시간 차트 */}
       <Text style={textStyles.title}>실시간 차트</Text>
 
-      <StockMenu />
+      <StockMenu
+        selectedIdx={orderCriteria[1]}
+        onPressHandler={(value: number) => {
+          sortCriteriaChangeHandler(1, value);
+        }}
+      />
 
       {liveStockData.slice(0, 10).map((datum, idx) => (
         <StockListItem
@@ -211,7 +187,7 @@ const StockHome = () => {
           key={`live_stock_${datum.stockId}`}
           stockName={datum.stockName}
           stockId={datum.stockId}
-          money={datum.money}
+          price={datum.price}
           fluRate={datum.fluRate}
           isBookmarked={datum.isBookmarked}
           onPress={() => stockDetailHandler(datum.stockId)}
@@ -223,7 +199,12 @@ const StockHome = () => {
       {/* 카테고리 차트 */}
       <Text style={textStyles.title}>카테고리별로 종목 보기</Text>
 
-      <StockMenu />
+      <StockMenu
+        selectedIdx={orderCriteria[2]}
+        onPressHandler={(value: number) => {
+          sortCriteriaChangeHandler(2, value);
+        }}
+      />
 
       {categoryMockData.map((datum, idx) => (
         <CategoryListItem
@@ -247,7 +228,14 @@ const StockHome = () => {
           관심 종목 리스트가 비어있네요!
         </Text>
       )}
-      {interestStockData.length > 0 && <StockMenu />}
+      {interestStockData.length > 0 && (
+        <StockMenu
+          selectedIdx={orderCriteria[3]}
+          onPressHandler={(value: number) => {
+            sortCriteriaChangeHandler(3, value);
+          }}
+        />
+      )}
 
       {interestStockData.slice(0, 3).map((datum, idx) => (
         <StockListItem
@@ -255,7 +243,7 @@ const StockHome = () => {
           key={`interest_stock_${datum.stockId}`}
           stockName={datum.stockName}
           stockId={datum.stockId}
-          money={datum.money}
+          price={datum.price}
           fluRate={datum.fluRate}
           isBookmarked={datum.isBookmarked}
           onPress={() => stockDetailHandler(datum.stockId)}

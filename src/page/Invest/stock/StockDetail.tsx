@@ -13,6 +13,7 @@ import Button from '../../../components/common/buttons/Button';
 import BottomNav from '../../../components/common/BottomNav';
 import {ScrollView} from 'react-native-gesture-handler';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
+import getStockIcon from '../../../assets/image/icon/stockLogo/StockLogo';
 
 const mockData: StockData = {
   stockName: '넷플릭스',
@@ -143,7 +144,7 @@ const StockDetail = ({route}: any) => {
               <Text style={textStyles.partTitle}>종목 정보</Text>
               <View style={containerStyles.companyInfoContainer}>
                 <Image
-                  src={`https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/${stockId}.png`}
+                  src={getStockIcon(stockId)}
                   style={imageStyles.companyLogo}
                 />
                 <Text style={textStyles.title2}>{stockData.stockName}</Text>

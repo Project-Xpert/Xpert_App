@@ -5,12 +5,13 @@ import BookmarkEnabled from '../../../assets/image/icon/button/bookmarkEnabled.s
 import {screenSize} from '../../../assets/styles/screenSize';
 import {colorStyles} from '../../../assets/styles/color';
 import {fontStyle} from '../../../assets/styles/fontStyles';
+import getStockIcon from '../../../assets/image/icon/stockLogo/StockLogo';
 
 interface ItemProps {
   ranking: number;
   stockName: string;
   stockId: string;
-  money: number;
+  price: number;
   fluRate: number;
   isBookmarked: boolean;
   onPress: () => void;
@@ -33,7 +34,7 @@ const StockListItem = (props: ItemProps) => {
 
       <Image
         style={imageStyles.companyIcon}
-        src={`https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/${props.stockId}.png`}
+        src={getStockIcon(props.stockId)}
       />
 
       <View style={containerStyles.textOuterContainer}>
@@ -43,7 +44,7 @@ const StockListItem = (props: ItemProps) => {
         </View>
         <View style={containerStyles.textInnerContainer}>
           <Text style={textStyles.stockPrice}>
-            {moneyFormatter(props.money)}원
+            {moneyFormatter(props.price)}원
           </Text>
           <Text style={fluRateStyle}>
             {props.fluRate > 0 && '+'}

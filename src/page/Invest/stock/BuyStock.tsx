@@ -18,6 +18,7 @@ import UnitInput from '../../../components/common/inputs/UnitInput';
 import Button from '../../../components/common/buttons/Button';
 import moneyFormatter from '../../../util/moneyFormatter';
 import {UserAPI} from '../../../api/user';
+import getStockIcon from '../../../assets/image/icon/stockLogo/StockLogo';
 
 const dropdownMenus = ['시장가 기준으로 판매', '지정가 가격으로 판매'];
 
@@ -107,7 +108,7 @@ const BuyStock = ({route}: any) => {
           <View style={containerStyles.topContainer}>
             <Image
               style={imageStyles.companyIcon}
-              src={`https://static2.finnhub.io/file/publicdatany/finnhubimage/stock_logo/${stockId}.png`}
+              src={getStockIcon(stockId)}
             />
             <View style={containerStyles.textContainer}>
               <Text style={textStyles.title}>{stockData.stockName}</Text>
