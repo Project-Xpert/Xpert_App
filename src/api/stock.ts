@@ -20,6 +20,17 @@ const getStockData = async (keyword: String, sort: Sort) => {
   });
 };
 
+const getStockDetail = async (stockCode: String) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.get(`${BASE_URL}/detail/${stockCode}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 export const StockAPI = {
   getStockData,
+  getStockDetail,
 };

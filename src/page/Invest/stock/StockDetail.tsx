@@ -4,7 +4,7 @@ import BasicContainer from '../../../components/common/BasicContainer';
 import BasicHeader from '../../../components/common/headers/BasicHeader';
 import {fontStyle} from '../../../assets/styles/fontStyles';
 import {colorStyles} from '../../../assets/styles/color';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import DisabledBookmark from '../../../assets/image/icon/button/bookmarkDisabled.svg';
 import EnabledBookmark from '../../../assets/image/icon/button/bookmarkEnabled.svg';
 import moneyFormatter from '../../../util/moneyFormatter';
@@ -14,22 +14,23 @@ import BottomNav from '../../../components/common/BottomNav';
 import {ScrollView} from 'react-native-gesture-handler';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import getStockIcon from '../../../assets/image/icon/stockLogo/StockLogo';
+import {StockAPI} from '../../../api/stock';
 
-const mockData: StockData = {
-  stockName: '넷플릭스',
-  priceKR: 10000,
-  priceUS: 320,
-  isBookmarked: true,
-  fluAmount: -120000,
-  fluRate: -72.3,
-  summary: 'OTT 시장을 선도하고 개적하는 기업',
-  marketCapital: '712조 7,503억원',
-  companyValue: '594조 7,277억원',
-  listedDate: '2002년 5월 23일',
-  sharedStockCnt: '425,571,266주',
-  analystOpinion: [0, 5, 2, 5, 3],
-  analystPredict:
-    '애널리스트들이 1년 후 넷플릭스의 목표 주가가 1,618,482원으로 지금보다 -3.0% 하락 할 것으로 예상했어요',
+const basicStockData: StockData = {
+  stockName: '',
+  priceKR: 0,
+  priceUS: 0,
+  isBookmarked: false,
+  fluAmount: 0,
+  fluRate: 0,
+  summary: '',
+  companyDetail: {
+    mcp: 0,
+    shareOutstanding: 0,
+    ipo: '',
+    companyFullName: '',
+  },
+  analystOpinion: [0, 0, 0, 0, 0],
 };
 
 interface StockData {
@@ -40,12 +41,15 @@ interface StockData {
   fluAmount: number;
   fluRate: number;
   summary: string;
-  marketCapital: string;
-  companyValue: string;
-  listedDate: string;
-  sharedStockCnt: string;
+  companyDetail: CompanyDetailData;
   analystOpinion: number[];
-  analystPredict: string;
+}
+
+interface CompanyDetailData {
+  mcp: number;
+  shareOutstanding: number;
+  ipo: string;
+  companyFullName: string;
 }
 
 const analystOpinionMap = {
@@ -57,7 +61,7 @@ const analystOpinionMap = {
 const StockDetail = ({route}: any) => {
   const stockId = route.params.stockId;
   const navigation = useNavigation<NavigationProp<any>>();
-  const [stockData, setStockData] = useState(mockData);
+  const [stockData, setStockData] = useState<StockData>(basicStockData);
 
   const analystTotalCnt = stockData.analystOpinion?.reduce((a, b) => a + b);
 
@@ -92,6 +96,18 @@ const StockDetail = ({route}: any) => {
         ? colorStyles.defaultRed
         : colorStyles.basicText,
   };
+
+  useEffect(() => {
+    StockAPI.getStockDetail(stockId)
+      .then(response => {
+        if (response.data) {
+          setStockData(response.data);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
 
   const orderStockHandler = () => {
     navigation.navigate('BuyStock', {stockId});
@@ -156,17 +172,23 @@ const StockDetail = ({route}: any) => {
               </View>
               <View style={containerStyles.bodyContainer}>
                 <View>
+                  <Text style={textStyles.body}>법인 등록명</Text>
                   <Text style={textStyles.body}>시가총액</Text>
-                  <Text style={textStyles.body}>실제 기업 가치</Text>
                   <Text style={textStyles.body}>상장일</Text>
                   <Text style={textStyles.body}>발행 주식수</Text>
                 </View>
                 <View style={{marginLeft: screenSize.getVW(5.8)}}>
-                  <Text style={textStyles.body}>{stockData.marketCapital}</Text>
-                  <Text style={textStyles.body}>{stockData.companyValue}</Text>
-                  <Text style={textStyles.body}>{stockData.listedDate}</Text>
                   <Text style={textStyles.body}>
-                    {stockData.sharedStockCnt}
+                    {stockData.companyDetail.companyFullName}
+                  </Text>
+                  <Text style={textStyles.body}>
+                    ${moneyFormatter(stockData.companyDetail.mcp)}
+                  </Text>
+                  <Text style={textStyles.body}>
+                    {stockData.companyDetail.ipo}
+                  </Text>
+                  <Text style={textStyles.body}>
+                    {moneyFormatter(stockData.companyDetail.shareOutstanding)}
                   </Text>
                 </View>
               </View>
@@ -210,12 +232,6 @@ const StockDetail = ({route}: any) => {
                       },
                     )}
                   </View>
-
-                  {stockData.analystPredict && (
-                    <Text style={textStyles.body}>
-                      {stockData.analystPredict}
-                    </Text>
-                  )}
                 </View>
               )}
             </View>
