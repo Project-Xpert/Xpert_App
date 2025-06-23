@@ -19,14 +19,9 @@ import Button from '../../../components/common/buttons/Button';
 import moneyFormatter from '../../../util/moneyFormatter';
 import {UserAPI} from '../../../api/user';
 import getStockIcon from '../../../assets/image/icon/stockLogo/StockLogo';
+import {StockAPI} from '../../../api/stock';
 
 const dropdownMenus = ['시장가 기준으로 판매', '지정가 가격으로 판매'];
-
-const mockData: StockData = {
-  stockName: '애플',
-  priceKR: 14000,
-  priceUS: 10,
-};
 
 const userOwnStockMockData: UserOwnStockData = {
   ownCnt: 10,
@@ -44,12 +39,13 @@ interface UserOwnStockData {
 
 const BuyStock = ({route}: any) => {
   const stockId = route.params.stockId;
+  const stockData: StockData = route.params.stockData;
+
   const [mode, setMode] = useState<'buy' | 'sell'>('buy');
   const [tradeMode, setTradeMode] = useState(-1);
   const [stockCnt, setStockCnt] = useState(0);
   const [stockPrice, setStockPrice] = useState(0);
   const [userMoney, setUserMoney] = useState(0);
-  const [stockData, setStockData] = useState<StockData>(mockData);
   const [userOwnStockData, setUserOwnStockData] =
     useState<UserOwnStockData>(userOwnStockMockData);
 
@@ -118,10 +114,10 @@ const BuyStock = ({route}: any) => {
 
           <View style={containerStyles.topContainer}>
             <Text style={textStyles.krPrice}>
-              {moneyFormatter(mockData.priceKR)}원
+              {moneyFormatter(stockData.priceKR)}원
             </Text>
             <Text style={textStyles.usPrice}>
-              ${moneyFormatter(mockData.priceUS)}
+              ${moneyFormatter(stockData.priceUS)}
             </Text>
           </View>
 
@@ -179,7 +175,11 @@ const BuyStock = ({route}: any) => {
                   {moneyFormatter(userMoney)}원
                 </Text>
                 <Text style={textStyles.body}>
-                  {moneyFormatter(stockCnt * stockData.priceKR)}원
+                  {moneyFormatter(
+                    stockCnt *
+                      (tradeMode == 0 ? stockData.priceKR : stockPrice),
+                  )}
+                  원
                 </Text>
               </View>
             </View>
@@ -212,7 +212,9 @@ const BuyStock = ({route}: any) => {
           disable={
             stockCnt === 0 ||
             tradeMode === -1 ||
-            (mode === 'buy' && stockCnt * stockData.priceKR > userMoney) ||
+            (mode === 'buy' &&
+              stockCnt * (tradeMode == 0 ? stockData.priceKR : stockPrice) >
+                userMoney) ||
             (mode === 'sell' && stockCnt > userOwnStockData.ownCnt) ||
             (tradeMode === 1 && stockPrice === 0)
           }
