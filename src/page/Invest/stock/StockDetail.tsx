@@ -110,7 +110,7 @@ const StockDetail = ({route}: any) => {
   }, []);
 
   const orderStockHandler = () => {
-    navigation.navigate('BuyStock', {stockId, stockData});
+    navigation.navigate('TradeStock', {stockId, stockData});
   };
 
   return (

@@ -30,7 +30,25 @@ const getStockDetail = async (stockCode: String) => {
   });
 };
 
+interface BuyStockRequestDto {
+  option: 'MANUAL_PRICE' | 'MARKET_PRICE';
+  stockCode: string;
+  amount: number;
+  price: number;
+}
+
+const buyStock = async (request: BuyStockRequestDto) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.put(`${BASE_URL}/buy`, request, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 export const StockAPI = {
   getStockData,
   getStockDetail,
+  buyStock,
 };

@@ -137,9 +137,11 @@ const StockHome = () => {
         </View>
       </View>
 
-      <Text style={textStyles.title}>거래 예약중인 주식</Text>
-      {ownStockData.length > 5 && (
-        <SeeMoreBtn text={'예약중인 주식 보러가기 >'} />
+      {ownStockData.length > 0 && (
+        <View>
+          <Text style={textStyles.title}>거래 예약중인 주식</Text>
+          <SeeMoreBtn text={'예약중인 주식 보러가기 >'} />
+        </View>
       )}
 
       {/* 소유한 주식 */}

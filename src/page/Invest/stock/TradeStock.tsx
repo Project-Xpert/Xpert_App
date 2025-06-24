@@ -20,6 +20,7 @@ import moneyFormatter from '../../../util/moneyFormatter';
 import {UserAPI} from '../../../api/user';
 import getStockIcon from '../../../assets/image/icon/stockLogo/StockLogo';
 import {StockAPI} from '../../../api/stock';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 
 const dropdownMenus = ['시장가 기준으로 판매', '지정가 가격으로 판매'];
 
@@ -40,6 +41,7 @@ interface UserOwnStockData {
 const BuyStock = ({route}: any) => {
   const stockId = route.params.stockId;
   const stockData: StockData = route.params.stockData;
+  const navigate = useNavigation<NavigationProp<any>>();
 
   const [mode, setMode] = useState<'buy' | 'sell'>('buy');
   const [tradeMode, setTradeMode] = useState(-1);
@@ -84,7 +86,20 @@ const BuyStock = ({route}: any) => {
     setTradeMode(dropdownMenus.indexOf(menu));
   };
 
-  const buyStockHandler = () => {};
+  const buyStockHandler = () => {
+    StockAPI.buyStock({
+      option: tradeMode == 0 ? 'MARKET_PRICE' : 'MANUAL_PRICE',
+      stockCode: stockId,
+      amount: stockCnt,
+      price: tradeMode == 0 ? stockData.priceKR : stockPrice,
+    })
+      .then(response => {
+        navigate.navigate('Invest');
+      })
+      .catch(e => {
+        console.error(e);
+      });
+  };
 
   return (
     <BasicContainer paddingTop={screenSize.getVH(9.2)}>

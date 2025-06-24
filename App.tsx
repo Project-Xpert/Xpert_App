@@ -31,7 +31,7 @@ import FriendHome from './src/page/social/friend/FriendHome';
 import FriendDetail from './src/page/social/friend/FriendDetail';
 import SendMoney from './src/page/social/friend/SendMoney';
 import StockDetail from './src/page/Invest/stock/StockDetail';
-import BuyStock from './src/page/Invest/stock/BuyStock';
+import TradeStock from './src/page/Invest/stock/TradeStock';
 
 const Stack = createStackNavigator();
 const App = () => {
@@ -115,7 +115,7 @@ const App = () => {
           <Stack.Screen name="FriendDetail" component={FriendDetail} />
           <Stack.Screen name="SendMoney" component={SendMoney} />
           <Stack.Screen name="StockDetail" component={StockDetail} />
-          <Stack.Screen name="BuyStock" component={BuyStock} />
+          <Stack.Screen name="TradeStock" component={TradeStock} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>
