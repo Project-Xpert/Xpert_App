@@ -47,8 +47,37 @@ const buyStock = async (request: BuyStockRequestDto) => {
   });
 };
 
+interface SellStockRequestDto {
+  option: 'MANUAL_PRICE' | 'MARKET_PRICE';
+  stockCode: string;
+  amount: number;
+  price: number;
+}
+
+const sellStock = async (request: SellStockRequestDto) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.put(`${BASE_URL}/sell`, request, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+const getStockHolding = async (stockCode: String) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.get(`${BASE_URL}/holding/${stockCode}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 export const StockAPI = {
   getStockData,
   getStockDetail,
   buyStock,
+  sellStock,
+  getStockHolding,
 };

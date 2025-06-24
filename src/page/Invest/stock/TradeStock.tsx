@@ -22,20 +22,12 @@ import getStockIcon from '../../../assets/image/icon/stockLogo/StockLogo';
 import {StockAPI} from '../../../api/stock';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
-const dropdownMenus = ['시장가 기준으로 판매', '지정가 가격으로 판매'];
-
-const userOwnStockMockData: UserOwnStockData = {
-  ownCnt: 10,
-};
+const dropdownMenus = ['시장가 기준으로', '지정가 가격으로'];
 
 interface StockData {
   stockName: String;
   priceKR: number;
   priceUS: number;
-}
-
-interface UserOwnStockData {
-  ownCnt: number;
 }
 
 const BuyStock = ({route}: any) => {
@@ -48,14 +40,24 @@ const BuyStock = ({route}: any) => {
   const [stockCnt, setStockCnt] = useState(0);
   const [stockPrice, setStockPrice] = useState(0);
   const [userMoney, setUserMoney] = useState(0);
-  const [userOwnStockData, setUserOwnStockData] =
-    useState<UserOwnStockData>(userOwnStockMockData);
+  const [userOwnStockData, setUserOwnStockData] = useState(0);
 
   useEffect(() => {
     UserAPI.GetUserData()
       .then(response => {
         if (response.data) {
           setUserMoney(response.data.money);
+        }
+      })
+      .catch(e => {
+        console.error(e);
+      });
+
+    StockAPI.getStockHolding(stockId)
+      .then(response => {
+        if (response.data) {
+          setUserOwnStockData(response.data.holdingCnt);
+          console.log(response.data.holdingCnt);
         }
       })
       .catch(e => {
@@ -86,19 +88,34 @@ const BuyStock = ({route}: any) => {
     setTradeMode(dropdownMenus.indexOf(menu));
   };
 
-  const buyStockHandler = () => {
-    StockAPI.buyStock({
-      option: tradeMode == 0 ? 'MARKET_PRICE' : 'MANUAL_PRICE',
-      stockCode: stockId,
-      amount: stockCnt,
-      price: tradeMode == 0 ? stockData.priceKR : stockPrice,
-    })
-      .then(response => {
-        navigate.navigate('Invest');
+  const tradeStockHandler = () => {
+    if (mode === 'buy') {
+      StockAPI.buyStock({
+        option: tradeMode == 0 ? 'MARKET_PRICE' : 'MANUAL_PRICE',
+        stockCode: stockId,
+        amount: stockCnt,
+        price: tradeMode == 0 ? stockData.priceKR : stockPrice,
       })
-      .catch(e => {
-        console.error(e);
-      });
+        .then(response => {
+          navigate.navigate('Invest');
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    } else {
+      StockAPI.sellStock({
+        option: tradeMode == 0 ? 'MARKET_PRICE' : 'MANUAL_PRICE',
+        stockCode: stockId,
+        amount: stockCnt,
+        price: tradeMode == 0 ? stockData.priceKR : stockPrice,
+      })
+        .then(response => {
+          navigate.navigate('Invest');
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    }
   };
 
   return (
@@ -207,7 +224,7 @@ const BuyStock = ({route}: any) => {
               </View>
               <View style={{marginLeft: screenSize.getVW(5.8)}}>
                 <Text style={textStyles.body}>
-                  {moneyFormatter(userOwnStockData.ownCnt)}주
+                  {moneyFormatter(userOwnStockData)}주
                 </Text>
                 <Text style={textStyles.body}>
                   {moneyFormatter(stockCnt)}주
@@ -223,14 +240,14 @@ const BuyStock = ({route}: any) => {
           text={'주식 거래 주문하기'}
           size={'large'}
           marginTop={screenSize.getVH(0)}
-          onPress={buyStockHandler}
+          onPress={tradeStockHandler}
           disable={
             stockCnt === 0 ||
             tradeMode === -1 ||
             (mode === 'buy' &&
               stockCnt * (tradeMode == 0 ? stockData.priceKR : stockPrice) >
                 userMoney) ||
-            (mode === 'sell' && stockCnt > userOwnStockData.ownCnt) ||
+            (mode === 'sell' && stockCnt > userOwnStockData) ||
             (tradeMode === 1 && stockPrice === 0)
           }
         />
