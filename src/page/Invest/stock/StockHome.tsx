@@ -78,6 +78,7 @@ const orderCriteriaList = [
 const StockHome = () => {
   const navigator = useNavigation<NavigationProp<any>>();
 
+  const [hasOrderedStock, setHasOrderedStock] = useState<boolean>(false);
   const [ownStockData, setOwnStockData] = useState<StocksData[]>([]);
   const [liveStockData, setLiveStockData] = useState<StocksData[]>([]);
   const [userMoney, setUserMoney] = useState<number>(0);
@@ -93,6 +94,18 @@ const StockHome = () => {
       setOrderCriteria(newOrderCriteria);
     }
   };
+
+  useEffect(() => {
+    StockAPI.getOwnStocks('', orderCriteriaList[orderCriteria[0]])
+      .then(response => {
+        if (response.data) {
+          setOwnStockData(response.data.stocks);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, [orderCriteria[0]]);
 
   useEffect(() => {
     StockAPI.getStockData('', orderCriteriaList[orderCriteria[1]])
@@ -137,7 +150,7 @@ const StockHome = () => {
         </View>
       </View>
 
-      {ownStockData.length > 0 && (
+      {hasOrderedStock && (
         <View>
           <Text style={textStyles.title}>거래 예약중인 주식</Text>
           <SeeMoreBtn text={'예약중인 주식 보러가기 >'} />

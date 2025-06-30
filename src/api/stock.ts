@@ -20,6 +20,16 @@ const getStockData = async (keyword: String, sort: Sort) => {
   });
 };
 
+const getOwnStocks = async (keyword: String, sort: Sort) => {
+  const accessToken = await AsyncStorage.getItem('accessToken');
+
+  return await axios.get(`${BASE_URL}/owned?keyword=${keyword}&sort=${sort}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 const getStockDetail = async (stockCode: String) => {
   const accessToken = await AsyncStorage.getItem('accessToken');
 
@@ -80,4 +90,5 @@ export const StockAPI = {
   buyStock,
   sellStock,
   getStockHolding,
+  getOwnStocks,
 };
